@@ -1,6 +1,7 @@
 %{
   #include "main.c"
   #include "token.h"
+  #include "init.c"
 %}
 
 %%
