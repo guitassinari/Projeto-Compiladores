@@ -4,6 +4,7 @@
   #include "init.c"
 %}
 
+
 %%
 
 int {return KW_INT;}
