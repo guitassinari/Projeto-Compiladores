@@ -1,11 +1,9 @@
 
 void main(){
   int token;
-  FILE * file = fopen("teste.txt", "r");
-
-  while(!feof(file)){
+  yyin = fopen("teste.txt", "r");
+  while(1){
     token = yylex();
-    printf("%d\n", token);
+    printf("%d", token);
   }
-  printf("FOI");
 }

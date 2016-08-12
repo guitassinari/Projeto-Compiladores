@@ -1,4 +1,1 @@
-int
-float
-read
-for
+"teste"

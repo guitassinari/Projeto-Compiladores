@@ -36,21 +36,19 @@ TRUE {return LIT_TRUE;}
 '[a-zA-z]' {return LIT_CHAR;}
 ["] {BEGIN(STRING);}
 
-.+ {return TOKEN_ERROR;}
-
 \* {BEGIN(COMMENT);}
 
 <COMMENT>. {}
 <COMMENT>\n {}
 <COMMENT>[*][\\] {BEGIN(INITIAL);}
 
-<STRING>. {}
+<STRING>[\\][\"] {}
+<STRING>[\"] {BEGIN(INITIAL); return LIT_STRING;}
 <STRING>\n {}
-<STRING>\" {}
-<STRING>["] {BEGIN(INITIAL); return LIT_STRING;}
+<STRING>. {}
 
 %%
 
 int yywrap(){
-  return 1;
+  return 0;
 }
