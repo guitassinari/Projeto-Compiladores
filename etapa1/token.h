@@ -8,15 +8,16 @@
  */
 
 #define KW_INT        256
-#define KW_REAL       257
+#define KW_FLOAT      257
 #define KW_BOOL       258
 #define KW_CHAR       259
 #define KW_IF         261
+#define KW_THEN       262
 #define KW_ELSE       263
-#define KW_WHILE      264
-#define KW_INPUT      266
+#define KW_FOR        265
+#define KW_READ       266
 #define KW_RETURN     267
-#define KW_OUTPUT     268
+#define KW_PRINT      268
 
 #define OPERATOR_LE   270
 #define OPERATOR_GE   271
@@ -28,7 +29,7 @@
 #define TK_IDENTIFIER 280
 #define LIT_INTEGER   281
 #define LIT_FALSE     283
-#define LIT_TRUE	  284
+#define LIT_TRUE      284
 #define LIT_CHAR      285
 #define LIT_STRING    286
 
