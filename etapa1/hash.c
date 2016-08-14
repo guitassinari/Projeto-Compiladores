@@ -15,11 +15,10 @@ typedef struct entry_s entry_t;
 
 struct hashtable_s {
 	int size;
-	struct entry_s **table;	
+	struct entry_s **table;
 };
 
 typedef struct hashtable_s hashtable_t;
-
 
 /* Create a new hashtable. */
 hashtable_t *ht_create( int size ) {
@@ -44,7 +43,7 @@ hashtable_t *ht_create( int size ) {
 
 	hashtable->size = size;
 
-	return hashtable;	
+	return hashtable;
 }
 
 /* Hash a string for a particular hash table. */
@@ -114,11 +113,11 @@ void ht_set( hashtable_t *hashtable, char *key, char *value ) {
 		if( next == hashtable->table[ bin ] ) {
 			newpair->next = next;
 			hashtable->table[ bin ] = newpair;
-	
+
 		/* We're at the end of the linked list in this bin. */
 		} else if ( next == NULL ) {
 			last->next = newpair;
-	
+
 		/* We're in the middle of the list. */
 		} else  {
 			newpair->next = next;
@@ -147,23 +146,5 @@ char *ht_get( hashtable_t *hashtable, char *key ) {
 	} else {
 		return pair->value;
 	}
-	
-}
 
-
-int main( int argc, char **argv ) {
-
-	hashtable_t *hashtable = ht_create( 65536 );
-
-	ht_set( hashtable, "key1", "inky" );
-	ht_set( hashtable, "key2", "pinky" );
-	ht_set( hashtable, "key3", "blinky" );
-	ht_set( hashtable, "key4", "floyd" );
-
-	printf( "%s\n", ht_get( hashtable, "key1" ) );
-	printf( "%s\n", ht_get( hashtable, "key2" ) );
-	printf( "%s\n", ht_get( hashtable, "key3" ) );
-	printf( "%s\n", ht_get( hashtable, "key4" ) );
-
-	return 0;
 }

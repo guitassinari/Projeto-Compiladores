@@ -1,11 +1,16 @@
 %{
   #include "main.c"
   #include "token.h"
-  #include "init.c"
+  #include "hash.c"
+  #define TABLE_SIZE 997
 
-  static is_running = 1;
+  hashtable_t *table;
+  void initMe(){
+    table = ht_create( TABLE_SIZE );
+  }
+
+  static int is_running = 1;
   int isRunning(){
-    printf("is_running = %d\n", is_running);
     return is_running;
   }
 
@@ -20,6 +25,7 @@
 
 %%
 
+[ ] {}
 int {return KW_INT;}
 float {return KW_FLOAT;}
 bool {return KW_BOOL;}
@@ -41,11 +47,14 @@ print {return KW_PRINT;}
 
 [,;:()[\]{}+-/<>=!&$] {return yytext[0];}
 
-FALSE {return LIT_FALSE;}
-TRUE {return LIT_TRUE;}
-'[a-zA-z]' {return LIT_CHAR;}
+^(.?$|[^_]].*|[^0-9]].*) {ht_set(table, yytext, yytext); return TK_IDENTIFIER;}
+^[0-9]+$ {return LIT_INTEGER;}
+FALSE {ht_set(table, yytext, yytext); return LIT_FALSE;}
+TRUE {ht_set(table, yytext, yytext); return LIT_TRUE;}
+'[a-zA-z]' { ht_set(table, yytext, yytext); return LIT_CHAR;}
 ["] {BEGIN(STRING);}
 \n {line_number++;}
+
 <<EOF>> {is_running = 0;}
 
 \* {BEGIN(COMMENT);}
@@ -58,6 +67,8 @@ TRUE {return LIT_TRUE;}
 <STRING>[\"] {BEGIN(INITIAL); return LIT_STRING;}
 <STRING>\n {line_number++;}
 <STRING>. {}
+
+. {return TOKEN_ERROR;}
 
 %%
 
