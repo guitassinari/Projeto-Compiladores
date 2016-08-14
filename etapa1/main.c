@@ -4,6 +4,9 @@ void main(){
   yyin = fopen("teste.txt", "r");
   while(1){
     token = yylex();
-    printf("%d", token);
+    printf("%d\n", token);
+    if(!isRunning()){
+      break;
+    }
   }
 }

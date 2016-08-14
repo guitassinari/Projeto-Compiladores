@@ -3,12 +3,16 @@
   #include "token.h"
   #include "init.c"
 
-  static int line_number = 1;
+  static is_running = 1;
+  int isRunning(){
+    printf("is_running = %d\n", is_running);
+    return is_running;
+  }
 
+  static int line_number = 1;
   int getLineNumber(){
     return line_number;
   }
-
 %}
 
 %x COMMENT
@@ -42,6 +46,7 @@ TRUE {return LIT_TRUE;}
 '[a-zA-z]' {return LIT_CHAR;}
 ["] {BEGIN(STRING);}
 \n {line_number++;}
+<<EOF>> {is_running = 0;}
 
 \* {BEGIN(COMMENT);}
 
@@ -57,6 +62,5 @@ TRUE {return LIT_TRUE;}
 %%
 
 int yywrap(){
-  printf("%d", getLineNumber());
-  return 0;
+  return 1;
 }
