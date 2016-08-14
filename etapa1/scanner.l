@@ -2,7 +2,13 @@
   #include "main.c"
   #include "token.h"
   #include "init.c"
-  #include "lineControl.c"
+
+  static int line_number = 1;
+
+  int getLineNumber(){
+    return line_number;
+  }
+
 %}
 
 %x COMMENT
@@ -35,20 +41,22 @@ FALSE {return LIT_FALSE;}
 TRUE {return LIT_TRUE;}
 '[a-zA-z]' {return LIT_CHAR;}
 ["] {BEGIN(STRING);}
+\n {line_number++;}
 
 \* {BEGIN(COMMENT);}
 
 <COMMENT>. {}
-<COMMENT>\n {}
+<COMMENT>\n {line_number++;}
 <COMMENT>[*][\\] {BEGIN(INITIAL);}
 
 <STRING>[\\][\"] {}
 <STRING>[\"] {BEGIN(INITIAL); return LIT_STRING;}
-<STRING>\n {}
+<STRING>\n {line_number++;}
 <STRING>. {}
 
 %%
 
 int yywrap(){
+  printf("%d", getLineNumber());
   return 0;
 }
