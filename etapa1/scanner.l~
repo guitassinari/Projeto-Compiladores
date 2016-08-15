@@ -5,7 +5,7 @@
   #define TABLE_SIZE 997
 
   hashtable_t *table;
-  void initMe(void){
+  void initMe(){
     table = ht_create( TABLE_SIZE );
   }
 
