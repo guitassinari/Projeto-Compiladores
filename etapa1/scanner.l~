@@ -5,7 +5,7 @@
   #define TABLE_SIZE 997
 
   hashtable_t *table;
-  void initMe(){
+  void initMe(void){
     table = ht_create( TABLE_SIZE );
   }
 
@@ -24,6 +24,8 @@
 %x STRING
 
 %%
+
+"//".* {printf("achei um comentário!");}
 
 [ ] {}
 int {return KW_INT;}
@@ -55,16 +57,14 @@ TRUE {ht_set(table, yytext, yytext); return LIT_TRUE;}
 ["] {BEGIN(STRING);}
 \n {line_number++;}
 
-<<EOF>> {is_running = 0;}
-
-\* {BEGIN(COMMENT);}
+"/"\* {BEGIN(COMMENT);}
 
 <COMMENT>. {}
 <COMMENT>\n {line_number++;}
-<COMMENT>[*][\\] {BEGIN(INITIAL);}
+<COMMENT>\*"/" {BEGIN(INITIAL);}
 
 <STRING>[\\][\"] {}
-<STRING>[\"] {BEGIN(INITIAL); return LIT_STRING;}
+<STRING>["] {BEGIN(INITIAL); return LIT_STRING;}
 <STRING>\n {line_number++;}
 <STRING>. {}
 
@@ -73,5 +73,6 @@ TRUE {ht_set(table, yytext, yytext); return LIT_TRUE;}
 %%
 
 int yywrap(){
+  is_running = 0;
   return 1;
 }

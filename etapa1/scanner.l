@@ -25,6 +25,8 @@
 
 %%
 
+"//".* {printf("achei um comentário!");}
+
 [ ] {}
 int {return KW_INT;}
 float {return KW_FLOAT;}
@@ -35,7 +37,7 @@ then {return KW_THEN;}
 else {return KW_ELSE;}
 for {return KW_FOR;}
 read {return KW_READ;}
-return {return KW_RETURN;}
+return {return KW_RETURN;}gedit 	
 print {return KW_PRINT;}
 
 [<][=] {return OPERATOR_LE;}
@@ -55,16 +57,14 @@ TRUE {ht_set(table, yytext, yytext); return LIT_TRUE;}
 ["] {BEGIN(STRING);}
 \n {line_number++;}
 
-<<EOF>> {is_running = 0;}
-
-\* {BEGIN(COMMENT);}
+"/"\* {BEGIN(COMMENT);}
 
 <COMMENT>. {}
 <COMMENT>\n {line_number++;}
-<COMMENT>[*][\\] {BEGIN(INITIAL);}
+<COMMENT>\*"/" {BEGIN(INITIAL);}
 
 <STRING>[\\][\"] {}
-<STRING>[\"] {BEGIN(INITIAL); return LIT_STRING;}
+<STRING>["] {BEGIN(INITIAL); return LIT_STRING;}
 <STRING>\n {line_number++;}
 <STRING>. {}
 
@@ -73,5 +73,6 @@ TRUE {ht_set(table, yytext, yytext); return LIT_TRUE;}
 %%
 
 int yywrap(){
+  is_running = 0;
   return 1;
 }
