@@ -37,7 +37,7 @@ then {return KW_THEN;}
 else {return KW_ELSE;}
 for {return KW_FOR;}
 read {return KW_READ;}
-return {return KW_RETURN;}gedit 	
+return {return KW_RETURN;}
 print {return KW_PRINT;}
 
 [<][=] {return OPERATOR_LE;}
