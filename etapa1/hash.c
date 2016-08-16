@@ -148,3 +148,15 @@ char *ht_get( hashtable_t *hashtable, char *key ) {
 	}
 
 }
+
+void display(hashtable_t *hashtable){
+	int i;
+	for(i = 0; i < hashtable->size; i++){
+		entry_t *pair;
+		pair = hashtable->table[i];
+		while(pair != NULL){
+			printf("%d - %s\n", i,pair->value);
+			pair = pair->next;
+		}
+	}
+}

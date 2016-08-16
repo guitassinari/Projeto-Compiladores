@@ -37,7 +37,7 @@ then {return KW_THEN;}
 else {return KW_ELSE;}
 for {return KW_FOR;}
 read {return KW_READ;}
-return {return KW_RETURN;}gedit 	
+return {return KW_RETURN;}
 print {return KW_PRINT;}
 
 [<][=] {return OPERATOR_LE;}
@@ -49,7 +49,7 @@ print {return KW_PRINT;}
 
 [,;:()[\]{}+-/<>=!&$] {return yytext[0];}
 
-^(.?$|[^_]].*|[^0-9]].*) {ht_set(table, yytext, yytext); return TK_IDENTIFIER;}
+[a-zA-Z][a-zA-Z_0-9]+ {ht_set(table, yytext, yytext); return TK_IDENTIFIER;}
 ^[0-9]+$ {return LIT_INTEGER;}
 FALSE {ht_set(table, yytext, yytext); return LIT_FALSE;}
 TRUE {ht_set(table, yytext, yytext); return LIT_TRUE;}
@@ -74,5 +74,6 @@ TRUE {ht_set(table, yytext, yytext); return LIT_TRUE;}
 
 int yywrap(){
   is_running = 0;
+  display(table);
   return 1;
 }
