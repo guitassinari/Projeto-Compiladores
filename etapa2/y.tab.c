@@ -64,27 +64,25 @@ static const YYINT yylhs[] = {                           -1,
     0,
 };
 static const YYINT yylen[] = {                            2,
-    2,
+    1,
 };
 static const YYINT yydefred[] = {                         0,
-    0,    0,    1,
+    1,    0,
 };
 static const YYINT yydgoto[] = {                          2,
 };
 static const YYINT yysindex[] = {                      -257,
- -256,    0,    0,
+    0,    0,
 };
 static const YYINT yyrindex[] = {                         0,
-    0,    0,    0,
+    0,    0,
 };
 static const YYINT yygindex[] = {                         0,
 };
-#define YYTABLESIZE 2
+#define YYTABLESIZE 0
 static const YYINT yytable[] = {                          1,
-    0,    3,
 };
 static const YYINT yycheck[] = {                        257,
-   -1,  258,
 };
 #define YYFINAL 2
 #ifndef YYDEBUG
@@ -107,7 +105,7 @@ static const char *const yyname[] = {
 };
 static const char *const yyrule[] = {
 "$accept : test",
-"test : TYPE NUMBER",
+"test : TYPE",
 
 };
 #endif
@@ -145,6 +143,12 @@ typedef struct {
 } YYSTACKDATA;
 /* variables for the parser stack */
 static YYSTACKDATA yystack;
+#line 8 "parser.l"
+
+void yyerror (char const *s) {
+  printf("Fodeu");
+}
+#line 152 "y.tab.c"
 
 #if YYDEBUG
 #include <stdio.h>		/* needed for printf */
@@ -346,6 +350,11 @@ yyreduce:
         memset(&yyval, 0, sizeof yyval);
     switch (yyn)
     {
+case 1:
+#line 4 "parser.l"
+	{printf("Achei um tipo valido!");}
+break;
+#line 358 "y.tab.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;
