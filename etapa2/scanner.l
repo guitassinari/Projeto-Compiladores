@@ -25,11 +25,18 @@
 
 "//".* {}
 
-int {return TYPE;}
-real {return TYPE;}
-bool {return TYPE;}
-char {return TYPE;}
+int {return INT;}
+real {return REAL;}
+bool {return BOOL;}
+char {return CHAR;}
 
+[a-zA-Z][a-zA-Z_0-9]+ {ht_set(table, yytext, yytext); return IDENTIFIER;}
+
+
+^[0-9]+$ {return LIT_INTEGER;}
+FALSE {ht_set(table, yytext, yytext); return LIT_FALSE;}
+TRUE {ht_set(table, yytext, yytext); return LIT_TRUE;}
+'[a-zA-z]' { ht_set(table, yytext, yytext); return LIT_CHAR;}
 %%
 
 int yywrap(){
