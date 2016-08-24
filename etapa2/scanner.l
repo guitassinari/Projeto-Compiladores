@@ -21,9 +21,6 @@
   }
 %}
 
-%x COMMENT
-%x STRING
-
 %%
 
 "//".* {}

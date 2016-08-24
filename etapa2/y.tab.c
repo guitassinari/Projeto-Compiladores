@@ -17,6 +17,10 @@
 
 #define YYPURE 0
 
+#line 2 "parser.y"
+  #include <stdio.h>
+  #include <string.h>
+#line 24 "y.tab.c"
 
 #if ! defined(YYSTYPE) && ! defined(YYSTYPE_IS_DECLARED)
 /* Default: YYSTYPE is the semantic value type. */
@@ -56,8 +60,6 @@ typedef int YYSTYPE;
 extern int YYPARSE_DECL();
 
 #define TYPE 257
-#define NUMBER 258
-#define STRING 259
 #define YYERRCODE 256
 typedef short YYINT;
 static const YYINT yylhs[] = {                           -1,
@@ -88,8 +90,8 @@ static const YYINT yycheck[] = {                        257,
 #ifndef YYDEBUG
 #define YYDEBUG 0
 #endif
-#define YYMAXTOKEN 259
-#define YYUNDFTOKEN 262
+#define YYMAXTOKEN 257
+#define YYUNDFTOKEN 260
 #define YYTRANSLATE(a) ((a) > YYMAXTOKEN ? YYUNDFTOKEN : (a))
 #if YYDEBUG
 static const char *const yyname[] = {
@@ -100,12 +102,11 @@ static const char *const yyname[] = {
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"TYPE","NUMBER","STRING",0,0,
-"illegal-symbol",
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"TYPE",0,0,"illegal-symbol",
 };
 static const char *const yyrule[] = {
-"$accept : test",
-"test : TYPE",
+"$accept : declaration",
+"declaration : TYPE",
 
 };
 #endif
@@ -143,12 +144,16 @@ typedef struct {
 } YYSTACKDATA;
 /* variables for the parser stack */
 static YYSTACKDATA yystack;
-#line 8 "parser.l"
+#line 11 "parser.y"
 
 void yyerror (char const *s) {
   printf("Fodeu");
 }
-#line 152 "y.tab.c"
+
+void main(){
+  yyparse();
+}
+#line 157 "y.tab.c"
 
 #if YYDEBUG
 #include <stdio.h>		/* needed for printf */
@@ -351,10 +356,10 @@ yyreduce:
     switch (yyn)
     {
 case 1:
-#line 4 "parser.l"
+#line 8 "parser.y"
 	{printf("Achei um tipo valido!");}
 break;
-#line 358 "y.tab.c"
+#line 363 "y.tab.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;
