@@ -23,24 +23,24 @@
 
 %%
 
-"//".* {}
+[0-9]+ { return INTEGER;}
 
 int {return INT;}
 real {return REAL;}
 bool {return BOOL;}
 char {return CHAR;}
 
-[a-zA-Z][a-zA-Z_0-9]+ {ht_set(table, yytext, yytext); return IDENTIFIER;}
+FALSE {return FALSE;}
+TRUE {return TRUE;}
+'[a-zA-z]' {return CHAR;}
+[a-zA-Z][a-zA-Z_0-9]+ {return IDENTIFIER;}
 
+":" {return DOUBLE_PERIOD;}
+";" {return PERIOD_AND_COMMA;}
 
-^[0-9]+$ {return LIT_INTEGER;}
-FALSE {ht_set(table, yytext, yytext); return LIT_FALSE;}
-TRUE {ht_set(table, yytext, yytext); return LIT_TRUE;}
-'[a-zA-z]' { ht_set(table, yytext, yytext); return LIT_CHAR;}
 %%
 
 int yywrap(){
-  is_running = 0;
-  display(table);
+  exit(0);
   return 1;
 }

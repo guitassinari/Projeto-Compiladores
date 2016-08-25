@@ -1,0 +1,203 @@
+   0  $accept : var_declaration $end
+
+   1  var_declaration : type IDENTIFIER array_or_normal
+
+   2  array_or_normal : ':' literal
+   3                  | '[' INTEGER ']' array_init
+
+   4  array_init : ':' array_init_literals
+   5             |
+
+   6  array_init_literals : literal array_init_literals
+   7                      |
+
+   8  literal : INTEGER
+   9          | FALSE
+  10          | TRUE
+  11          | CHAR
+
+  12  type : INT
+  13       | REAL
+  14       | BOOL
+  15       | CHAR
+
+state 0
+	$accept : . var_declaration $end  (0)
+
+	INT  shift 1
+	REAL  shift 2
+	BOOL  shift 3
+	CHAR  shift 4
+	.  error
+
+	var_declaration  goto 5
+	type  goto 6
+
+
+state 1
+	type : INT .  (12)
+
+	.  reduce 12
+
+
+state 2
+	type : REAL .  (13)
+
+	.  reduce 13
+
+
+state 3
+	type : BOOL .  (14)
+
+	.  reduce 14
+
+
+state 4
+	type : CHAR .  (15)
+
+	.  reduce 15
+
+
+state 5
+	$accept : var_declaration . $end  (0)
+
+	$end  accept
+
+
+state 6
+	var_declaration : type . IDENTIFIER array_or_normal  (1)
+
+	IDENTIFIER  shift 7
+	.  error
+
+
+state 7
+	var_declaration : type IDENTIFIER . array_or_normal  (1)
+
+	':'  shift 8
+	'['  shift 9
+	.  error
+
+	array_or_normal  goto 10
+
+
+state 8
+	array_or_normal : ':' . literal  (2)
+
+	CHAR  shift 11
+	INTEGER  shift 12
+	FALSE  shift 13
+	TRUE  shift 14
+	.  error
+
+	literal  goto 15
+
+
+state 9
+	array_or_normal : '[' . INTEGER ']' array_init  (3)
+
+	INTEGER  shift 16
+	.  error
+
+
+state 10
+	var_declaration : type IDENTIFIER array_or_normal .  (1)
+
+	.  reduce 1
+
+
+state 11
+	literal : CHAR .  (11)
+
+	.  reduce 11
+
+
+state 12
+	literal : INTEGER .  (8)
+
+	.  reduce 8
+
+
+state 13
+	literal : FALSE .  (9)
+
+	.  reduce 9
+
+
+state 14
+	literal : TRUE .  (10)
+
+	.  reduce 10
+
+
+state 15
+	array_or_normal : ':' literal .  (2)
+
+	.  reduce 2
+
+
+state 16
+	array_or_normal : '[' INTEGER . ']' array_init  (3)
+
+	']'  shift 17
+	.  error
+
+
+state 17
+	array_or_normal : '[' INTEGER ']' . array_init  (3)
+	array_init : .  (5)
+
+	':'  shift 18
+	$end  reduce 5
+
+	array_init  goto 19
+
+
+state 18
+	array_init : ':' . array_init_literals  (4)
+	array_init_literals : .  (7)
+
+	CHAR  shift 11
+	INTEGER  shift 12
+	FALSE  shift 13
+	TRUE  shift 14
+	$end  reduce 7
+
+	literal  goto 20
+	array_init_literals  goto 21
+
+
+state 19
+	array_or_normal : '[' INTEGER ']' array_init .  (3)
+
+	.  reduce 3
+
+
+state 20
+	array_init_literals : literal . array_init_literals  (6)
+	array_init_literals : .  (7)
+
+	CHAR  shift 11
+	INTEGER  shift 12
+	FALSE  shift 13
+	TRUE  shift 14
+	$end  reduce 7
+
+	literal  goto 20
+	array_init_literals  goto 22
+
+
+state 21
+	array_init : ':' array_init_literals .  (4)
+
+	.  reduce 4
+
+
+state 22
+	array_init_literals : literal array_init_literals .  (6)
+
+	.  reduce 6
+
+
+14 terminals, 7 nonterminals
+16 grammar rules, 23 states
