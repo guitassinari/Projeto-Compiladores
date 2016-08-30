@@ -6,5 +6,3 @@
 #define FALSE 262
 #define TRUE 263
 #define IDENTIFIER 264
-#define PERIOD_AND_COMMA 265
-#define DOUBLE_PERIOD 266

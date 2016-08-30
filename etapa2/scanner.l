@@ -23,7 +23,8 @@
 
 %%
 
-[0-9]+ { return INTEGER;}
+[0-9]+ {return INTEGER;}
+[;:=+-[\].{}(),-_/] {return yytext[0];}
 
 int {return INT;}
 real {return REAL;}
@@ -35,8 +36,7 @@ TRUE {return TRUE;}
 '[a-zA-z]' {return CHAR;}
 [a-zA-Z][a-zA-Z_0-9]+ {return IDENTIFIER;}
 
-":" {return DOUBLE_PERIOD;}
-";" {return PERIOD_AND_COMMA;}
+\n {}
 
 %%
 

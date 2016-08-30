@@ -19,7 +19,7 @@
 
 #line 2 "parser.y"
   #include <stdio.h>
-  #include <string.h>
+  #include <stdlib.h>
 #line 24 "y.tab.c"
 
 #if ! defined(YYSTYPE) && ! defined(YYSTYPE_IS_DECLARED)
@@ -67,71 +67,76 @@ extern int YYPARSE_DECL();
 #define FALSE 262
 #define TRUE 263
 #define IDENTIFIER 264
-#define PERIOD_AND_COMMA 265
-#define DOUBLE_PERIOD 266
 #define YYERRCODE 256
 typedef short YYINT;
 static const YYINT yylhs[] = {                           -1,
-    0,    3,    3,    4,    4,    5,    5,    2,    2,    2,
-    2,    1,    1,    1,    1,
+    0,    2,    2,    4,    4,    5,    5,    3,    3,    3,
+    3,    1,    1,    1,    1,
 };
 static const YYINT yylen[] = {                            2,
-    5,    2,    4,    2,    0,    2,    0,    1,    1,    1,
+    4,    2,    4,    2,    0,    2,    0,    1,    1,    1,
     1,    1,    1,    1,    1,
 };
 static const YYINT yydefred[] = {                         0,
-   12,   13,   14,   15,    0,    0,    0,    0,   11,    8,
-    9,   10,    0,    1,
+   12,   13,   14,   15,    0,    0,    0,    0,    0,    0,
+   11,    8,    9,   10,    2,    0,    1,    0,    0,    3,
+    0,    4,    6,
 };
 static const YYINT yydgoto[] = {                          5,
-    6,   13,    0,    0,    0,
+    6,   10,   21,   20,   22,
 };
-static const YYINT yysindex[] = {                      -257,
-    0,    0,    0,    0,    0, -255, -258, -256,    0,    0,
-    0,    0, -254,    0,
+static const YYINT yysindex[] = {                      -256,
+    0,    0,    0,    0,    0, -254,  -58, -255, -252,  -48,
+    0,    0,    0,    0,    0,  -81,    0,  -45, -255,    0,
+ -255,    0,    0,
 };
 static const YYINT yyrindex[] = {                         0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,  -44,  -43,    0,
+  -43,    0,    0,
 };
 static const YYINT yygindex[] = {                         0,
-    0,    0,    0,    0,    0,
+    0,    0,    6,    0,   -4,
 };
-#define YYTABLESIZE 11
-static const YYINT yytable[] = {                          1,
-    2,    3,    4,    9,   10,   11,   12,    8,    7,    0,
-   14,
+#define YYTABLESIZE 33
+static const YYINT yytable[] = {                          8,
+    1,    2,    3,    4,   11,   12,   13,   14,   16,    7,
+   17,   18,   19,   15,    5,    7,   23,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    9,
 };
-static const YYINT yycheck[] = {                        257,
-  258,  259,  260,  260,  261,  262,  263,  266,  264,   -1,
-  265,
+static const YYINT yycheck[] = {                         58,
+  257,  258,  259,  260,  260,  261,  262,  263,  261,  264,
+   59,   93,   58,    8,   59,   59,   21,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   91,
 };
 #define YYFINAL 5
 #ifndef YYDEBUG
 #define YYDEBUG 0
 #endif
-#define YYMAXTOKEN 266
-#define YYUNDFTOKEN 274
+#define YYMAXTOKEN 264
+#define YYUNDFTOKEN 272
 #define YYTRANSLATE(a) ((a) > YYMAXTOKEN ? YYUNDFTOKEN : (a))
 #if YYDEBUG
 static const char *const yyname[] = {
 
 "end-of-file",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"':'","';'",0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"'['",0,"']'",0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"'['",0,"']'",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"INT","REAL","BOOL",
-"CHAR","INTEGER","FALSE","TRUE","IDENTIFIER","PERIOD_AND_COMMA","DOUBLE_PERIOD",
-0,0,0,0,0,0,0,"illegal-symbol",
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"INT","REAL",
+"BOOL","CHAR","INTEGER","FALSE","TRUE","IDENTIFIER",0,0,0,0,0,0,0,
+"illegal-symbol",
 };
 static const char *const yyrule[] = {
 "$accept : var_declaration",
-"var_declaration : type IDENTIFIER DOUBLE_PERIOD literal PERIOD_AND_COMMA",
-"array_or_normal : DOUBLE_PERIOD literal",
+"var_declaration : type IDENTIFIER array_or_normal ';'",
+"array_or_normal : ':' literal",
 "array_or_normal : '[' INTEGER ']' array_init",
-"array_init : DOUBLE_PERIOD array_init_literals",
+"array_init : ':' array_init_literals",
 "array_init :",
 "array_init_literals : literal array_init_literals",
 "array_init_literals :",
@@ -180,7 +185,7 @@ typedef struct {
 } YYSTACKDATA;
 /* variables for the parser stack */
 static YYSTACKDATA yystack;
-#line 42 "parser.y"
+#line 43 "parser.y"
 
 void yyerror (char const *s) {
   printf(" Fodeu %s", s);
@@ -192,7 +197,7 @@ void main(){
   yyin = fopen("teste.txt","r");
   yyparse();
 }
-#line 196 "y.tab.c"
+#line 201 "y.tab.c"
 
 #if YYDEBUG
 #include <stdio.h>		/* needed for printf */

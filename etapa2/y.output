@@ -1,6 +1,6 @@
    0  $accept : var_declaration $end
 
-   1  var_declaration : type IDENTIFIER array_or_normal
+   1  var_declaration : type IDENTIFIER array_or_normal ';'
 
    2  array_or_normal : ':' literal
    3                  | '[' INTEGER ']' array_init
@@ -65,14 +65,14 @@ state 5
 
 
 state 6
-	var_declaration : type . IDENTIFIER array_or_normal  (1)
+	var_declaration : type . IDENTIFIER array_or_normal ';'  (1)
 
 	IDENTIFIER  shift 7
 	.  error
 
 
 state 7
-	var_declaration : type IDENTIFIER . array_or_normal  (1)
+	var_declaration : type IDENTIFIER . array_or_normal ';'  (1)
 
 	':'  shift 8
 	'['  shift 9
@@ -101,9 +101,10 @@ state 9
 
 
 state 10
-	var_declaration : type IDENTIFIER array_or_normal .  (1)
+	var_declaration : type IDENTIFIER array_or_normal . ';'  (1)
 
-	.  reduce 1
+	';'  shift 17
+	.  error
 
 
 state 11
@@ -139,21 +140,27 @@ state 15
 state 16
 	array_or_normal : '[' INTEGER . ']' array_init  (3)
 
-	']'  shift 17
+	']'  shift 18
 	.  error
 
 
 state 17
-	array_or_normal : '[' INTEGER ']' . array_init  (3)
-	array_init : .  (5)
+	var_declaration : type IDENTIFIER array_or_normal ';' .  (1)
 
-	':'  shift 18
-	$end  reduce 5
-
-	array_init  goto 19
+	.  reduce 1
 
 
 state 18
+	array_or_normal : '[' INTEGER ']' . array_init  (3)
+	array_init : .  (5)
+
+	':'  shift 19
+	';'  reduce 5
+
+	array_init  goto 20
+
+
+state 19
 	array_init : ':' . array_init_literals  (4)
 	array_init_literals : .  (7)
 
@@ -161,19 +168,19 @@ state 18
 	INTEGER  shift 12
 	FALSE  shift 13
 	TRUE  shift 14
-	$end  reduce 7
+	';'  reduce 7
 
-	literal  goto 20
-	array_init_literals  goto 21
+	literal  goto 21
+	array_init_literals  goto 22
 
 
-state 19
+state 20
 	array_or_normal : '[' INTEGER ']' array_init .  (3)
 
 	.  reduce 3
 
 
-state 20
+state 21
 	array_init_literals : literal . array_init_literals  (6)
 	array_init_literals : .  (7)
 
@@ -181,23 +188,23 @@ state 20
 	INTEGER  shift 12
 	FALSE  shift 13
 	TRUE  shift 14
-	$end  reduce 7
+	';'  reduce 7
 
-	literal  goto 20
-	array_init_literals  goto 22
+	literal  goto 21
+	array_init_literals  goto 23
 
 
-state 21
+state 22
 	array_init : ':' array_init_literals .  (4)
 
 	.  reduce 4
 
 
-state 22
+state 23
 	array_init_literals : literal array_init_literals .  (6)
 
 	.  reduce 6
 
 
 14 terminals, 7 nonterminals
-16 grammar rules, 23 states
+16 grammar rules, 24 states
