@@ -23,17 +23,24 @@
 
 %%
 
-"//".* {}
+[0-9]+ {return INTEGER;}
+[;:=+-[\].{}(),-_/] {return yytext[0];}
 
-int {return TYPE;}
-real {return TYPE;}
-bool {return TYPE;}
-char {return TYPE;}
+int {return INT;}
+real {return REAL;}
+bool {return BOOL;}
+char {return CHAR;}
+
+FALSE {return FALSE;}
+TRUE {return TRUE;}
+'[a-zA-z]' {return CHAR;}
+[a-zA-Z][a-zA-Z_0-9]+ {return IDENTIFIER;}
+
+\n {}
 
 %%
 
 int yywrap(){
-  is_running = 0;
-  display(table);
+  exit(0);
   return 1;
 }
