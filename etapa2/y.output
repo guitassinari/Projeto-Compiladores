@@ -1,210 +1,296 @@
-   0  $accept : var_declaration $end
+   0  $accept : command $end
 
-   1  var_declaration : type IDENTIFIER array_or_normal ';'
+   1  command : print
+   2          | return
+   3          | read
+   4          | attribuition
+   5          | print
+   6          | flowControl
 
-   2  array_or_normal : ':' literal
-   3                  | '[' INTEGER ']' array_init
+   7  flowControl :
 
-   4  array_init : ':' array_init_literals
-   5             |
+   8  attribuition : IDENTIFIER '=' expression
+   9               | IDENTIFIER '[' expression ']' '=' expression
 
-   6  array_init_literals : literal array_init_literals
-   7                      |
+  10  read : READ IDENTIFIER
 
-   8  literal : INTEGER
-   9          | FALSE
-  10          | TRUE
-  11          | CHAR
+  11  return : RETURN expression
 
-  12  type : INT
-  13       | REAL
-  14       | BOOL
-  15       | CHAR
+  12  print : PRINT printList
+
+  13  printList : STRING printList
+  14            | expression printList
+  15            |
+
+  16  expression :
+
+  17  funct_declaration : type IDENTIFIER '(' funct_params ')' funct_body
+
+  18  funct_params : type IDENTIFIER funct_params_cont
+  19               |
+
+  20  funct_params_cont : ',' type IDENTIFIER funct_params_cont
+  21                    |
+
+  22  funct_body : '{' '}'
+
+  23  var_declaration : type IDENTIFIER array_or_normal ';'
+
+  24  array_or_normal : ':' literal
+  25                  | '[' INTEGER ']' array_init
+
+  26  array_init : ':' array_init_literals
+  27             |
+
+  28  array_init_literals : literal array_init_literals
+  29                      |
+
+  30  literal : INTEGER
+  31          | FALSE
+  32          | TRUE
+  33          | CHAR
+
+  34  type : INT
+  35       | REAL
+  36       | BOOL
+  37       | CHAR
 
 state 0
-	$accept : . var_declaration $end  (0)
+	$accept : . command $end  (0)
+	flowControl : .  (7)
 
-	INT  shift 1
-	REAL  shift 2
-	BOOL  shift 3
-	CHAR  shift 4
-	.  error
+	IDENTIFIER  shift 1
+	READ  shift 2
+	PRINT  shift 3
+	RETURN  shift 4
+	$end  reduce 7
 
-	var_declaration  goto 5
-	type  goto 6
+	command  goto 5
+	print  goto 6
+	return  goto 7
+	read  goto 8
+	attribuition  goto 9
+	flowControl  goto 10
 
 
 state 1
-	type : INT .  (12)
+	attribuition : IDENTIFIER . '=' expression  (8)
+	attribuition : IDENTIFIER . '[' expression ']' '=' expression  (9)
 
-	.  reduce 12
+	'='  shift 11
+	'['  shift 12
+	.  error
 
 
 state 2
-	type : REAL .  (13)
+	read : READ . IDENTIFIER  (10)
 
-	.  reduce 13
+	IDENTIFIER  shift 13
+	.  error
 
 
+3: reduce/reduce conflict (reduce 15, reduce 16) on $end
+3: shift/reduce conflict (shift 14, reduce 16) on STRING
 state 3
-	type : BOOL .  (14)
+	print : PRINT . printList  (12)
+	printList : .  (15)
+	expression : .  (16)
 
-	.  reduce 14
+	STRING  shift 14
+	$end  reduce 15
+
+	expression  goto 15
+	printList  goto 16
 
 
 state 4
-	type : CHAR .  (15)
+	return : RETURN . expression  (11)
+	expression : .  (16)
 
-	.  reduce 15
+	.  reduce 16
+
+	expression  goto 17
 
 
 state 5
-	$accept : var_declaration . $end  (0)
+	$accept : command . $end  (0)
 
 	$end  accept
 
 
+6: reduce/reduce conflict (reduce 1, reduce 5) on $end
 state 6
-	var_declaration : type . IDENTIFIER array_or_normal ';'  (1)
-
-	IDENTIFIER  shift 7
-	.  error
-
-
-state 7
-	var_declaration : type IDENTIFIER . array_or_normal ';'  (1)
-
-	':'  shift 8
-	'['  shift 9
-	.  error
-
-	array_or_normal  goto 10
-
-
-state 8
-	array_or_normal : ':' . literal  (2)
-
-	CHAR  shift 11
-	INTEGER  shift 12
-	FALSE  shift 13
-	TRUE  shift 14
-	.  error
-
-	literal  goto 15
-
-
-state 9
-	array_or_normal : '[' . INTEGER ']' array_init  (3)
-
-	INTEGER  shift 16
-	.  error
-
-
-state 10
-	var_declaration : type IDENTIFIER array_or_normal . ';'  (1)
-
-	';'  shift 17
-	.  error
-
-
-state 11
-	literal : CHAR .  (11)
-
-	.  reduce 11
-
-
-state 12
-	literal : INTEGER .  (8)
-
-	.  reduce 8
-
-
-state 13
-	literal : FALSE .  (9)
-
-	.  reduce 9
-
-
-state 14
-	literal : TRUE .  (10)
-
-	.  reduce 10
-
-
-state 15
-	array_or_normal : ':' literal .  (2)
-
-	.  reduce 2
-
-
-state 16
-	array_or_normal : '[' INTEGER . ']' array_init  (3)
-
-	']'  shift 18
-	.  error
-
-
-state 17
-	var_declaration : type IDENTIFIER array_or_normal ';' .  (1)
+	command : print .  (1)
+	command : print .  (5)
 
 	.  reduce 1
 
 
-state 18
-	array_or_normal : '[' INTEGER ']' . array_init  (3)
-	array_init : .  (5)
+state 7
+	command : return .  (2)
 
-	':'  shift 19
-	';'  reduce 5
-
-	array_init  goto 20
+	.  reduce 2
 
 
-state 19
-	array_init : ':' . array_init_literals  (4)
-	array_init_literals : .  (7)
-
-	CHAR  shift 11
-	INTEGER  shift 12
-	FALSE  shift 13
-	TRUE  shift 14
-	';'  reduce 7
-
-	literal  goto 21
-	array_init_literals  goto 22
-
-
-state 20
-	array_or_normal : '[' INTEGER ']' array_init .  (3)
+state 8
+	command : read .  (3)
 
 	.  reduce 3
 
 
-state 21
-	array_init_literals : literal . array_init_literals  (6)
-	array_init_literals : .  (7)
-
-	CHAR  shift 11
-	INTEGER  shift 12
-	FALSE  shift 13
-	TRUE  shift 14
-	';'  reduce 7
-
-	literal  goto 21
-	array_init_literals  goto 23
-
-
-state 22
-	array_init : ':' array_init_literals .  (4)
+state 9
+	command : attribuition .  (4)
 
 	.  reduce 4
 
 
-state 23
-	array_init_literals : literal array_init_literals .  (6)
+state 10
+	command : flowControl .  (6)
 
 	.  reduce 6
 
 
-14 terminals, 7 nonterminals
-16 grammar rules, 24 states
+state 11
+	attribuition : IDENTIFIER '=' . expression  (8)
+	expression : .  (16)
+
+	.  reduce 16
+
+	expression  goto 18
+
+
+state 12
+	attribuition : IDENTIFIER '[' . expression ']' '=' expression  (9)
+	expression : .  (16)
+
+	.  reduce 16
+
+	expression  goto 19
+
+
+state 13
+	read : READ IDENTIFIER .  (10)
+
+	.  reduce 10
+
+
+14: reduce/reduce conflict (reduce 15, reduce 16) on $end
+14: shift/reduce conflict (shift 14, reduce 16) on STRING
+state 14
+	printList : STRING . printList  (13)
+	printList : .  (15)
+	expression : .  (16)
+
+	STRING  shift 14
+	$end  reduce 15
+
+	expression  goto 15
+	printList  goto 20
+
+
+15: reduce/reduce conflict (reduce 15, reduce 16) on $end
+15: shift/reduce conflict (shift 14, reduce 16) on STRING
+state 15
+	printList : expression . printList  (14)
+	printList : .  (15)
+	expression : .  (16)
+
+	STRING  shift 14
+	$end  reduce 15
+
+	expression  goto 15
+	printList  goto 21
+
+
+state 16
+	print : PRINT printList .  (12)
+
+	.  reduce 12
+
+
+state 17
+	return : RETURN expression .  (11)
+
+	.  reduce 11
+
+
+state 18
+	attribuition : IDENTIFIER '=' expression .  (8)
+
+	.  reduce 8
+
+
+state 19
+	attribuition : IDENTIFIER '[' expression . ']' '=' expression  (9)
+
+	']'  shift 22
+	.  error
+
+
+state 20
+	printList : STRING printList .  (13)
+
+	.  reduce 13
+
+
+state 21
+	printList : expression printList .  (14)
+
+	.  reduce 14
+
+
+state 22
+	attribuition : IDENTIFIER '[' expression ']' . '=' expression  (9)
+
+	'='  shift 23
+	.  error
+
+
+state 23
+	attribuition : IDENTIFIER '[' expression ']' '=' . expression  (9)
+	expression : .  (16)
+
+	.  reduce 16
+
+	expression  goto 24
+
+
+state 24
+	attribuition : IDENTIFIER '[' expression ']' '=' expression .  (9)
+
+	.  reduce 9
+
+
+Rules never reduced:
+	command : print  (5)
+	funct_declaration : type IDENTIFIER '(' funct_params ')' funct_body  (17)
+	funct_params : type IDENTIFIER funct_params_cont  (18)
+	funct_params :  (19)
+	funct_params_cont : ',' type IDENTIFIER funct_params_cont  (20)
+	funct_params_cont :  (21)
+	funct_body : '{' '}'  (22)
+	var_declaration : type IDENTIFIER array_or_normal ';'  (23)
+	array_or_normal : ':' literal  (24)
+	array_or_normal : '[' INTEGER ']' array_init  (25)
+	array_init : ':' array_init_literals  (26)
+	array_init :  (27)
+	array_init_literals : literal array_init_literals  (28)
+	array_init_literals :  (29)
+	literal : INTEGER  (30)
+	literal : FALSE  (31)
+	literal : TRUE  (32)
+	literal : CHAR  (33)
+	type : INT  (34)
+	type : REAL  (35)
+	type : BOOL  (36)
+	type : CHAR  (37)
+
+
+State 3 contains 1 shift/reduce conflict, 1 reduce/reduce conflict.
+State 6 contains 1 reduce/reduce conflict.
+State 14 contains 1 shift/reduce conflict, 1 reduce/reduce conflict.
+State 15 contains 1 shift/reduce conflict, 1 reduce/reduce conflict.
+
+
+24 terminals, 19 nonterminals
+38 grammar rules, 25 states

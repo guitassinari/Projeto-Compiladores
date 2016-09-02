@@ -31,6 +31,17 @@ real {return REAL;}
 bool {return BOOL;}
 char {return CHAR;}
 
+read {return READ;}
+print {return PRINT;}
+return {return RETURN;}
+for {return FOR;}
+to {return TO;}
+if {return IF;}
+then {return THEN;}
+else {return ELSE;}
+L?\"(\\.|[^\\"])*\"	{return STRING; }
+
+
 FALSE {return FALSE;}
 TRUE {return TRUE;}
 '[a-zA-z]' {return CHAR;}

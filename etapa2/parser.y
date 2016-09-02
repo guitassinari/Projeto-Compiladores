@@ -12,60 +12,131 @@
 %token TRUE
 %token CHAR
 %token IDENTIFIER
+%token READ
+%token PRINT
+%token RETURN
+%token STRING
+%token TO
+%token FOR
+%token IF
+%token THEN
+%token ELSE
 
 %%
 
+command             : print
+                    | return
+                    | read
+                    | attribuition
+                    | print
+                    | flowControl
+                    ;
 
-funct_declaration :
-    type IDENTIFIER '(' funct_params ')' funct_body
-  ;
+flowControl         : IF '(' expression ')' THEN command
+                    | IF '(' expression ')' THEN command ELSE command
+                    | FOR '(' expression ')' command
+                    | FOR '(' IDENTIFIER '=' expression TO expression ')' command
+                    ;
 
-funct_params :
-    type IDENTIFIER funct_params_cont
-  |
-  ;
+attribuition        : IDENTIFIER '=' expression
+                    | IDENTIFIER '[' expression ']' '=' expression
+                    ;
 
-funct_params_cont :
-    ',' type IDENTIFIER funct_params_cont
-  |
-  ;
+read                : READ IDENTIFIER
+                    ;
 
-funct_body :
-    '{' '}'
-  ;
+return              : RETURN expression
+                    ;
 
-var_declaration :
-    type IDENTIFIER array_or_normal ';'
-  ;
+print               : PRINT printList
+                    ;
 
-array_or_normal :
-    ':' literal
-  | '[' INTEGER ']' array_init
-  ;
+printList           : STRING printList
+                    | expression printList
+                    |
+                    ;
 
-array_init :
-    ':' array_init_literals
-  |
-  ;
+expression          : IDENTIFIER
+                    | IDENTIFIER '[' arrayPosition ']'
+                    | INTEGER
+                    | CHAR
+                    | logicalValues
+                    | functionCall
+                    | parenthesisExpr operator parenthesisExpr
+                    ;
 
-array_init_literals :
-    literal array_init_literals
-  |
-  ;
+parenthesisExpr     : '(' expression ')'
+                    | expression
+                    ;
 
-literal :
-    INTEGER
-  | FALSE
-  | TRUE
-  | CHAR
-  ;
+arrayPosition       : INTEGER
+                    | expression
+                    | CHAR
+                    ;
 
-type :
-    INT
-  | REAL
-  | BOOL
-  | CHAR
-  ;
+logicalValues       : TRUE
+                    | FALSE
+                    ;
+
+operators           : logicalOperators
+                    | arithmeticOperators
+                    ;
+
+logicalOperators    : '||'
+                    | '&&'
+                    | '=='
+                    | '!='
+                    ;
+
+arithmeticOperators : '+'
+                    | '-'
+                    | '*'
+                    | '/'
+                    ;
+
+functionCall        :
+                    ;
+
+funct_declaration   : type IDENTIFIER '(' funct_params ')' funct_body
+                    ;
+
+funct_params        : type IDENTIFIER funct_params_cont
+                    |
+                    ;
+
+funct_params_cont   : ',' type IDENTIFIER funct_params_cont
+                    |
+                    ;
+
+funct_body          : '{' '}'
+                    ;
+
+var_declaration     : type IDENTIFIER array_or_normal ';'
+                    ;
+
+array_or_normal     : ':' literal
+                    | '[' INTEGER ']' array_init
+                    ;
+
+array_init          : ':' array_init_literals
+                    |
+                    ;
+
+array_init_literals : literal array_init_literals
+                    |
+                    ;
+
+literal             : INTEGER
+                    | FALSE
+                    | TRUE
+                    | CHAR
+                    ;
+
+type                : INT
+                    | REAL
+                    | BOOL
+                    | CHAR
+                    ;
 
 %%
 
