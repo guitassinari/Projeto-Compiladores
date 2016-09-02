@@ -23,6 +23,23 @@
 %token ELSE
 
 %%
+functionCall        :
+                    ;
+
+functionDeclaration : type IDENTIFIER '(' functionParams ')' functionBody
+                    ;
+
+functionParams      : type IDENTIFIER functionParamsCont
+                    |
+                    ;
+
+functionParamsCont  : ',' type IDENTIFIER functionParamsCont
+                    |
+                    ;
+
+functionBody        : '{' commandBlock '}'
+                    ;
+
 
 commandBlock        : command ';' commandBlock
                     | ';'
@@ -101,23 +118,6 @@ arithmeticOperators : '+'
                     | '-'
                     | '*'
                     | '/'
-                    ;
-
-functionCall        :
-                    ;
-
-functionDeclaration : type IDENTIFIER '(' functionParams ')' functionBody
-                    ;
-
-functionParams      : type IDENTIFIER functionParamsCont
-                    |
-                    ;
-
-functionParamsCont  : ',' type IDENTIFIER functionParamsCont
-                    |
-                    ;
-
-functionBody        : '{' '}'
                     ;
 
 variableDeclaration : type IDENTIFIER arrayOrNormal ';'
