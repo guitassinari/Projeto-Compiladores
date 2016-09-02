@@ -153,9 +153,3 @@ void yyerror (char const *s) {
   printf(" Fodeu %s", s);
   exit(3);
 }
-
-void main(){
-  extern FILE *yyin;
-  yyin = fopen("teste.txt","r");
-  yyparse();
-}
