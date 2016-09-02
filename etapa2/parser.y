@@ -26,7 +26,7 @@
 functionCall        :
                     ;
 
-functionDeclaration : type IDENTIFIER '(' functionParams ')' functionBody
+functionDeclaration : type IDENTIFIER '(' functionParams ')' commandBlock
                     ;
 
 functionParams      : type IDENTIFIER functionParamsCont
@@ -37,16 +37,11 @@ functionParamsCont  : ',' type IDENTIFIER functionParamsCont
                     |
                     ;
 
-functionBody        : '{' commandBlock '}'
+
+commandBlock        : '{' commandBlockList '}'
                     ;
 
-
-commandBlock        : command ';' commandBlock
-                    | ';'
-                    ;
-
-commandList         : command commandList
-                    |
+commandBlockList    : command ';' commandBlockList
                     ;
 
 command             : print
