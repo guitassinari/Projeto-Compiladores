@@ -24,12 +24,21 @@
 
 %%
 
+commandBlock        : command ';' commandBlock
+                    | ';'
+                    ;
+
+commandList         : command commandList
+                    |
+                    ;
+
 command             : print
                     | return
                     | read
                     | attribuition
                     | print
                     | flowControl
+                    |
                     ;
 
 flowControl         : IF '(' expression ')' THEN command
@@ -97,32 +106,32 @@ arithmeticOperators : '+'
 functionCall        :
                     ;
 
-funct_declaration   : type IDENTIFIER '(' funct_params ')' funct_body
+functionDeclaration : type IDENTIFIER '(' functionParams ')' functionBody
                     ;
 
-funct_params        : type IDENTIFIER funct_params_cont
+functionParams      : type IDENTIFIER functionParamsCont
                     |
                     ;
 
-funct_params_cont   : ',' type IDENTIFIER funct_params_cont
+functionParamsCont  : ',' type IDENTIFIER functionParamsCont
                     |
                     ;
 
-funct_body          : '{' '}'
+functionBody        : '{' '}'
                     ;
 
-var_declaration     : type IDENTIFIER array_or_normal ';'
+variableDeclaration : type IDENTIFIER arrayOrNormal ';'
                     ;
 
-array_or_normal     : ':' literal
-                    | '[' INTEGER ']' array_init
+arrayOrNormal       : ':' literal
+                    | '[' INTEGER ']' arrayInit
                     ;
 
-array_init          : ':' array_init_literals
+arrayInit           : ':' arrayInitLiterals
                     |
                     ;
 
-array_init_literals : literal array_init_literals
+arrayInitLiterals   : literal arrayInitLiterals
                     |
                     ;
 
