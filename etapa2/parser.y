@@ -23,34 +23,51 @@
 %token ELSE
 
 %%
-functionCall        :
+program             : commandList
+                    | variableDeclaration
+                    | functDeclaration
                     ;
 
-functionDeclaration : type IDENTIFIER '(' functionParams ')' commandBlock
+commandList         : command commandList
                     ;
 
-functionParams      : type IDENTIFIER functionParamsCont
-                    |
-                    ;
-
-functionParamsCont  : ',' type IDENTIFIER functionParamsCont
-                    |
-                    ;
-
-
-commandBlock        : '{' commandBlockList '}'
-                    ;
-
-commandBlockList    : command ';' commandBlockList
+functDeclaration    : type IDENTIFIER '(' functParamsDef commandBlock
                     ;
 
 command             : print
                     | return
                     | read
                     | attribuition
-                    | print
                     | flowControl
+                    | commandBlock
                     |
+                    ;
+
+functCall           : IDENTIFIER '(' functParams ')'
+                    ;
+
+functParams         : IDENTIFIER functParamsCont
+                    |
+                    ;
+
+functParamsCont     : ',' IDENTIFIER functParamsCont
+                    |
+                    ;
+
+
+
+functParamsDef      : type IDENTIFIER functParamsDefCont
+                    |
+                    ;
+
+functParamsDefCont  : ',' type IDENTIFIER functParamsDefCont
+                    |
+                    ;
+
+commandBlock        : '{' commandBlockList '}'
+                    ;
+
+commandBlockList    : command ';' commandBlockList
                     ;
 
 flowControl         : IF '(' expression ')' THEN command
@@ -77,36 +94,60 @@ printList           : STRING printList
                     |
                     ;
 
-expression          : IDENTIFIER
-                    | IDENTIFIER '[' arrayPosition ']'
+logicalExpression   : arithmeticExpression relationalOperators arithmeticExpression
+                    | logicalExpression logicalOperators logicalExpression
+                    | TRUE
+                    | FALSE
+                    | functCall
+                    ;
+
+arithmeticExpression: arithmeticExpression arithmeticOperators arithmeticExpression
+                    | IDENTIFIER expressionVarCont
+                    | REAL
                     | INTEGER
+                    | functCall
+                    ;
+
+integerExpression   : integerExpression arithmeticOperators integerExpression
+                    | INTEGER
+                    | functCall
+                    ;
+charExpression      : charExpression operator charExpression
                     | CHAR
-                    | logicalValues
-                    | functionCall
-                    | parenthesisExpr operator parenthesisExpr
+                    | functCall
+                    ;
+
+expression          : parenthesisExpr operator parenthesisExpr
+                    | logicalExpression
+                    | arithmeticExpression
+                    | integerExpression
+                    | charExpression
+                    ;
+
+expressionVarCont   : '[' arrayPosition ']'
+                    |
                     ;
 
 parenthesisExpr     : '(' expression ')'
                     | expression
                     ;
 
-arrayPosition       : INTEGER
-                    | expression
-                    | CHAR
+arrayPosition       : integerExpression
                     ;
 
-logicalValues       : TRUE
-                    | FALSE
-                    ;
-
-operators           : logicalOperators
+operator            : logicalOperators
+                    | relationalOperators
                     | arithmeticOperators
                     ;
 
 logicalOperators    : '||'
                     | '&&'
-                    | '=='
+                    ;
+
+relationalOperators : '=='
                     | '!='
+                    | '<='
+                    | '>='
                     ;
 
 arithmeticOperators : '+'
