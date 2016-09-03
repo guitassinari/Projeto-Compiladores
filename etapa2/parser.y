@@ -21,18 +21,17 @@
 %token IF
 %token THEN
 %token ELSE
+%token END
 
 %%
-program             : program
-                    | commandList
-                    | variableDeclaration
-                    | functDeclaration
+program             : declarationList
                     ;
 
-commandList         : command commandList
+declarationList     : variableDeclaration declarationList
+                    | functDeclaration declarationList
                     ;
 
-functDeclaration    : type IDENTIFIER '(' functParamsDef ')' commandBlock
+functDeclaration    : type IDENTIFIER '(' functParamsDef ')' commandBlock ';'
                     ;
 
 command             : print
@@ -41,6 +40,7 @@ command             : print
                     | attribuition
                     | flowControl
                     | commandBlock
+                    |
                     ;
 
 functCall           : IDENTIFIER '(' functParams ')'

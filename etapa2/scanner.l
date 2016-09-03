@@ -39,8 +39,7 @@ to {return TO;}
 if {return IF;}
 then {return THEN;}
 else {return ELSE;}
-L?\"(\\.|[^\\"])*\"	{return STRING; }
-
+L?\"(\\.|[^\\"])*\"	{return STRING;}
 
 FALSE {return FALSE;}
 TRUE {return TRUE;}
@@ -53,5 +52,6 @@ TRUE {return TRUE;}
 
 int yywrap(){
   exit(0);
+  is_running = 0;
   return 1;
 }
