@@ -12,70 +12,183 @@
 %token TRUE
 %token CHAR
 %token IDENTIFIER
+%token READ
+%token PRINT
+%token RETURN
+%token STRING
+%token TO
+%token FOR
+%token IF
+%token THEN
+%token ELSE
 
 %%
+program             : program
+                    | commandList
+                    | variableDeclaration
+                    | functDeclaration
+                    ;
 
+commandList         : command commandList
+                    ;
 
-funct_declaration :
-    type IDENTIFIER '(' funct_params ')' funct_body
-  ;
+functDeclaration    : type IDENTIFIER '(' functParamsDef ')' commandBlock
+                    ;
 
-funct_params :
-    type IDENTIFIER funct_params_cont
-  |
-  ;
+command             : print
+                    | return
+                    | read
+                    | attribuition
+                    | flowControl
+                    | commandBlock
+                    ;
 
-funct_params_cont :
-    ',' type IDENTIFIER funct_params_cont
-  |
-  ;
+functCall           : IDENTIFIER '(' functParams ')'
+                    ;
 
-funct_body :
-    '{' '}'
-  ;
+functParams         : IDENTIFIER functParamsCont
+                    |
+                    ;
 
-var_declaration :
-    type IDENTIFIER array_or_normal ';'
-  ;
+functParamsCont     : ',' IDENTIFIER functParamsCont
+                    |
+                    ;
 
-array_or_normal :
-    ':' literal
-  | '[' INTEGER ']' array_init
-  ;
+functParamsDef      : type IDENTIFIER functParamsDefCont
+                    |
+                    ;
 
-array_init :
-    ':' array_init_literals
-  |
-  ;
+functParamsDefCont  : ',' type IDENTIFIER functParamsDefCont
+                    |
+                    ;
 
-array_init_literals :
-    literal array_init_literals
-  |
-  ;
+commandBlock        : '{' commandBlockList '}'
+                    ;
 
-literal :
-    INTEGER
-  | FALSE
-  | TRUE
-  | CHAR
-  ;
+commandBlockList    : command ';' commandBlockList
+                    ;
 
-type :
-    INT
-  | REAL
-  | BOOL
-  | CHAR
-  ;
+flowControl         : IF '(' expression ')' THEN command ifThenCont
+                    | FOR '(' forCont
+                    ;
+
+ifThenCont          : ELSE command
+                    |
+                    ;
+
+forCont             : expression forEnd
+                    | IDENTIFIER '=' expression TO expression forEnd
+                    ;
+
+forEnd              : ')' command
+                    ;
+
+attribuition        : IDENTIFIER attribuitionCont
+                    ;
+
+attribuitionCont    : '=' expression
+                    | '[' expression ']' '=' expression
+                    ;
+
+read                : READ IDENTIFIER
+                    ;
+
+return              : RETURN expression
+                    ;
+
+print               : PRINT printList
+                    ;
+
+printList           : STRING printList
+                    | expression printList
+                    |
+                    ;
+
+logicalExpression   : arithmeticExpression relationalOperators arithmeticExpression
+                    | logicalExpression logicalOperators logicalExpression
+                    | TRUE
+                    | FALSE
+                    ;
+
+arithmeticExpression: arithmeticExpression arithmeticOperators arithmeticExpression
+                    | integerExpression
+                    | IDENTIFIER expressionVarCont
+                    | REAL
+                    ;
+
+integerExpression   : integerExpression arithmeticOperators integerExpression
+                    | INTEGER
+                    ;
+
+charExpression      : charExpression operator charExpression
+                    | CHAR
+                    ;
+
+expression          : '(' expression ')'
+                    | logicalExpression
+                    | arithmeticExpression
+                    | charExpression
+                    | functCall
+                    ;
+
+expressionVarCont   : '[' arrayPosition ']'
+                    |
+                    ;
+
+arrayPosition       : integerExpression
+                    ;
+
+operator            : logicalOperators
+                    | relationalOperators
+                    | arithmeticOperators
+                    ;
+
+logicalOperators    : '||'
+                    | '&&'
+                    ;
+
+relationalOperators : '=='
+                    | '!='
+                    | '<='
+                    | '>='
+                    ;
+
+arithmeticOperators : '+'
+                    | '-'
+                    | '*'
+                    | '/'
+                    ;
+
+variableDeclaration : type IDENTIFIER arrayOrNormal ';'
+                    ;
+
+arrayOrNormal       : ':' literal
+                    | '[' INTEGER ']' arrayInit
+                    ;
+
+arrayInit           : ':' arrayInitLiterals
+                    |
+                    ;
+
+arrayInitLiterals   : literal arrayInitLiterals
+                    |
+                    ;
+
+literal             : INTEGER
+                    | FALSE
+                    | TRUE
+                    | CHAR
+                    ;
+
+type                : INT
+                    | REAL
+                    | BOOL
+                    | CHAR
+                    ;
 
 %%
 
 void yyerror (char const *s) {
   printf(" Fodeu %s", s);
   exit(3);
-}
-
-void main(){
-  extern FILE *yyin;
-  yyin = fopen("teste.txt","r");
-  yyparse();
 }
