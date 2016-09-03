@@ -1,1 +1,2 @@
 int var [22] : 22 33 10;
+real hey : 30;

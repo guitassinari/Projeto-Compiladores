@@ -1,20 +1,20 @@
    0  $accept : program $end
 
-   1  program : commandList
-   2          | variableDeclaration
-   3          | functDeclaration
+   1  program : program
+   2          | commandList
+   3          | variableDeclaration
+   4          | functDeclaration
 
-   4  commandList : command commandList
+   5  commandList : command commandList
 
-   5  functDeclaration : type IDENTIFIER '(' functParamsDef commandBlock
+   6  functDeclaration : type IDENTIFIER '(' functParamsDef commandBlock
 
-   6  command : print
-   7          | return
-   8          | read
-   9          | attribuition
-  10          | flowControl
-  11          | commandBlock
-  12          |
+   7  command : print
+   8          | return
+   9          | read
+  10          | attribuition
+  11          | flowControl
+  12          | commandBlock
 
   13  functCall : IDENTIFIER '(' functParams ')'
 
@@ -34,106 +34,99 @@
 
   23  commandBlockList : command ';' commandBlockList
 
-  24  flowControl : IF '(' expression ')' THEN command
-  25              | IF '(' expression ')' THEN command ELSE command
-  26              | FOR '(' expression ')' command
-  27              | FOR '(' IDENTIFIER '=' expression TO expression ')' command
+  24  flowControl : IF '(' expression ')' THEN command ifThenCont
+  25              | FOR '(' forCont
 
-  28  attribuition : IDENTIFIER '=' expression
-  29               | IDENTIFIER '[' expression ']' '=' expression
+  26  ifThenCont : ELSE command
+  27             |
 
-  30  read : READ IDENTIFIER
+  28  forCont : expression forEnd
+  29          | IDENTIFIER '=' expression TO expression forEnd
 
-  31  return : RETURN expression
+  30  forEnd : ')' command
 
-  32  print : PRINT printList
+  31  attribuition : IDENTIFIER attribuitionCont
 
-  33  printList : STRING printList
-  34            | expression printList
-  35            |
+  32  attribuitionCont : '=' expression
+  33                   | '[' expression ']' '=' expression
 
-  36  logicalExpression : arithmeticExpression relationalOperators arithmeticExpression
-  37                    | logicalExpression logicalOperators logicalExpression
-  38                    | TRUE
-  39                    | FALSE
-  40                    | functCall
+  34  read : READ IDENTIFIER
 
-  41  arithmeticExpression : arithmeticExpression arithmeticOperators arithmeticExpression
-  42                       | IDENTIFIER expressionVarCont
-  43                       | REAL
-  44                       | INTEGER
-  45                       | functCall
+  35  return : RETURN expression
 
-  46  integerExpression : integerExpression arithmeticOperators integerExpression
-  47                    | INTEGER
-  48                    | functCall
+  36  print : PRINT printList
 
-  49  charExpression : charExpression operator charExpression
-  50                 | CHAR
-  51                 | functCall
+  37  printList : STRING printList
+  38            | expression printList
+  39            |
 
-  52  expression : parenthesisExpr operator parenthesisExpr
+  40  logicalExpression : arithmeticExpression relationalOperators arithmeticExpression
+  41                    | logicalExpression logicalOperators logicalExpression
+  42                    | TRUE
+  43                    | FALSE
+
+  44  arithmeticExpression : arithmeticExpression arithmeticOperators arithmeticExpression
+  45                       | integerExpression
+  46                       | IDENTIFIER expressionVarCont
+  47                       | REAL
+
+  48  integerExpression : integerExpression arithmeticOperators integerExpression
+  49                    | INTEGER
+
+  50  charExpression : charExpression operator charExpression
+  51                 | CHAR
+
+  52  expression : '(' expression ')'
   53             | logicalExpression
   54             | arithmeticExpression
-  55             | integerExpression
-  56             | charExpression
+  55             | charExpression
+  56             | functCall
 
   57  expressionVarCont : '[' arrayPosition ']'
   58                    |
 
-  59  parenthesisExpr : '(' expression ')'
-  60                  | expression
+  59  arrayPosition : integerExpression
 
-  61  arrayPosition : integerExpression
+  60  operator : logicalOperators
+  61           | relationalOperators
+  62           | arithmeticOperators
 
-  62  operator : logicalOperators
-  63           | relationalOperators
-  64           | arithmeticOperators
+  63  logicalOperators : "||"
+  64                   | "&&"
 
-  65  logicalOperators : "||"
-  66                   | "&&"
+  65  relationalOperators : "=="
+  66                      | "!="
+  67                      | "<="
+  68                      | ">="
 
-  67  relationalOperators : "=="
-  68                      | "!="
-  69                      | "<="
-  70                      | ">="
+  69  arithmeticOperators : '+'
+  70                      | '-'
+  71                      | '*'
+  72                      | '/'
 
-  71  arithmeticOperators : '+'
-  72                      | '-'
-  73                      | '*'
-  74                      | '/'
+  73  variableDeclaration : type IDENTIFIER arrayOrNormal ';'
 
-  75  variableDeclaration : type IDENTIFIER arrayOrNormal ';'
+  74  arrayOrNormal : ':' literal
+  75                | '[' INTEGER ']' arrayInit
 
-  76  arrayOrNormal : ':' literal
-  77                | '[' INTEGER ']' arrayInit
+  76  arrayInit : ':' arrayInitLiterals
+  77            |
 
-  78  arrayInit : ':' arrayInitLiterals
-  79            |
+  78  arrayInitLiterals : literal arrayInitLiterals
+  79                    |
 
-  80  arrayInitLiterals : literal arrayInitLiterals
-  81                    |
+  80  literal : INTEGER
+  81          | FALSE
+  82          | TRUE
+  83          | CHAR
 
-  82  literal : INTEGER
-  83          | FALSE
-  84          | TRUE
-  85          | CHAR
-
-  86  type : INT
-  87       | REAL
-  88       | BOOL
-  89       | CHAR
+  84  type : INT
+  85       | REAL
+  86       | BOOL
+  87       | CHAR
 
-0: shift/reduce conflict (shift 5, reduce 12) on IDENTIFIER
-0: shift/reduce conflict (shift 6, reduce 12) on READ
-0: shift/reduce conflict (shift 7, reduce 12) on PRINT
-0: shift/reduce conflict (shift 8, reduce 12) on RETURN
-0: shift/reduce conflict (shift 9, reduce 12) on FOR
-0: shift/reduce conflict (shift 10, reduce 12) on IF
-0: shift/reduce conflict (shift 11, reduce 12) on '{'
 state 0
 	$accept : . program $end  (0)
-	command : .  (12)
 
 	INT  shift 1
 	REAL  shift 2
@@ -146,6 +139,7 @@ state 0
 	FOR  shift 9
 	IF  shift 10
 	'{'  shift 11
+	.  error
 
 	program  goto 12
 	commandList  goto 13
@@ -162,109 +156,106 @@ state 0
 
 
 state 1
-	type : INT .  (86)
+	type : INT .  (84)
+
+	.  reduce 84
+
+
+state 2
+	type : REAL .  (85)
+
+	.  reduce 85
+
+
+state 3
+	type : BOOL .  (86)
 
 	.  reduce 86
 
 
-state 2
-	type : REAL .  (87)
+state 4
+	type : CHAR .  (87)
 
 	.  reduce 87
 
 
-state 3
-	type : BOOL .  (88)
-
-	.  reduce 88
-
-
-state 4
-	type : CHAR .  (89)
-
-	.  reduce 89
-
-
 state 5
-	attribuition : IDENTIFIER . '=' expression  (28)
-	attribuition : IDENTIFIER . '[' expression ']' '=' expression  (29)
+	attribuition : IDENTIFIER . attribuitionCont  (31)
 
 	'='  shift 24
 	'['  shift 25
 	.  error
 
+	attribuitionCont  goto 26
+
 
 state 6
-	read : READ . IDENTIFIER  (30)
+	read : READ . IDENTIFIER  (34)
 
-	IDENTIFIER  shift 26
+	IDENTIFIER  shift 27
 	.  error
 
 
-7: shift/reduce conflict (shift 32, reduce 35) on IDENTIFIER
+7: shift/reduce conflict (shift 33, reduce 39) on IDENTIFIER
 state 7
-	print : PRINT . printList  (32)
-	printList : .  (35)
+	print : PRINT . printList  (36)
+	printList : .  (39)
 
-	REAL  shift 27
-	CHAR  shift 28
-	INTEGER  shift 29
-	FALSE  shift 30
-	TRUE  shift 31
-	IDENTIFIER  shift 32
-	STRING  shift 33
-	'('  shift 34
-	READ  reduce 35
-	PRINT  reduce 35
-	RETURN  reduce 35
-	FOR  reduce 35
-	IF  reduce 35
-	ELSE  reduce 35
-	'{'  reduce 35
-	';'  reduce 35
+	REAL  shift 28
+	CHAR  shift 29
+	INTEGER  shift 30
+	FALSE  shift 31
+	TRUE  shift 32
+	IDENTIFIER  shift 33
+	STRING  shift 34
+	'('  shift 35
+	READ  reduce 39
+	PRINT  reduce 39
+	RETURN  reduce 39
+	FOR  reduce 39
+	IF  reduce 39
+	ELSE  reduce 39
+	'{'  reduce 39
+	';'  reduce 39
 
-	functCall  goto 35
-	expression  goto 36
-	printList  goto 37
-	logicalExpression  goto 38
-	arithmeticExpression  goto 39
-	integerExpression  goto 40
-	charExpression  goto 41
-	parenthesisExpr  goto 42
+	functCall  goto 36
+	expression  goto 37
+	printList  goto 38
+	logicalExpression  goto 39
+	arithmeticExpression  goto 40
+	integerExpression  goto 41
+	charExpression  goto 42
 
 
 state 8
-	return : RETURN . expression  (31)
+	return : RETURN . expression  (35)
 
-	REAL  shift 27
-	CHAR  shift 28
-	INTEGER  shift 29
-	FALSE  shift 30
-	TRUE  shift 31
-	IDENTIFIER  shift 32
-	'('  shift 34
+	REAL  shift 28
+	CHAR  shift 29
+	INTEGER  shift 30
+	FALSE  shift 31
+	TRUE  shift 32
+	IDENTIFIER  shift 33
+	'('  shift 35
 	.  error
 
-	functCall  goto 35
+	functCall  goto 36
 	expression  goto 43
-	logicalExpression  goto 38
-	arithmeticExpression  goto 39
-	integerExpression  goto 40
-	charExpression  goto 41
-	parenthesisExpr  goto 42
+	logicalExpression  goto 39
+	arithmeticExpression  goto 40
+	integerExpression  goto 41
+	charExpression  goto 42
 
 
 state 9
-	flowControl : FOR . '(' expression ')' command  (26)
-	flowControl : FOR . '(' IDENTIFIER '=' expression TO expression ')' command  (27)
+	flowControl : FOR . '(' forCont  (25)
 
 	'('  shift 44
 	.  error
 
 
 state 10
-	flowControl : IF . '(' expression ')' THEN command  (24)
-	flowControl : IF . '(' expression ')' THEN command ELSE command  (25)
+	flowControl : IF . '(' expression ')' THEN command ifThenCont  (24)
 
 	'('  shift 45
 	.  error
@@ -272,7 +263,6 @@ state 10
 
 state 11
 	commandBlock : '{' . commandBlockList '}'  (22)
-	command : .  (12)
 
 	IDENTIFIER  shift 5
 	READ  shift 6
@@ -281,7 +271,7 @@ state 11
 	FOR  shift 9
 	IF  shift 10
 	'{'  shift 11
-	';'  reduce 12
+	.  error
 
 	command  goto 46
 	commandBlock  goto 18
@@ -295,38 +285,32 @@ state 11
 
 state 12
 	$accept : program . $end  (0)
+	program : program .  (1)
 
 	$end  accept
-
-
-state 13
-	program : commandList .  (1)
-
 	.  reduce 1
 
 
-state 14
-	program : variableDeclaration .  (2)
+state 13
+	program : commandList .  (2)
 
 	.  reduce 2
 
 
-state 15
-	program : functDeclaration .  (3)
+state 14
+	program : variableDeclaration .  (3)
 
 	.  reduce 3
 
 
-16: shift/reduce conflict (shift 5, reduce 12) on IDENTIFIER
-16: shift/reduce conflict (shift 6, reduce 12) on READ
-16: shift/reduce conflict (shift 7, reduce 12) on PRINT
-16: shift/reduce conflict (shift 8, reduce 12) on RETURN
-16: shift/reduce conflict (shift 9, reduce 12) on FOR
-16: shift/reduce conflict (shift 10, reduce 12) on IF
-16: shift/reduce conflict (shift 11, reduce 12) on '{'
+state 15
+	program : functDeclaration .  (4)
+
+	.  reduce 4
+
+
 state 16
-	commandList : command . commandList  (4)
-	command : .  (12)
+	commandList : command . commandList  (5)
 
 	IDENTIFIER  shift 5
 	READ  shift 6
@@ -335,6 +319,7 @@ state 16
 	FOR  shift 9
 	IF  shift 10
 	'{'  shift 11
+	.  error
 
 	commandList  goto 48
 	command  goto 16
@@ -347,161 +332,135 @@ state 16
 
 
 state 17
-	functDeclaration : type . IDENTIFIER '(' functParamsDef commandBlock  (5)
-	variableDeclaration : type . IDENTIFIER arrayOrNormal ';'  (75)
+	functDeclaration : type . IDENTIFIER '(' functParamsDef commandBlock  (6)
+	variableDeclaration : type . IDENTIFIER arrayOrNormal ';'  (73)
 
 	IDENTIFIER  shift 49
 	.  error
 
 
 state 18
-	command : commandBlock .  (11)
+	command : commandBlock .  (12)
 
-	.  reduce 11
+	.  reduce 12
 
 
 state 19
-	command : print .  (6)
-
-	.  reduce 6
-
-
-state 20
-	command : return .  (7)
+	command : print .  (7)
 
 	.  reduce 7
 
 
-state 21
-	command : read .  (8)
+state 20
+	command : return .  (8)
 
 	.  reduce 8
 
 
-state 22
-	command : attribuition .  (9)
+state 21
+	command : read .  (9)
 
 	.  reduce 9
 
 
-state 23
-	command : flowControl .  (10)
+state 22
+	command : attribuition .  (10)
 
 	.  reduce 10
 
 
-state 24
-	attribuition : IDENTIFIER '=' . expression  (28)
+state 23
+	command : flowControl .  (11)
 
-	REAL  shift 27
-	CHAR  shift 28
-	INTEGER  shift 29
-	FALSE  shift 30
-	TRUE  shift 31
-	IDENTIFIER  shift 32
-	'('  shift 34
+	.  reduce 11
+
+
+state 24
+	attribuitionCont : '=' . expression  (32)
+
+	REAL  shift 28
+	CHAR  shift 29
+	INTEGER  shift 30
+	FALSE  shift 31
+	TRUE  shift 32
+	IDENTIFIER  shift 33
+	'('  shift 35
 	.  error
 
-	functCall  goto 35
+	functCall  goto 36
 	expression  goto 50
-	logicalExpression  goto 38
-	arithmeticExpression  goto 39
-	integerExpression  goto 40
-	charExpression  goto 41
-	parenthesisExpr  goto 42
+	logicalExpression  goto 39
+	arithmeticExpression  goto 40
+	integerExpression  goto 41
+	charExpression  goto 42
 
 
 state 25
-	attribuition : IDENTIFIER '[' . expression ']' '=' expression  (29)
+	attribuitionCont : '[' . expression ']' '=' expression  (33)
 
-	REAL  shift 27
-	CHAR  shift 28
-	INTEGER  shift 29
-	FALSE  shift 30
-	TRUE  shift 31
-	IDENTIFIER  shift 32
-	'('  shift 34
+	REAL  shift 28
+	CHAR  shift 29
+	INTEGER  shift 30
+	FALSE  shift 31
+	TRUE  shift 32
+	IDENTIFIER  shift 33
+	'('  shift 35
 	.  error
 
-	functCall  goto 35
+	functCall  goto 36
 	expression  goto 51
-	logicalExpression  goto 38
-	arithmeticExpression  goto 39
-	integerExpression  goto 40
-	charExpression  goto 41
-	parenthesisExpr  goto 42
+	logicalExpression  goto 39
+	arithmeticExpression  goto 40
+	integerExpression  goto 41
+	charExpression  goto 42
 
 
 state 26
-	read : READ IDENTIFIER .  (30)
+	attribuition : IDENTIFIER attribuitionCont .  (31)
 
-	.  reduce 30
+	.  reduce 31
 
 
 state 27
-	arithmeticExpression : REAL .  (43)
+	read : READ IDENTIFIER .  (34)
+
+	.  reduce 34
+
+
+state 28
+	arithmeticExpression : REAL .  (47)
+
+	.  reduce 47
+
+
+state 29
+	charExpression : CHAR .  (51)
+
+	.  reduce 51
+
+
+state 30
+	integerExpression : INTEGER .  (49)
+
+	.  reduce 49
+
+
+state 31
+	logicalExpression : FALSE .  (43)
 
 	.  reduce 43
 
 
-state 28
-	charExpression : CHAR .  (50)
-
-	.  reduce 50
-
-
-29: reduce/reduce conflict (reduce 44, reduce 47) on REAL
-29: reduce/reduce conflict (reduce 44, reduce 47) on CHAR
-29: reduce/reduce conflict (reduce 44, reduce 47) on INTEGER
-29: reduce/reduce conflict (reduce 44, reduce 47) on FALSE
-29: reduce/reduce conflict (reduce 44, reduce 47) on TRUE
-29: reduce/reduce conflict (reduce 44, reduce 47) on IDENTIFIER
-29: reduce/reduce conflict (reduce 44, reduce 47) on READ
-29: reduce/reduce conflict (reduce 44, reduce 47) on PRINT
-29: reduce/reduce conflict (reduce 44, reduce 47) on RETURN
-29: reduce/reduce conflict (reduce 44, reduce 47) on STRING
-29: reduce/reduce conflict (reduce 44, reduce 47) on TO
-29: reduce/reduce conflict (reduce 44, reduce 47) on FOR
-29: reduce/reduce conflict (reduce 44, reduce 47) on IF
-29: reduce/reduce conflict (reduce 44, reduce 47) on ELSE
-29: reduce/reduce conflict (reduce 44, reduce 47) on '('
-29: reduce/reduce conflict (reduce 44, reduce 47) on ')'
-29: reduce/reduce conflict (reduce 44, reduce 47) on '{'
-29: reduce/reduce conflict (reduce 44, reduce 47) on ';'
-29: reduce/reduce conflict (reduce 44, reduce 47) on ']'
-29: reduce/reduce conflict (reduce 44, reduce 47) on "||"
-29: reduce/reduce conflict (reduce 44, reduce 47) on "&&"
-29: reduce/reduce conflict (reduce 44, reduce 47) on "=="
-29: reduce/reduce conflict (reduce 44, reduce 47) on "!="
-29: reduce/reduce conflict (reduce 44, reduce 47) on "<="
-29: reduce/reduce conflict (reduce 44, reduce 47) on ">="
-29: reduce/reduce conflict (reduce 44, reduce 47) on '+'
-29: reduce/reduce conflict (reduce 44, reduce 47) on '-'
-29: reduce/reduce conflict (reduce 44, reduce 47) on '*'
-29: reduce/reduce conflict (reduce 44, reduce 47) on '/'
-state 29
-	arithmeticExpression : INTEGER .  (44)
-	integerExpression : INTEGER .  (47)
-
-	.  reduce 44
-
-
-state 30
-	logicalExpression : FALSE .  (39)
-
-	.  reduce 39
-
-
-state 31
-	logicalExpression : TRUE .  (38)
-
-	.  reduce 38
-
-
-32: shift/reduce conflict (shift 52, reduce 58) on '('
 state 32
+	logicalExpression : TRUE .  (42)
+
+	.  reduce 42
+
+
+33: shift/reduce conflict (shift 52, reduce 58) on '('
+state 33
 	functCall : IDENTIFIER . '(' functParams ')'  (13)
-	arithmeticExpression : IDENTIFIER . expressionVarCont  (42)
+	arithmeticExpression : IDENTIFIER . expressionVarCont  (46)
 	expressionVarCont : .  (58)
 
 	'('  shift 52
@@ -524,8 +483,6 @@ state 32
 	'{'  reduce 58
 	';'  reduce 58
 	']'  reduce 58
-	"||"  reduce 58
-	"&&"  reduce 58
 	"=="  reduce 58
 	"!="  reduce 58
 	"<="  reduce 58
@@ -538,208 +495,102 @@ state 32
 	expressionVarCont  goto 54
 
 
-33: shift/reduce conflict (shift 32, reduce 35) on IDENTIFIER
-state 33
-	printList : STRING . printList  (33)
-	printList : .  (35)
-
-	REAL  shift 27
-	CHAR  shift 28
-	INTEGER  shift 29
-	FALSE  shift 30
-	TRUE  shift 31
-	IDENTIFIER  shift 32
-	STRING  shift 33
-	'('  shift 34
-	READ  reduce 35
-	PRINT  reduce 35
-	RETURN  reduce 35
-	FOR  reduce 35
-	IF  reduce 35
-	ELSE  reduce 35
-	'{'  reduce 35
-	';'  reduce 35
-
-	functCall  goto 35
-	expression  goto 36
-	printList  goto 55
-	logicalExpression  goto 38
-	arithmeticExpression  goto 39
-	integerExpression  goto 40
-	charExpression  goto 41
-	parenthesisExpr  goto 42
-
-
+34: shift/reduce conflict (shift 33, reduce 39) on IDENTIFIER
 state 34
-	parenthesisExpr : '(' . expression ')'  (59)
+	printList : STRING . printList  (37)
+	printList : .  (39)
 
-	REAL  shift 27
-	CHAR  shift 28
-	INTEGER  shift 29
-	FALSE  shift 30
-	TRUE  shift 31
-	IDENTIFIER  shift 32
-	'('  shift 34
+	REAL  shift 28
+	CHAR  shift 29
+	INTEGER  shift 30
+	FALSE  shift 31
+	TRUE  shift 32
+	IDENTIFIER  shift 33
+	STRING  shift 34
+	'('  shift 35
+	READ  reduce 39
+	PRINT  reduce 39
+	RETURN  reduce 39
+	FOR  reduce 39
+	IF  reduce 39
+	ELSE  reduce 39
+	'{'  reduce 39
+	';'  reduce 39
+
+	functCall  goto 36
+	expression  goto 37
+	printList  goto 55
+	logicalExpression  goto 39
+	arithmeticExpression  goto 40
+	integerExpression  goto 41
+	charExpression  goto 42
+
+
+state 35
+	expression : '(' . expression ')'  (52)
+
+	REAL  shift 28
+	CHAR  shift 29
+	INTEGER  shift 30
+	FALSE  shift 31
+	TRUE  shift 32
+	IDENTIFIER  shift 33
+	'('  shift 35
 	.  error
 
-	functCall  goto 35
+	functCall  goto 36
 	expression  goto 56
-	logicalExpression  goto 38
-	arithmeticExpression  goto 39
-	integerExpression  goto 40
-	charExpression  goto 41
-	parenthesisExpr  goto 42
+	logicalExpression  goto 39
+	arithmeticExpression  goto 40
+	integerExpression  goto 41
+	charExpression  goto 42
 
 
-35: reduce/reduce conflict (reduce 40, reduce 45) on REAL
-35: reduce/reduce conflict (reduce 40, reduce 48) on REAL
-35: reduce/reduce conflict (reduce 40, reduce 51) on REAL
-35: reduce/reduce conflict (reduce 40, reduce 45) on CHAR
-35: reduce/reduce conflict (reduce 40, reduce 48) on CHAR
-35: reduce/reduce conflict (reduce 40, reduce 51) on CHAR
-35: reduce/reduce conflict (reduce 40, reduce 45) on INTEGER
-35: reduce/reduce conflict (reduce 40, reduce 48) on INTEGER
-35: reduce/reduce conflict (reduce 40, reduce 51) on INTEGER
-35: reduce/reduce conflict (reduce 40, reduce 45) on FALSE
-35: reduce/reduce conflict (reduce 40, reduce 48) on FALSE
-35: reduce/reduce conflict (reduce 40, reduce 51) on FALSE
-35: reduce/reduce conflict (reduce 40, reduce 45) on TRUE
-35: reduce/reduce conflict (reduce 40, reduce 48) on TRUE
-35: reduce/reduce conflict (reduce 40, reduce 51) on TRUE
-35: reduce/reduce conflict (reduce 40, reduce 45) on IDENTIFIER
-35: reduce/reduce conflict (reduce 40, reduce 48) on IDENTIFIER
-35: reduce/reduce conflict (reduce 40, reduce 51) on IDENTIFIER
-35: reduce/reduce conflict (reduce 40, reduce 45) on READ
-35: reduce/reduce conflict (reduce 40, reduce 48) on READ
-35: reduce/reduce conflict (reduce 40, reduce 51) on READ
-35: reduce/reduce conflict (reduce 40, reduce 45) on PRINT
-35: reduce/reduce conflict (reduce 40, reduce 48) on PRINT
-35: reduce/reduce conflict (reduce 40, reduce 51) on PRINT
-35: reduce/reduce conflict (reduce 40, reduce 45) on RETURN
-35: reduce/reduce conflict (reduce 40, reduce 48) on RETURN
-35: reduce/reduce conflict (reduce 40, reduce 51) on RETURN
-35: reduce/reduce conflict (reduce 40, reduce 45) on STRING
-35: reduce/reduce conflict (reduce 40, reduce 48) on STRING
-35: reduce/reduce conflict (reduce 40, reduce 51) on STRING
-35: reduce/reduce conflict (reduce 40, reduce 45) on TO
-35: reduce/reduce conflict (reduce 40, reduce 48) on TO
-35: reduce/reduce conflict (reduce 40, reduce 51) on TO
-35: reduce/reduce conflict (reduce 40, reduce 45) on FOR
-35: reduce/reduce conflict (reduce 40, reduce 48) on FOR
-35: reduce/reduce conflict (reduce 40, reduce 51) on FOR
-35: reduce/reduce conflict (reduce 40, reduce 45) on IF
-35: reduce/reduce conflict (reduce 40, reduce 48) on IF
-35: reduce/reduce conflict (reduce 40, reduce 51) on IF
-35: reduce/reduce conflict (reduce 40, reduce 45) on ELSE
-35: reduce/reduce conflict (reduce 40, reduce 48) on ELSE
-35: reduce/reduce conflict (reduce 40, reduce 51) on ELSE
-35: reduce/reduce conflict (reduce 40, reduce 45) on '('
-35: reduce/reduce conflict (reduce 40, reduce 48) on '('
-35: reduce/reduce conflict (reduce 40, reduce 51) on '('
-35: reduce/reduce conflict (reduce 40, reduce 45) on ')'
-35: reduce/reduce conflict (reduce 40, reduce 48) on ')'
-35: reduce/reduce conflict (reduce 40, reduce 51) on ')'
-35: reduce/reduce conflict (reduce 40, reduce 45) on '{'
-35: reduce/reduce conflict (reduce 40, reduce 48) on '{'
-35: reduce/reduce conflict (reduce 40, reduce 51) on '{'
-35: reduce/reduce conflict (reduce 40, reduce 45) on ';'
-35: reduce/reduce conflict (reduce 40, reduce 48) on ';'
-35: reduce/reduce conflict (reduce 40, reduce 51) on ';'
-35: reduce/reduce conflict (reduce 40, reduce 45) on ']'
-35: reduce/reduce conflict (reduce 40, reduce 48) on ']'
-35: reduce/reduce conflict (reduce 40, reduce 51) on ']'
-35: reduce/reduce conflict (reduce 40, reduce 45) on "||"
-35: reduce/reduce conflict (reduce 40, reduce 48) on "||"
-35: reduce/reduce conflict (reduce 40, reduce 51) on "||"
-35: reduce/reduce conflict (reduce 40, reduce 45) on "&&"
-35: reduce/reduce conflict (reduce 40, reduce 48) on "&&"
-35: reduce/reduce conflict (reduce 40, reduce 51) on "&&"
-35: reduce/reduce conflict (reduce 40, reduce 45) on "=="
-35: reduce/reduce conflict (reduce 40, reduce 48) on "=="
-35: reduce/reduce conflict (reduce 40, reduce 51) on "=="
-35: reduce/reduce conflict (reduce 40, reduce 45) on "!="
-35: reduce/reduce conflict (reduce 40, reduce 48) on "!="
-35: reduce/reduce conflict (reduce 40, reduce 51) on "!="
-35: reduce/reduce conflict (reduce 40, reduce 45) on "<="
-35: reduce/reduce conflict (reduce 40, reduce 48) on "<="
-35: reduce/reduce conflict (reduce 40, reduce 51) on "<="
-35: reduce/reduce conflict (reduce 40, reduce 45) on ">="
-35: reduce/reduce conflict (reduce 40, reduce 48) on ">="
-35: reduce/reduce conflict (reduce 40, reduce 51) on ">="
-35: reduce/reduce conflict (reduce 40, reduce 45) on '+'
-35: reduce/reduce conflict (reduce 40, reduce 48) on '+'
-35: reduce/reduce conflict (reduce 40, reduce 51) on '+'
-35: reduce/reduce conflict (reduce 40, reduce 45) on '-'
-35: reduce/reduce conflict (reduce 40, reduce 48) on '-'
-35: reduce/reduce conflict (reduce 40, reduce 51) on '-'
-35: reduce/reduce conflict (reduce 40, reduce 45) on '*'
-35: reduce/reduce conflict (reduce 40, reduce 48) on '*'
-35: reduce/reduce conflict (reduce 40, reduce 51) on '*'
-35: reduce/reduce conflict (reduce 40, reduce 45) on '/'
-35: reduce/reduce conflict (reduce 40, reduce 48) on '/'
-35: reduce/reduce conflict (reduce 40, reduce 51) on '/'
-state 35
-	logicalExpression : functCall .  (40)
-	arithmeticExpression : functCall .  (45)
-	integerExpression : functCall .  (48)
-	charExpression : functCall .  (51)
-
-	.  reduce 40
-
-
-36: shift/reduce conflict (shift 32, reduce 35) on IDENTIFIER
 state 36
-	printList : expression . printList  (34)
-	parenthesisExpr : expression .  (60)
-	printList : .  (35)
+	expression : functCall .  (56)
 
-	REAL  shift 27
-	CHAR  shift 28
-	INTEGER  shift 29
-	FALSE  shift 30
-	TRUE  shift 31
-	IDENTIFIER  shift 32
-	STRING  shift 33
-	'('  shift 34
-	READ  reduce 35
-	PRINT  reduce 35
-	RETURN  reduce 35
-	FOR  reduce 35
-	IF  reduce 35
-	ELSE  reduce 35
-	'{'  reduce 35
-	';'  reduce 35
-	"||"  reduce 60
-	"&&"  reduce 60
-	"=="  reduce 60
-	"!="  reduce 60
-	"<="  reduce 60
-	">="  reduce 60
-	'+'  reduce 60
-	'-'  reduce 60
-	'*'  reduce 60
-	'/'  reduce 60
-
-	functCall  goto 35
-	expression  goto 36
-	printList  goto 57
-	logicalExpression  goto 38
-	arithmeticExpression  goto 39
-	integerExpression  goto 40
-	charExpression  goto 41
-	parenthesisExpr  goto 42
+	.  reduce 56
 
 
+37: shift/reduce conflict (shift 33, reduce 39) on IDENTIFIER
 state 37
-	print : PRINT printList .  (32)
+	printList : expression . printList  (38)
+	printList : .  (39)
 
-	.  reduce 32
+	REAL  shift 28
+	CHAR  shift 29
+	INTEGER  shift 30
+	FALSE  shift 31
+	TRUE  shift 32
+	IDENTIFIER  shift 33
+	STRING  shift 34
+	'('  shift 35
+	READ  reduce 39
+	PRINT  reduce 39
+	RETURN  reduce 39
+	FOR  reduce 39
+	IF  reduce 39
+	ELSE  reduce 39
+	'{'  reduce 39
+	';'  reduce 39
+
+	functCall  goto 36
+	expression  goto 37
+	printList  goto 57
+	logicalExpression  goto 39
+	arithmeticExpression  goto 40
+	integerExpression  goto 41
+	charExpression  goto 42
 
 
-38: shift/reduce conflict (shift 58, reduce 53) on "||"
-38: shift/reduce conflict (shift 59, reduce 53) on "&&"
 state 38
-	logicalExpression : logicalExpression . logicalOperators logicalExpression  (37)
+	print : PRINT printList .  (36)
+
+	.  reduce 36
+
+
+state 39
+	logicalExpression : logicalExpression . logicalOperators logicalExpression  (41)
 	expression : logicalExpression .  (53)
 
 	"||"  shift 58
@@ -763,29 +614,13 @@ state 38
 	'{'  reduce 53
 	';'  reduce 53
 	']'  reduce 53
-	"=="  reduce 53
-	"!="  reduce 53
-	"<="  reduce 53
-	">="  reduce 53
-	'+'  reduce 53
-	'-'  reduce 53
-	'*'  reduce 53
-	'/'  reduce 53
 
 	logicalOperators  goto 60
 
 
-39: shift/reduce conflict (shift 61, reduce 54) on "=="
-39: shift/reduce conflict (shift 62, reduce 54) on "!="
-39: shift/reduce conflict (shift 63, reduce 54) on "<="
-39: shift/reduce conflict (shift 64, reduce 54) on ">="
-39: shift/reduce conflict (shift 65, reduce 54) on '+'
-39: shift/reduce conflict (shift 66, reduce 54) on '-'
-39: shift/reduce conflict (shift 67, reduce 54) on '*'
-39: shift/reduce conflict (shift 68, reduce 54) on '/'
-state 39
-	logicalExpression : arithmeticExpression . relationalOperators arithmeticExpression  (36)
-	arithmeticExpression : arithmeticExpression . arithmeticOperators arithmeticExpression  (41)
+state 40
+	logicalExpression : arithmeticExpression . relationalOperators arithmeticExpression  (40)
+	arithmeticExpression : arithmeticExpression . arithmeticOperators arithmeticExpression  (44)
 	expression : arithmeticExpression .  (54)
 
 	"=="  shift 61
@@ -815,21 +650,62 @@ state 39
 	'{'  reduce 54
 	';'  reduce 54
 	']'  reduce 54
-	"||"  reduce 54
-	"&&"  reduce 54
 
 	relationalOperators  goto 69
 	arithmeticOperators  goto 70
 
 
-40: shift/reduce conflict (shift 65, reduce 55) on '+'
-40: shift/reduce conflict (shift 66, reduce 55) on '-'
-40: shift/reduce conflict (shift 67, reduce 55) on '*'
-40: shift/reduce conflict (shift 68, reduce 55) on '/'
-state 40
-	integerExpression : integerExpression . arithmeticOperators integerExpression  (46)
-	expression : integerExpression .  (55)
+41: shift/reduce conflict (shift 65, reduce 45) on '+'
+41: shift/reduce conflict (shift 66, reduce 45) on '-'
+41: shift/reduce conflict (shift 67, reduce 45) on '*'
+41: shift/reduce conflict (shift 68, reduce 45) on '/'
+state 41
+	arithmeticExpression : integerExpression .  (45)
+	integerExpression : integerExpression . arithmeticOperators integerExpression  (48)
 
+	'+'  shift 65
+	'-'  shift 66
+	'*'  shift 67
+	'/'  shift 68
+	REAL  reduce 45
+	CHAR  reduce 45
+	INTEGER  reduce 45
+	FALSE  reduce 45
+	TRUE  reduce 45
+	IDENTIFIER  reduce 45
+	READ  reduce 45
+	PRINT  reduce 45
+	RETURN  reduce 45
+	STRING  reduce 45
+	TO  reduce 45
+	FOR  reduce 45
+	IF  reduce 45
+	ELSE  reduce 45
+	'('  reduce 45
+	')'  reduce 45
+	'{'  reduce 45
+	';'  reduce 45
+	']'  reduce 45
+	"||"  reduce 45
+	"&&"  reduce 45
+	"=="  reduce 45
+	"!="  reduce 45
+	"<="  reduce 45
+	">="  reduce 45
+
+	arithmeticOperators  goto 71
+
+
+state 42
+	charExpression : charExpression . operator charExpression  (50)
+	expression : charExpression .  (55)
+
+	"||"  shift 58
+	"&&"  shift 59
+	"=="  shift 61
+	"!="  shift 62
+	"<="  shift 63
+	">="  shift 64
 	'+'  shift 65
 	'-'  shift 66
 	'*'  shift 67
@@ -853,59 +729,6 @@ state 40
 	'{'  reduce 55
 	';'  reduce 55
 	']'  reduce 55
-	"||"  reduce 55
-	"&&"  reduce 55
-	"=="  reduce 55
-	"!="  reduce 55
-	"<="  reduce 55
-	">="  reduce 55
-
-	arithmeticOperators  goto 71
-
-
-41: shift/reduce conflict (shift 58, reduce 56) on "||"
-41: shift/reduce conflict (shift 59, reduce 56) on "&&"
-41: shift/reduce conflict (shift 61, reduce 56) on "=="
-41: shift/reduce conflict (shift 62, reduce 56) on "!="
-41: shift/reduce conflict (shift 63, reduce 56) on "<="
-41: shift/reduce conflict (shift 64, reduce 56) on ">="
-41: shift/reduce conflict (shift 65, reduce 56) on '+'
-41: shift/reduce conflict (shift 66, reduce 56) on '-'
-41: shift/reduce conflict (shift 67, reduce 56) on '*'
-41: shift/reduce conflict (shift 68, reduce 56) on '/'
-state 41
-	charExpression : charExpression . operator charExpression  (49)
-	expression : charExpression .  (56)
-
-	"||"  shift 58
-	"&&"  shift 59
-	"=="  shift 61
-	"!="  shift 62
-	"<="  shift 63
-	">="  shift 64
-	'+'  shift 65
-	'-'  shift 66
-	'*'  shift 67
-	'/'  shift 68
-	REAL  reduce 56
-	CHAR  reduce 56
-	INTEGER  reduce 56
-	FALSE  reduce 56
-	TRUE  reduce 56
-	IDENTIFIER  reduce 56
-	READ  reduce 56
-	PRINT  reduce 56
-	RETURN  reduce 56
-	STRING  reduce 56
-	TO  reduce 56
-	FOR  reduce 56
-	IF  reduce 56
-	ELSE  reduce 56
-	'('  reduce 56
-	')'  reduce 56
-	'{'  reduce 56
-	';'  reduce 56
-	']'  reduce 56
 
 	relationalOperators  goto 72
 	logicalOperators  goto 73
@@ -913,94 +736,51 @@ state 41
 	operator  goto 75
 
 
-state 42
-	expression : parenthesisExpr . operator parenthesisExpr  (52)
-
-	"||"  shift 58
-	"&&"  shift 59
-	"=="  shift 61
-	"!="  shift 62
-	"<="  shift 63
-	">="  shift 64
-	'+'  shift 65
-	'-'  shift 66
-	'*'  shift 67
-	'/'  shift 68
-	.  error
-
-	relationalOperators  goto 72
-	logicalOperators  goto 73
-	arithmeticOperators  goto 74
-	operator  goto 76
-
-
 state 43
-	return : RETURN expression .  (31)
-	parenthesisExpr : expression .  (60)
+	return : RETURN expression .  (35)
 
-	IDENTIFIER  reduce 31
-	READ  reduce 31
-	PRINT  reduce 31
-	RETURN  reduce 31
-	FOR  reduce 31
-	IF  reduce 31
-	ELSE  reduce 31
-	'{'  reduce 31
-	';'  reduce 31
-	"||"  reduce 60
-	"&&"  reduce 60
-	"=="  reduce 60
-	"!="  reduce 60
-	"<="  reduce 60
-	">="  reduce 60
-	'+'  reduce 60
-	'-'  reduce 60
-	'*'  reduce 60
-	'/'  reduce 60
+	.  reduce 35
 
 
 state 44
-	flowControl : FOR '(' . expression ')' command  (26)
-	flowControl : FOR '(' . IDENTIFIER '=' expression TO expression ')' command  (27)
+	flowControl : FOR '(' . forCont  (25)
 
-	REAL  shift 27
-	CHAR  shift 28
-	INTEGER  shift 29
-	FALSE  shift 30
-	TRUE  shift 31
-	IDENTIFIER  shift 77
-	'('  shift 34
+	REAL  shift 28
+	CHAR  shift 29
+	INTEGER  shift 30
+	FALSE  shift 31
+	TRUE  shift 32
+	IDENTIFIER  shift 76
+	'('  shift 35
 	.  error
 
-	functCall  goto 35
-	expression  goto 78
-	logicalExpression  goto 38
-	arithmeticExpression  goto 39
-	integerExpression  goto 40
-	charExpression  goto 41
-	parenthesisExpr  goto 42
+	functCall  goto 36
+	expression  goto 77
+	forCont  goto 78
+	logicalExpression  goto 39
+	arithmeticExpression  goto 40
+	integerExpression  goto 41
+	charExpression  goto 42
 
 
 state 45
-	flowControl : IF '(' . expression ')' THEN command  (24)
-	flowControl : IF '(' . expression ')' THEN command ELSE command  (25)
+	flowControl : IF '(' . expression ')' THEN command ifThenCont  (24)
 
-	REAL  shift 27
-	CHAR  shift 28
-	INTEGER  shift 29
-	FALSE  shift 30
-	TRUE  shift 31
-	IDENTIFIER  shift 32
-	'('  shift 34
+	REAL  shift 28
+	CHAR  shift 29
+	INTEGER  shift 30
+	FALSE  shift 31
+	TRUE  shift 32
+	IDENTIFIER  shift 33
+	'('  shift 35
 	.  error
 
-	functCall  goto 35
+	functCall  goto 36
 	expression  goto 79
-	logicalExpression  goto 38
-	arithmeticExpression  goto 39
-	integerExpression  goto 40
-	charExpression  goto 41
-	parenthesisExpr  goto 42
+	logicalExpression  goto 39
+	arithmeticExpression  goto 40
+	integerExpression  goto 41
+	charExpression  goto 42
 
 
 state 46
@@ -1018,14 +798,14 @@ state 47
 
 
 state 48
-	commandList : command commandList .  (4)
+	commandList : command commandList .  (5)
 
-	.  reduce 4
+	.  reduce 5
 
 
 state 49
-	functDeclaration : type IDENTIFIER . '(' functParamsDef commandBlock  (5)
-	variableDeclaration : type IDENTIFIER . arrayOrNormal ';'  (75)
+	functDeclaration : type IDENTIFIER . '(' functParamsDef commandBlock  (6)
+	variableDeclaration : type IDENTIFIER . arrayOrNormal ';'  (73)
 
 	'('  shift 82
 	'['  shift 83
@@ -1036,45 +816,16 @@ state 49
 
 
 state 50
-	attribuition : IDENTIFIER '=' expression .  (28)
-	parenthesisExpr : expression .  (60)
+	attribuitionCont : '=' expression .  (32)
 
-	IDENTIFIER  reduce 28
-	READ  reduce 28
-	PRINT  reduce 28
-	RETURN  reduce 28
-	FOR  reduce 28
-	IF  reduce 28
-	ELSE  reduce 28
-	'{'  reduce 28
-	';'  reduce 28
-	"||"  reduce 60
-	"&&"  reduce 60
-	"=="  reduce 60
-	"!="  reduce 60
-	"<="  reduce 60
-	">="  reduce 60
-	'+'  reduce 60
-	'-'  reduce 60
-	'*'  reduce 60
-	'/'  reduce 60
+	.  reduce 32
 
 
 state 51
-	attribuition : IDENTIFIER '[' expression . ']' '=' expression  (29)
-	parenthesisExpr : expression .  (60)
+	attribuitionCont : '[' expression . ']' '=' expression  (33)
 
 	']'  shift 86
-	"||"  reduce 60
-	"&&"  reduce 60
-	"=="  reduce 60
-	"!="  reduce 60
-	"<="  reduce 60
-	">="  reduce 60
-	'+'  reduce 60
-	'-'  reduce 60
-	'*'  reduce 60
-	'/'  reduce 60
+	.  error
 
 
 state 52
@@ -1090,220 +841,359 @@ state 52
 state 53
 	expressionVarCont : '[' . arrayPosition ']'  (57)
 
-	INTEGER  shift 89
-	IDENTIFIER  shift 90
+	INTEGER  shift 30
 	.  error
 
-	functCall  goto 91
-	integerExpression  goto 92
-	arrayPosition  goto 93
+	integerExpression  goto 89
+	arrayPosition  goto 90
 
 
 state 54
-	arithmeticExpression : IDENTIFIER expressionVarCont .  (42)
+	arithmeticExpression : IDENTIFIER expressionVarCont .  (46)
 
-	.  reduce 42
+	.  reduce 46
 
 
 state 55
-	printList : STRING printList .  (33)
+	printList : STRING printList .  (37)
 
-	.  reduce 33
+	.  reduce 37
 
 
 state 56
-	parenthesisExpr : '(' expression . ')'  (59)
-	parenthesisExpr : expression .  (60)
+	expression : '(' expression . ')'  (52)
 
-	')'  shift 94
-	"||"  reduce 60
-	"&&"  reduce 60
-	"=="  reduce 60
-	"!="  reduce 60
-	"<="  reduce 60
-	">="  reduce 60
-	'+'  reduce 60
-	'-'  reduce 60
-	'*'  reduce 60
-	'/'  reduce 60
+	')'  shift 91
+	.  error
 
 
 state 57
-	printList : expression printList .  (34)
+	printList : expression printList .  (38)
 
-	.  reduce 34
+	.  reduce 38
 
 
 state 58
-	logicalOperators : "||" .  (65)
-
-	.  reduce 65
-
-
-state 59
-	logicalOperators : "&&" .  (66)
-
-	.  reduce 66
-
-
-state 60
-	logicalExpression : logicalExpression logicalOperators . logicalExpression  (37)
-
-	REAL  shift 27
-	INTEGER  shift 95
-	FALSE  shift 30
-	TRUE  shift 31
-	IDENTIFIER  shift 32
-	.  error
-
-	functCall  goto 96
-	logicalExpression  goto 97
-	arithmeticExpression  goto 98
-
-
-state 61
-	relationalOperators : "==" .  (67)
-
-	.  reduce 67
-
-
-state 62
-	relationalOperators : "!=" .  (68)
-
-	.  reduce 68
-
-
-state 63
-	relationalOperators : "<=" .  (69)
-
-	.  reduce 69
-
-
-state 64
-	relationalOperators : ">=" .  (70)
-
-	.  reduce 70
-
-
-state 65
-	arithmeticOperators : '+' .  (71)
-
-	.  reduce 71
-
-
-state 66
-	arithmeticOperators : '-' .  (72)
-
-	.  reduce 72
-
-
-state 67
-	arithmeticOperators : '*' .  (73)
-
-	.  reduce 73
-
-
-state 68
-	arithmeticOperators : '/' .  (74)
-
-	.  reduce 74
-
-
-state 69
-	logicalExpression : arithmeticExpression relationalOperators . arithmeticExpression  (36)
-
-	REAL  shift 27
-	INTEGER  shift 95
-	IDENTIFIER  shift 32
-	.  error
-
-	functCall  goto 99
-	arithmeticExpression  goto 100
-
-
-state 70
-	arithmeticExpression : arithmeticExpression arithmeticOperators . arithmeticExpression  (41)
-
-	REAL  shift 27
-	INTEGER  shift 95
-	IDENTIFIER  shift 32
-	.  error
-
-	functCall  goto 99
-	arithmeticExpression  goto 101
-
-
-state 71
-	integerExpression : integerExpression arithmeticOperators . integerExpression  (46)
-
-	INTEGER  shift 89
-	IDENTIFIER  shift 90
-	.  error
-
-	functCall  goto 91
-	integerExpression  goto 102
-
-
-state 72
-	operator : relationalOperators .  (63)
+	logicalOperators : "||" .  (63)
 
 	.  reduce 63
 
 
-state 73
-	operator : logicalOperators .  (62)
-
-	.  reduce 62
-
-
-state 74
-	operator : arithmeticOperators .  (64)
+state 59
+	logicalOperators : "&&" .  (64)
 
 	.  reduce 64
 
 
-state 75
-	charExpression : charExpression operator . charExpression  (49)
+state 60
+	logicalExpression : logicalExpression logicalOperators . logicalExpression  (41)
 
-	CHAR  shift 28
-	IDENTIFIER  shift 90
+	REAL  shift 28
+	INTEGER  shift 30
+	FALSE  shift 31
+	TRUE  shift 32
+	IDENTIFIER  shift 92
 	.  error
 
-	functCall  goto 103
-	charExpression  goto 104
+	logicalExpression  goto 93
+	arithmeticExpression  goto 94
+	integerExpression  goto 41
+
+
+state 61
+	relationalOperators : "==" .  (65)
+
+	.  reduce 65
+
+
+state 62
+	relationalOperators : "!=" .  (66)
+
+	.  reduce 66
+
+
+state 63
+	relationalOperators : "<=" .  (67)
+
+	.  reduce 67
+
+
+state 64
+	relationalOperators : ">=" .  (68)
+
+	.  reduce 68
+
+
+state 65
+	arithmeticOperators : '+' .  (69)
+
+	.  reduce 69
+
+
+state 66
+	arithmeticOperators : '-' .  (70)
+
+	.  reduce 70
+
+
+state 67
+	arithmeticOperators : '*' .  (71)
+
+	.  reduce 71
+
+
+state 68
+	arithmeticOperators : '/' .  (72)
+
+	.  reduce 72
+
+
+state 69
+	logicalExpression : arithmeticExpression relationalOperators . arithmeticExpression  (40)
+
+	REAL  shift 28
+	INTEGER  shift 30
+	IDENTIFIER  shift 92
+	.  error
+
+	arithmeticExpression  goto 95
+	integerExpression  goto 41
+
+
+state 70
+	arithmeticExpression : arithmeticExpression arithmeticOperators . arithmeticExpression  (44)
+
+	REAL  shift 28
+	INTEGER  shift 30
+	IDENTIFIER  shift 92
+	.  error
+
+	arithmeticExpression  goto 96
+	integerExpression  goto 41
+
+
+state 71
+	integerExpression : integerExpression arithmeticOperators . integerExpression  (48)
+
+	INTEGER  shift 30
+	.  error
+
+	integerExpression  goto 97
+
+
+state 72
+	operator : relationalOperators .  (61)
+
+	.  reduce 61
+
+
+state 73
+	operator : logicalOperators .  (60)
+
+	.  reduce 60
+
+
+state 74
+	operator : arithmeticOperators .  (62)
+
+	.  reduce 62
+
+
+state 75
+	charExpression : charExpression operator . charExpression  (50)
+
+	CHAR  shift 29
+	.  error
+
+	charExpression  goto 98
 
 
 state 76
-	expression : parenthesisExpr operator . parenthesisExpr  (52)
-
-	REAL  shift 27
-	CHAR  shift 28
-	INTEGER  shift 29
-	FALSE  shift 30
-	TRUE  shift 31
-	IDENTIFIER  shift 32
-	'('  shift 34
-	.  error
-
-	functCall  goto 35
-	expression  goto 105
-	logicalExpression  goto 38
-	arithmeticExpression  goto 39
-	integerExpression  goto 40
-	charExpression  goto 41
-	parenthesisExpr  goto 106
-
-
-state 77
 	functCall : IDENTIFIER . '(' functParams ')'  (13)
-	flowControl : FOR '(' IDENTIFIER . '=' expression TO expression ')' command  (27)
-	arithmeticExpression : IDENTIFIER . expressionVarCont  (42)
+	forCont : IDENTIFIER . '=' expression TO expression forEnd  (29)
+	arithmeticExpression : IDENTIFIER . expressionVarCont  (46)
 	expressionVarCont : .  (58)
 
 	'('  shift 52
-	'='  shift 107
+	'='  shift 99
 	'['  shift 53
 	')'  reduce 58
+	"=="  reduce 58
+	"!="  reduce 58
+	"<="  reduce 58
+	">="  reduce 58
+	'+'  reduce 58
+	'-'  reduce 58
+	'*'  reduce 58
+	'/'  reduce 58
+
+	expressionVarCont  goto 54
+
+
+state 77
+	forCont : expression . forEnd  (28)
+
+	')'  shift 100
+	.  error
+
+	forEnd  goto 101
+
+
+state 78
+	flowControl : FOR '(' forCont .  (25)
+
+	.  reduce 25
+
+
+state 79
+	flowControl : IF '(' expression . ')' THEN command ifThenCont  (24)
+
+	')'  shift 102
+	.  error
+
+
+state 80
+	commandBlockList : command ';' . commandBlockList  (23)
+
+	IDENTIFIER  shift 5
+	READ  shift 6
+	PRINT  shift 7
+	RETURN  shift 8
+	FOR  shift 9
+	IF  shift 10
+	'{'  shift 11
+	.  error
+
+	command  goto 46
+	commandBlock  goto 18
+	print  goto 19
+	return  goto 20
+	read  goto 21
+	attribuition  goto 22
+	flowControl  goto 23
+	commandBlockList  goto 103
+
+
+state 81
+	commandBlock : '{' commandBlockList '}' .  (22)
+
+	.  reduce 22
+
+
+state 82
+	functDeclaration : type IDENTIFIER '(' . functParamsDef commandBlock  (6)
+	functParamsDef : .  (19)
+
+	INT  shift 1
+	REAL  shift 2
+	BOOL  shift 3
+	CHAR  shift 4
+	'{'  reduce 19
+
+	type  goto 104
+	functParamsDef  goto 105
+
+
+state 83
+	arrayOrNormal : '[' . INTEGER ']' arrayInit  (75)
+
+	INTEGER  shift 106
+	.  error
+
+
+state 84
+	arrayOrNormal : ':' . literal  (74)
+
+	CHAR  shift 107
+	INTEGER  shift 108
+	FALSE  shift 109
+	TRUE  shift 110
+	.  error
+
+	literal  goto 111
+
+
+state 85
+	variableDeclaration : type IDENTIFIER arrayOrNormal . ';'  (73)
+
+	';'  shift 112
+	.  error
+
+
+state 86
+	attribuitionCont : '[' expression ']' . '=' expression  (33)
+
+	'='  shift 113
+	.  error
+
+
+state 87
+	functParams : IDENTIFIER . functParamsCont  (14)
+	functParamsCont : .  (17)
+
+	','  shift 114
+	')'  reduce 17
+
+	functParamsCont  goto 115
+
+
+state 88
+	functCall : IDENTIFIER '(' functParams . ')'  (13)
+
+	')'  shift 116
+	.  error
+
+
+state 89
+	integerExpression : integerExpression . arithmeticOperators integerExpression  (48)
+	arrayPosition : integerExpression .  (59)
+
+	'+'  shift 65
+	'-'  shift 66
+	'*'  shift 67
+	'/'  shift 68
+	']'  reduce 59
+
+	arithmeticOperators  goto 71
+
+
+state 90
+	expressionVarCont : '[' arrayPosition . ']'  (57)
+
+	']'  shift 117
+	.  error
+
+
+state 91
+	expression : '(' expression ')' .  (52)
+
+	.  reduce 52
+
+
+state 92
+	arithmeticExpression : IDENTIFIER . expressionVarCont  (46)
+	expressionVarCont : .  (58)
+
+	'['  shift 53
+	REAL  reduce 58
+	CHAR  reduce 58
+	INTEGER  reduce 58
+	FALSE  reduce 58
+	TRUE  reduce 58
+	IDENTIFIER  reduce 58
+	READ  reduce 58
+	PRINT  reduce 58
+	RETURN  reduce 58
+	STRING  reduce 58
+	TO  reduce 58
+	FOR  reduce 58
+	IF  reduce 58
+	ELSE  reduce 58
+	'('  reduce 58
+	')'  reduce 58
+	'{'  reduce 58
+	';'  reduce 58
+	']'  reduce 58
 	"||"  reduce 58
 	"&&"  reduce 58
 	"=="  reduce 58
@@ -1318,316 +1208,14 @@ state 77
 	expressionVarCont  goto 54
 
 
-state 78
-	flowControl : FOR '(' expression . ')' command  (26)
-	parenthesisExpr : expression .  (60)
-
-	')'  shift 108
-	"||"  reduce 60
-	"&&"  reduce 60
-	"=="  reduce 60
-	"!="  reduce 60
-	"<="  reduce 60
-	">="  reduce 60
-	'+'  reduce 60
-	'-'  reduce 60
-	'*'  reduce 60
-	'/'  reduce 60
-
-
-state 79
-	flowControl : IF '(' expression . ')' THEN command  (24)
-	flowControl : IF '(' expression . ')' THEN command ELSE command  (25)
-	parenthesisExpr : expression .  (60)
-
-	')'  shift 109
-	"||"  reduce 60
-	"&&"  reduce 60
-	"=="  reduce 60
-	"!="  reduce 60
-	"<="  reduce 60
-	">="  reduce 60
-	'+'  reduce 60
-	'-'  reduce 60
-	'*'  reduce 60
-	'/'  reduce 60
-
-
-state 80
-	commandBlockList : command ';' . commandBlockList  (23)
-	command : .  (12)
-
-	IDENTIFIER  shift 5
-	READ  shift 6
-	PRINT  shift 7
-	RETURN  shift 8
-	FOR  shift 9
-	IF  shift 10
-	'{'  shift 11
-	';'  reduce 12
-
-	command  goto 46
-	commandBlock  goto 18
-	print  goto 19
-	return  goto 20
-	read  goto 21
-	attribuition  goto 22
-	flowControl  goto 23
-	commandBlockList  goto 110
-
-
-state 81
-	commandBlock : '{' commandBlockList '}' .  (22)
-
-	.  reduce 22
-
-
-state 82
-	functDeclaration : type IDENTIFIER '(' . functParamsDef commandBlock  (5)
-	functParamsDef : .  (19)
-
-	INT  shift 1
-	REAL  shift 2
-	BOOL  shift 3
-	CHAR  shift 4
-	'{'  reduce 19
-
-	type  goto 111
-	functParamsDef  goto 112
-
-
-state 83
-	arrayOrNormal : '[' . INTEGER ']' arrayInit  (77)
-
-	INTEGER  shift 113
-	.  error
-
-
-state 84
-	arrayOrNormal : ':' . literal  (76)
-
-	CHAR  shift 114
-	INTEGER  shift 115
-	FALSE  shift 116
-	TRUE  shift 117
-	.  error
-
-	literal  goto 118
-
-
-state 85
-	variableDeclaration : type IDENTIFIER arrayOrNormal . ';'  (75)
-
-	';'  shift 119
-	.  error
-
-
-state 86
-	attribuition : IDENTIFIER '[' expression ']' . '=' expression  (29)
-
-	'='  shift 120
-	.  error
-
-
-state 87
-	functParams : IDENTIFIER . functParamsCont  (14)
-	functParamsCont : .  (17)
-
-	','  shift 121
-	')'  reduce 17
-
-	functParamsCont  goto 122
-
-
-state 88
-	functCall : IDENTIFIER '(' functParams . ')'  (13)
-
-	')'  shift 123
-	.  error
-
-
-state 89
-	integerExpression : INTEGER .  (47)
-
-	.  reduce 47
-
-
-state 90
-	functCall : IDENTIFIER . '(' functParams ')'  (13)
-
-	'('  shift 52
-	.  error
-
-
-state 91
-	integerExpression : functCall .  (48)
-
-	.  reduce 48
-
-
-state 92
-	integerExpression : integerExpression . arithmeticOperators integerExpression  (46)
-	arrayPosition : integerExpression .  (61)
-
-	'+'  shift 65
-	'-'  shift 66
-	'*'  shift 67
-	'/'  shift 68
-	']'  reduce 61
-
-	arithmeticOperators  goto 71
-
-
+93: shift/reduce conflict (shift 58, reduce 41) on "||"
+93: shift/reduce conflict (shift 59, reduce 41) on "&&"
 state 93
-	expressionVarCont : '[' arrayPosition . ']'  (57)
-
-	']'  shift 124
-	.  error
-
-
-state 94
-	parenthesisExpr : '(' expression ')' .  (59)
-
-	.  reduce 59
-
-
-state 95
-	arithmeticExpression : INTEGER .  (44)
-
-	.  reduce 44
-
-
-96: reduce/reduce conflict (reduce 40, reduce 45) on "=="
-96: reduce/reduce conflict (reduce 40, reduce 45) on "!="
-96: reduce/reduce conflict (reduce 40, reduce 45) on "<="
-96: reduce/reduce conflict (reduce 40, reduce 45) on ">="
-96: reduce/reduce conflict (reduce 40, reduce 45) on '+'
-96: reduce/reduce conflict (reduce 40, reduce 45) on '-'
-96: reduce/reduce conflict (reduce 40, reduce 45) on '*'
-96: reduce/reduce conflict (reduce 40, reduce 45) on '/'
-state 96
-	logicalExpression : functCall .  (40)
-	arithmeticExpression : functCall .  (45)
-
-	.  reduce 40
-
-
-97: shift/reduce conflict (shift 58, reduce 37) on "||"
-97: shift/reduce conflict (shift 59, reduce 37) on "&&"
-state 97
-	logicalExpression : logicalExpression . logicalOperators logicalExpression  (37)
-	logicalExpression : logicalExpression logicalOperators logicalExpression .  (37)
+	logicalExpression : logicalExpression . logicalOperators logicalExpression  (41)
+	logicalExpression : logicalExpression logicalOperators logicalExpression .  (41)
 
 	"||"  shift 58
 	"&&"  shift 59
-	REAL  reduce 37
-	CHAR  reduce 37
-	INTEGER  reduce 37
-	FALSE  reduce 37
-	TRUE  reduce 37
-	IDENTIFIER  reduce 37
-	READ  reduce 37
-	PRINT  reduce 37
-	RETURN  reduce 37
-	STRING  reduce 37
-	TO  reduce 37
-	FOR  reduce 37
-	IF  reduce 37
-	ELSE  reduce 37
-	'('  reduce 37
-	')'  reduce 37
-	'{'  reduce 37
-	';'  reduce 37
-	']'  reduce 37
-	"=="  reduce 37
-	"!="  reduce 37
-	"<="  reduce 37
-	">="  reduce 37
-	'+'  reduce 37
-	'-'  reduce 37
-	'*'  reduce 37
-	'/'  reduce 37
-
-	logicalOperators  goto 60
-
-
-state 98
-	logicalExpression : arithmeticExpression . relationalOperators arithmeticExpression  (36)
-	arithmeticExpression : arithmeticExpression . arithmeticOperators arithmeticExpression  (41)
-
-	"=="  shift 61
-	"!="  shift 62
-	"<="  shift 63
-	">="  shift 64
-	'+'  shift 65
-	'-'  shift 66
-	'*'  shift 67
-	'/'  shift 68
-	.  error
-
-	relationalOperators  goto 69
-	arithmeticOperators  goto 70
-
-
-state 99
-	arithmeticExpression : functCall .  (45)
-
-	.  reduce 45
-
-
-100: shift/reduce conflict (shift 65, reduce 36) on '+'
-100: shift/reduce conflict (shift 66, reduce 36) on '-'
-100: shift/reduce conflict (shift 67, reduce 36) on '*'
-100: shift/reduce conflict (shift 68, reduce 36) on '/'
-state 100
-	logicalExpression : arithmeticExpression relationalOperators arithmeticExpression .  (36)
-	arithmeticExpression : arithmeticExpression . arithmeticOperators arithmeticExpression  (41)
-
-	'+'  shift 65
-	'-'  shift 66
-	'*'  shift 67
-	'/'  shift 68
-	REAL  reduce 36
-	CHAR  reduce 36
-	INTEGER  reduce 36
-	FALSE  reduce 36
-	TRUE  reduce 36
-	IDENTIFIER  reduce 36
-	READ  reduce 36
-	PRINT  reduce 36
-	RETURN  reduce 36
-	STRING  reduce 36
-	TO  reduce 36
-	FOR  reduce 36
-	IF  reduce 36
-	ELSE  reduce 36
-	'('  reduce 36
-	')'  reduce 36
-	'{'  reduce 36
-	';'  reduce 36
-	']'  reduce 36
-	"||"  reduce 36
-	"&&"  reduce 36
-	"=="  reduce 36
-	"!="  reduce 36
-	"<="  reduce 36
-	">="  reduce 36
-
-	arithmeticOperators  goto 70
-
-
-101: shift/reduce conflict (shift 65, reduce 41) on '+'
-101: shift/reduce conflict (shift 66, reduce 41) on '-'
-101: shift/reduce conflict (shift 67, reduce 41) on '*'
-101: shift/reduce conflict (shift 68, reduce 41) on '/'
-state 101
-	arithmeticExpression : arithmeticExpression . arithmeticOperators arithmeticExpression  (41)
-	arithmeticExpression : arithmeticExpression arithmeticOperators arithmeticExpression .  (41)
-
-	'+'  shift 65
-	'-'  shift 66
-	'*'  shift 67
-	'/'  shift 68
 	REAL  reduce 41
 	CHAR  reduce 41
 	INTEGER  reduce 41
@@ -1647,76 +1235,156 @@ state 101
 	'{'  reduce 41
 	';'  reduce 41
 	']'  reduce 41
-	"||"  reduce 41
-	"&&"  reduce 41
-	"=="  reduce 41
-	"!="  reduce 41
-	"<="  reduce 41
-	">="  reduce 41
 
+	logicalOperators  goto 60
+
+
+state 94
+	logicalExpression : arithmeticExpression . relationalOperators arithmeticExpression  (40)
+	arithmeticExpression : arithmeticExpression . arithmeticOperators arithmeticExpression  (44)
+
+	"=="  shift 61
+	"!="  shift 62
+	"<="  shift 63
+	">="  shift 64
+	'+'  shift 65
+	'-'  shift 66
+	'*'  shift 67
+	'/'  shift 68
+	.  error
+
+	relationalOperators  goto 69
 	arithmeticOperators  goto 70
 
 
-102: shift/reduce conflict (shift 65, reduce 46) on '+'
-102: shift/reduce conflict (shift 66, reduce 46) on '-'
-102: shift/reduce conflict (shift 67, reduce 46) on '*'
-102: shift/reduce conflict (shift 68, reduce 46) on '/'
-state 102
-	integerExpression : integerExpression . arithmeticOperators integerExpression  (46)
-	integerExpression : integerExpression arithmeticOperators integerExpression .  (46)
+state 95
+	logicalExpression : arithmeticExpression relationalOperators arithmeticExpression .  (40)
+	arithmeticExpression : arithmeticExpression . arithmeticOperators arithmeticExpression  (44)
 
 	'+'  shift 65
 	'-'  shift 66
 	'*'  shift 67
 	'/'  shift 68
-	REAL  reduce 46
-	CHAR  reduce 46
-	INTEGER  reduce 46
-	FALSE  reduce 46
-	TRUE  reduce 46
-	IDENTIFIER  reduce 46
-	READ  reduce 46
-	PRINT  reduce 46
-	RETURN  reduce 46
-	STRING  reduce 46
-	TO  reduce 46
-	FOR  reduce 46
-	IF  reduce 46
-	ELSE  reduce 46
-	'('  reduce 46
-	')'  reduce 46
-	'{'  reduce 46
-	';'  reduce 46
-	']'  reduce 46
-	"||"  reduce 46
-	"&&"  reduce 46
-	"=="  reduce 46
-	"!="  reduce 46
-	"<="  reduce 46
-	">="  reduce 46
+	REAL  reduce 40
+	CHAR  reduce 40
+	INTEGER  reduce 40
+	FALSE  reduce 40
+	TRUE  reduce 40
+	IDENTIFIER  reduce 40
+	READ  reduce 40
+	PRINT  reduce 40
+	RETURN  reduce 40
+	STRING  reduce 40
+	TO  reduce 40
+	FOR  reduce 40
+	IF  reduce 40
+	ELSE  reduce 40
+	'('  reduce 40
+	')'  reduce 40
+	'{'  reduce 40
+	';'  reduce 40
+	']'  reduce 40
+	"||"  reduce 40
+	"&&"  reduce 40
+
+	arithmeticOperators  goto 70
+
+
+96: shift/reduce conflict (shift 65, reduce 44) on '+'
+96: shift/reduce conflict (shift 66, reduce 44) on '-'
+96: shift/reduce conflict (shift 67, reduce 44) on '*'
+96: shift/reduce conflict (shift 68, reduce 44) on '/'
+state 96
+	arithmeticExpression : arithmeticExpression . arithmeticOperators arithmeticExpression  (44)
+	arithmeticExpression : arithmeticExpression arithmeticOperators arithmeticExpression .  (44)
+
+	'+'  shift 65
+	'-'  shift 66
+	'*'  shift 67
+	'/'  shift 68
+	REAL  reduce 44
+	CHAR  reduce 44
+	INTEGER  reduce 44
+	FALSE  reduce 44
+	TRUE  reduce 44
+	IDENTIFIER  reduce 44
+	READ  reduce 44
+	PRINT  reduce 44
+	RETURN  reduce 44
+	STRING  reduce 44
+	TO  reduce 44
+	FOR  reduce 44
+	IF  reduce 44
+	ELSE  reduce 44
+	'('  reduce 44
+	')'  reduce 44
+	'{'  reduce 44
+	';'  reduce 44
+	']'  reduce 44
+	"||"  reduce 44
+	"&&"  reduce 44
+	"=="  reduce 44
+	"!="  reduce 44
+	"<="  reduce 44
+	">="  reduce 44
+
+	arithmeticOperators  goto 70
+
+
+97: shift/reduce conflict (shift 65, reduce 48) on '+'
+97: shift/reduce conflict (shift 66, reduce 48) on '-'
+97: shift/reduce conflict (shift 67, reduce 48) on '*'
+97: shift/reduce conflict (shift 68, reduce 48) on '/'
+state 97
+	integerExpression : integerExpression . arithmeticOperators integerExpression  (48)
+	integerExpression : integerExpression arithmeticOperators integerExpression .  (48)
+
+	'+'  shift 65
+	'-'  shift 66
+	'*'  shift 67
+	'/'  shift 68
+	REAL  reduce 48
+	CHAR  reduce 48
+	INTEGER  reduce 48
+	FALSE  reduce 48
+	TRUE  reduce 48
+	IDENTIFIER  reduce 48
+	READ  reduce 48
+	PRINT  reduce 48
+	RETURN  reduce 48
+	STRING  reduce 48
+	TO  reduce 48
+	FOR  reduce 48
+	IF  reduce 48
+	ELSE  reduce 48
+	'('  reduce 48
+	')'  reduce 48
+	'{'  reduce 48
+	';'  reduce 48
+	']'  reduce 48
+	"||"  reduce 48
+	"&&"  reduce 48
+	"=="  reduce 48
+	"!="  reduce 48
+	"<="  reduce 48
+	">="  reduce 48
 
 	arithmeticOperators  goto 71
 
 
-state 103
-	charExpression : functCall .  (51)
-
-	.  reduce 51
-
-
-104: shift/reduce conflict (shift 58, reduce 49) on "||"
-104: shift/reduce conflict (shift 59, reduce 49) on "&&"
-104: shift/reduce conflict (shift 61, reduce 49) on "=="
-104: shift/reduce conflict (shift 62, reduce 49) on "!="
-104: shift/reduce conflict (shift 63, reduce 49) on "<="
-104: shift/reduce conflict (shift 64, reduce 49) on ">="
-104: shift/reduce conflict (shift 65, reduce 49) on '+'
-104: shift/reduce conflict (shift 66, reduce 49) on '-'
-104: shift/reduce conflict (shift 67, reduce 49) on '*'
-104: shift/reduce conflict (shift 68, reduce 49) on '/'
-state 104
-	charExpression : charExpression . operator charExpression  (49)
-	charExpression : charExpression operator charExpression .  (49)
+98: shift/reduce conflict (shift 58, reduce 50) on "||"
+98: shift/reduce conflict (shift 59, reduce 50) on "&&"
+98: shift/reduce conflict (shift 61, reduce 50) on "=="
+98: shift/reduce conflict (shift 62, reduce 50) on "!="
+98: shift/reduce conflict (shift 63, reduce 50) on "<="
+98: shift/reduce conflict (shift 64, reduce 50) on ">="
+98: shift/reduce conflict (shift 65, reduce 50) on '+'
+98: shift/reduce conflict (shift 66, reduce 50) on '-'
+98: shift/reduce conflict (shift 67, reduce 50) on '*'
+98: shift/reduce conflict (shift 68, reduce 50) on '/'
+state 98
+	charExpression : charExpression . operator charExpression  (50)
+	charExpression : charExpression operator charExpression .  (50)
 
 	"||"  shift 58
 	"&&"  shift 59
@@ -1728,25 +1396,25 @@ state 104
 	'-'  shift 66
 	'*'  shift 67
 	'/'  shift 68
-	REAL  reduce 49
-	CHAR  reduce 49
-	INTEGER  reduce 49
-	FALSE  reduce 49
-	TRUE  reduce 49
-	IDENTIFIER  reduce 49
-	READ  reduce 49
-	PRINT  reduce 49
-	RETURN  reduce 49
-	STRING  reduce 49
-	TO  reduce 49
-	FOR  reduce 49
-	IF  reduce 49
-	ELSE  reduce 49
-	'('  reduce 49
-	')'  reduce 49
-	'{'  reduce 49
-	';'  reduce 49
-	']'  reduce 49
+	REAL  reduce 50
+	CHAR  reduce 50
+	INTEGER  reduce 50
+	FALSE  reduce 50
+	TRUE  reduce 50
+	IDENTIFIER  reduce 50
+	READ  reduce 50
+	PRINT  reduce 50
+	RETURN  reduce 50
+	STRING  reduce 50
+	TO  reduce 50
+	FOR  reduce 50
+	IF  reduce 50
+	ELSE  reduce 50
+	'('  reduce 50
+	')'  reduce 50
+	'{'  reduce 50
+	';'  reduce 50
+	']'  reduce 50
 
 	relationalOperators  goto 72
 	logicalOperators  goto 73
@@ -1754,93 +1422,28 @@ state 104
 	operator  goto 75
 
 
-state 105
-	parenthesisExpr : expression .  (60)
+state 99
+	forCont : IDENTIFIER '=' . expression TO expression forEnd  (29)
 
-	.  reduce 60
-
-
-106: shift/reduce conflict (shift 58, reduce 52) on "||"
-106: shift/reduce conflict (shift 59, reduce 52) on "&&"
-106: shift/reduce conflict (shift 61, reduce 52) on "=="
-106: shift/reduce conflict (shift 62, reduce 52) on "!="
-106: shift/reduce conflict (shift 63, reduce 52) on "<="
-106: shift/reduce conflict (shift 64, reduce 52) on ">="
-106: shift/reduce conflict (shift 65, reduce 52) on '+'
-106: shift/reduce conflict (shift 66, reduce 52) on '-'
-106: shift/reduce conflict (shift 67, reduce 52) on '*'
-106: shift/reduce conflict (shift 68, reduce 52) on '/'
-state 106
-	expression : parenthesisExpr . operator parenthesisExpr  (52)
-	expression : parenthesisExpr operator parenthesisExpr .  (52)
-
-	"||"  shift 58
-	"&&"  shift 59
-	"=="  shift 61
-	"!="  shift 62
-	"<="  shift 63
-	">="  shift 64
-	'+'  shift 65
-	'-'  shift 66
-	'*'  shift 67
-	'/'  shift 68
-	REAL  reduce 52
-	CHAR  reduce 52
-	INTEGER  reduce 52
-	FALSE  reduce 52
-	TRUE  reduce 52
-	IDENTIFIER  reduce 52
-	READ  reduce 52
-	PRINT  reduce 52
-	RETURN  reduce 52
-	STRING  reduce 52
-	TO  reduce 52
-	FOR  reduce 52
-	IF  reduce 52
-	ELSE  reduce 52
-	'('  reduce 52
-	')'  reduce 52
-	'{'  reduce 52
-	';'  reduce 52
-	']'  reduce 52
-
-	relationalOperators  goto 72
-	logicalOperators  goto 73
-	arithmeticOperators  goto 74
-	operator  goto 76
-
-
-state 107
-	flowControl : FOR '(' IDENTIFIER '=' . expression TO expression ')' command  (27)
-
-	REAL  shift 27
-	CHAR  shift 28
-	INTEGER  shift 29
-	FALSE  shift 30
-	TRUE  shift 31
-	IDENTIFIER  shift 32
-	'('  shift 34
+	REAL  shift 28
+	CHAR  shift 29
+	INTEGER  shift 30
+	FALSE  shift 31
+	TRUE  shift 32
+	IDENTIFIER  shift 33
+	'('  shift 35
 	.  error
 
-	functCall  goto 35
-	expression  goto 125
-	logicalExpression  goto 38
-	arithmeticExpression  goto 39
-	integerExpression  goto 40
-	charExpression  goto 41
-	parenthesisExpr  goto 42
+	functCall  goto 36
+	expression  goto 118
+	logicalExpression  goto 39
+	arithmeticExpression  goto 40
+	integerExpression  goto 41
+	charExpression  goto 42
 
 
-108: shift/reduce conflict (shift 5, reduce 12) on IDENTIFIER
-108: shift/reduce conflict (shift 6, reduce 12) on READ
-108: shift/reduce conflict (shift 7, reduce 12) on PRINT
-108: shift/reduce conflict (shift 8, reduce 12) on RETURN
-108: shift/reduce conflict (shift 9, reduce 12) on FOR
-108: shift/reduce conflict (shift 10, reduce 12) on IF
-108: shift/reduce conflict (shift 11, reduce 12) on '{'
-state 108
-	flowControl : FOR '(' expression ')' . command  (26)
-	command : .  (12)
+state 100
+	forEnd : ')' . command  (30)
 
 	IDENTIFIER  shift 5
 	READ  shift 6
@@ -1849,10 +1452,9 @@ state 108
 	FOR  shift 9
 	IF  shift 10
 	'{'  shift 11
-	ELSE  reduce 12
-	';'  reduce 12
+	.  error
 
-	command  goto 126
+	command  goto 119
 	commandBlock  goto 18
 	print  goto 19
 	return  goto 20
@@ -1861,159 +1463,144 @@ state 108
 	flowControl  goto 23
 
 
-state 109
-	flowControl : IF '(' expression ')' . THEN command  (24)
-	flowControl : IF '(' expression ')' . THEN command ELSE command  (25)
+state 101
+	forCont : expression forEnd .  (28)
 
-	THEN  shift 127
+	.  reduce 28
+
+
+state 102
+	flowControl : IF '(' expression ')' . THEN command ifThenCont  (24)
+
+	THEN  shift 120
 	.  error
 
 
-state 110
+state 103
 	commandBlockList : command ';' commandBlockList .  (23)
 
 	.  reduce 23
 
 
-state 111
+state 104
 	functParamsDef : type . IDENTIFIER functParamsDefCont  (18)
 
-	IDENTIFIER  shift 128
+	IDENTIFIER  shift 121
 	.  error
 
 
-state 112
-	functDeclaration : type IDENTIFIER '(' functParamsDef . commandBlock  (5)
+state 105
+	functDeclaration : type IDENTIFIER '(' functParamsDef . commandBlock  (6)
 
 	'{'  shift 11
 	.  error
 
-	commandBlock  goto 129
+	commandBlock  goto 122
 
 
-state 113
-	arrayOrNormal : '[' INTEGER . ']' arrayInit  (77)
+state 106
+	arrayOrNormal : '[' INTEGER . ']' arrayInit  (75)
 
-	']'  shift 130
+	']'  shift 123
 	.  error
 
 
-state 114
-	literal : CHAR .  (85)
-
-	.  reduce 85
-
-
-state 115
-	literal : INTEGER .  (82)
-
-	.  reduce 82
-
-
-state 116
-	literal : FALSE .  (83)
+state 107
+	literal : CHAR .  (83)
 
 	.  reduce 83
 
 
-state 117
-	literal : TRUE .  (84)
+state 108
+	literal : INTEGER .  (80)
 
-	.  reduce 84
-
-
-state 118
-	arrayOrNormal : ':' literal .  (76)
-
-	.  reduce 76
+	.  reduce 80
 
 
-state 119
-	variableDeclaration : type IDENTIFIER arrayOrNormal ';' .  (75)
+state 109
+	literal : FALSE .  (81)
 
-	.  reduce 75
+	.  reduce 81
 
 
-state 120
-	attribuition : IDENTIFIER '[' expression ']' '=' . expression  (29)
+state 110
+	literal : TRUE .  (82)
 
-	REAL  shift 27
-	CHAR  shift 28
-	INTEGER  shift 29
-	FALSE  shift 30
-	TRUE  shift 31
-	IDENTIFIER  shift 32
-	'('  shift 34
+	.  reduce 82
+
+
+state 111
+	arrayOrNormal : ':' literal .  (74)
+
+	.  reduce 74
+
+
+state 112
+	variableDeclaration : type IDENTIFIER arrayOrNormal ';' .  (73)
+
+	.  reduce 73
+
+
+state 113
+	attribuitionCont : '[' expression ']' '=' . expression  (33)
+
+	REAL  shift 28
+	CHAR  shift 29
+	INTEGER  shift 30
+	FALSE  shift 31
+	TRUE  shift 32
+	IDENTIFIER  shift 33
+	'('  shift 35
 	.  error
 
-	functCall  goto 35
-	expression  goto 131
-	logicalExpression  goto 38
-	arithmeticExpression  goto 39
-	integerExpression  goto 40
-	charExpression  goto 41
-	parenthesisExpr  goto 42
+	functCall  goto 36
+	expression  goto 124
+	logicalExpression  goto 39
+	arithmeticExpression  goto 40
+	integerExpression  goto 41
+	charExpression  goto 42
 
 
-state 121
+state 114
 	functParamsCont : ',' . IDENTIFIER functParamsCont  (16)
 
-	IDENTIFIER  shift 132
+	IDENTIFIER  shift 125
 	.  error
 
 
-state 122
+state 115
 	functParams : IDENTIFIER functParamsCont .  (14)
 
 	.  reduce 14
 
 
-state 123
+state 116
 	functCall : IDENTIFIER '(' functParams ')' .  (13)
 
 	.  reduce 13
 
 
-state 124
+state 117
 	expressionVarCont : '[' arrayPosition ']' .  (57)
 
 	.  reduce 57
 
 
-state 125
-	flowControl : FOR '(' IDENTIFIER '=' expression . TO expression ')' command  (27)
-	parenthesisExpr : expression .  (60)
+state 118
+	forCont : IDENTIFIER '=' expression . TO expression forEnd  (29)
 
-	TO  shift 133
-	"||"  reduce 60
-	"&&"  reduce 60
-	"=="  reduce 60
-	"!="  reduce 60
-	"<="  reduce 60
-	">="  reduce 60
-	'+'  reduce 60
-	'-'  reduce 60
-	'*'  reduce 60
-	'/'  reduce 60
+	TO  shift 126
+	.  error
 
 
-state 126
-	flowControl : FOR '(' expression ')' command .  (26)
+state 119
+	forEnd : ')' command .  (30)
 
-	.  reduce 26
+	.  reduce 30
 
 
-127: shift/reduce conflict (shift 5, reduce 12) on IDENTIFIER
-127: shift/reduce conflict (shift 6, reduce 12) on READ
-127: shift/reduce conflict (shift 7, reduce 12) on PRINT
-127: shift/reduce conflict (shift 8, reduce 12) on RETURN
-127: shift/reduce conflict (shift 9, reduce 12) on FOR
-127: shift/reduce conflict (shift 10, reduce 12) on IF
-127: shift/reduce conflict (shift 11, reduce 12) on '{'
-state 127
-	flowControl : IF '(' expression ')' THEN . command  (24)
-	flowControl : IF '(' expression ')' THEN . command ELSE command  (25)
-	command : .  (12)
+state 120
+	flowControl : IF '(' expression ')' THEN . command ifThenCont  (24)
 
 	IDENTIFIER  shift 5
 	READ  shift 6
@@ -2022,10 +1609,9 @@ state 127
 	FOR  shift 9
 	IF  shift 10
 	'{'  shift 11
-	ELSE  reduce 12
-	';'  reduce 12
+	.  error
 
-	command  goto 134
+	command  goto 127
 	commandBlock  goto 18
 	print  goto 19
 	return  goto 20
@@ -2034,105 +1620,87 @@ state 127
 	flowControl  goto 23
 
 
-state 128
+state 121
 	functParamsDef : type IDENTIFIER . functParamsDefCont  (18)
 	functParamsDefCont : .  (21)
 
-	','  shift 135
+	','  shift 128
 	'{'  reduce 21
 
-	functParamsDefCont  goto 136
+	functParamsDefCont  goto 129
 
 
-state 129
-	functDeclaration : type IDENTIFIER '(' functParamsDef commandBlock .  (5)
+state 122
+	functDeclaration : type IDENTIFIER '(' functParamsDef commandBlock .  (6)
 
-	.  reduce 5
-
-
-state 130
-	arrayOrNormal : '[' INTEGER ']' . arrayInit  (77)
-	arrayInit : .  (79)
-
-	':'  shift 137
-	';'  reduce 79
-
-	arrayInit  goto 138
+	.  reduce 6
 
 
-state 131
-	attribuition : IDENTIFIER '[' expression ']' '=' expression .  (29)
-	parenthesisExpr : expression .  (60)
+state 123
+	arrayOrNormal : '[' INTEGER ']' . arrayInit  (75)
+	arrayInit : .  (77)
 
-	IDENTIFIER  reduce 29
-	READ  reduce 29
-	PRINT  reduce 29
-	RETURN  reduce 29
-	FOR  reduce 29
-	IF  reduce 29
-	ELSE  reduce 29
-	'{'  reduce 29
-	';'  reduce 29
-	"||"  reduce 60
-	"&&"  reduce 60
-	"=="  reduce 60
-	"!="  reduce 60
-	"<="  reduce 60
-	">="  reduce 60
-	'+'  reduce 60
-	'-'  reduce 60
-	'*'  reduce 60
-	'/'  reduce 60
+	':'  shift 130
+	';'  reduce 77
+
+	arrayInit  goto 131
 
 
-state 132
+state 124
+	attribuitionCont : '[' expression ']' '=' expression .  (33)
+
+	.  reduce 33
+
+
+state 125
 	functParamsCont : ',' IDENTIFIER . functParamsCont  (16)
 	functParamsCont : .  (17)
 
-	','  shift 121
+	','  shift 114
 	')'  reduce 17
 
-	functParamsCont  goto 139
+	functParamsCont  goto 132
 
 
-state 133
-	flowControl : FOR '(' IDENTIFIER '=' expression TO . expression ')' command  (27)
+state 126
+	forCont : IDENTIFIER '=' expression TO . expression forEnd  (29)
 
-	REAL  shift 27
-	CHAR  shift 28
-	INTEGER  shift 29
-	FALSE  shift 30
-	TRUE  shift 31
-	IDENTIFIER  shift 32
-	'('  shift 34
+	REAL  shift 28
+	CHAR  shift 29
+	INTEGER  shift 30
+	FALSE  shift 31
+	TRUE  shift 32
+	IDENTIFIER  shift 33
+	'('  shift 35
 	.  error
 
-	functCall  goto 35
-	expression  goto 140
-	logicalExpression  goto 38
-	arithmeticExpression  goto 39
-	integerExpression  goto 40
-	charExpression  goto 41
-	parenthesisExpr  goto 42
+	functCall  goto 36
+	expression  goto 133
+	logicalExpression  goto 39
+	arithmeticExpression  goto 40
+	integerExpression  goto 41
+	charExpression  goto 42
 
 
-134: shift/reduce conflict (shift 141, reduce 24) on ELSE
-state 134
-	flowControl : IF '(' expression ')' THEN command .  (24)
-	flowControl : IF '(' expression ')' THEN command . ELSE command  (25)
+127: shift/reduce conflict (shift 134, reduce 27) on ELSE
+state 127
+	flowControl : IF '(' expression ')' THEN command . ifThenCont  (24)
+	ifThenCont : .  (27)
 
-	ELSE  shift 141
-	IDENTIFIER  reduce 24
-	READ  reduce 24
-	PRINT  reduce 24
-	RETURN  reduce 24
-	FOR  reduce 24
-	IF  reduce 24
-	'{'  reduce 24
-	';'  reduce 24
+	ELSE  shift 134
+	IDENTIFIER  reduce 27
+	READ  reduce 27
+	PRINT  reduce 27
+	RETURN  reduce 27
+	FOR  reduce 27
+	IF  reduce 27
+	'{'  reduce 27
+	';'  reduce 27
+
+	ifThenCont  goto 135
 
 
-state 135
+state 128
 	functParamsDefCont : ',' . type IDENTIFIER functParamsDefCont  (20)
 
 	INT  shift 1
@@ -2141,68 +1709,52 @@ state 135
 	CHAR  shift 4
 	.  error
 
-	type  goto 142
+	type  goto 136
 
 
-state 136
+state 129
 	functParamsDef : type IDENTIFIER functParamsDefCont .  (18)
 
 	.  reduce 18
 
 
-state 137
-	arrayInit : ':' . arrayInitLiterals  (78)
-	arrayInitLiterals : .  (81)
+state 130
+	arrayInit : ':' . arrayInitLiterals  (76)
+	arrayInitLiterals : .  (79)
 
-	CHAR  shift 114
-	INTEGER  shift 115
-	FALSE  shift 116
-	TRUE  shift 117
-	';'  reduce 81
+	CHAR  shift 107
+	INTEGER  shift 108
+	FALSE  shift 109
+	TRUE  shift 110
+	';'  reduce 79
 
-	literal  goto 143
-	arrayInitLiterals  goto 144
-
-
-state 138
-	arrayOrNormal : '[' INTEGER ']' arrayInit .  (77)
-
-	.  reduce 77
+	literal  goto 137
+	arrayInitLiterals  goto 138
 
 
-state 139
+state 131
+	arrayOrNormal : '[' INTEGER ']' arrayInit .  (75)
+
+	.  reduce 75
+
+
+state 132
 	functParamsCont : ',' IDENTIFIER functParamsCont .  (16)
 
 	.  reduce 16
 
 
-state 140
-	flowControl : FOR '(' IDENTIFIER '=' expression TO expression . ')' command  (27)
-	parenthesisExpr : expression .  (60)
+state 133
+	forCont : IDENTIFIER '=' expression TO expression . forEnd  (29)
 
-	')'  shift 145
-	"||"  reduce 60
-	"&&"  reduce 60
-	"=="  reduce 60
-	"!="  reduce 60
-	"<="  reduce 60
-	">="  reduce 60
-	'+'  reduce 60
-	'-'  reduce 60
-	'*'  reduce 60
-	'/'  reduce 60
+	')'  shift 100
+	.  error
+
+	forEnd  goto 139
 
 
-141: shift/reduce conflict (shift 5, reduce 12) on IDENTIFIER
-141: shift/reduce conflict (shift 6, reduce 12) on READ
-141: shift/reduce conflict (shift 7, reduce 12) on PRINT
-141: shift/reduce conflict (shift 8, reduce 12) on RETURN
-141: shift/reduce conflict (shift 9, reduce 12) on FOR
-141: shift/reduce conflict (shift 10, reduce 12) on IF
-141: shift/reduce conflict (shift 11, reduce 12) on '{'
-state 141
-	flowControl : IF '(' expression ')' THEN command ELSE . command  (25)
-	command : .  (12)
+state 134
+	ifThenCont : ELSE . command  (26)
 
 	IDENTIFIER  shift 5
 	READ  shift 6
@@ -2211,10 +1763,9 @@ state 141
 	FOR  shift 9
 	IF  shift 10
 	'{'  shift 11
-	ELSE  reduce 12
-	';'  reduce 12
+	.  error
 
-	command  goto 146
+	command  goto 140
 	commandBlock  goto 18
 	print  goto 19
 	return  goto 20
@@ -2223,122 +1774,84 @@ state 141
 	flowControl  goto 23
 
 
-state 142
+state 135
+	flowControl : IF '(' expression ')' THEN command ifThenCont .  (24)
+
+	.  reduce 24
+
+
+state 136
 	functParamsDefCont : ',' type . IDENTIFIER functParamsDefCont  (20)
 
-	IDENTIFIER  shift 147
+	IDENTIFIER  shift 141
 	.  error
 
 
-state 143
-	arrayInitLiterals : literal . arrayInitLiterals  (80)
-	arrayInitLiterals : .  (81)
+state 137
+	arrayInitLiterals : literal . arrayInitLiterals  (78)
+	arrayInitLiterals : .  (79)
 
-	CHAR  shift 114
-	INTEGER  shift 115
-	FALSE  shift 116
-	TRUE  shift 117
-	';'  reduce 81
+	CHAR  shift 107
+	INTEGER  shift 108
+	FALSE  shift 109
+	TRUE  shift 110
+	';'  reduce 79
 
-	literal  goto 143
-	arrayInitLiterals  goto 148
+	literal  goto 137
+	arrayInitLiterals  goto 142
 
 
-state 144
-	arrayInit : ':' arrayInitLiterals .  (78)
+state 138
+	arrayInit : ':' arrayInitLiterals .  (76)
+
+	.  reduce 76
+
+
+state 139
+	forCont : IDENTIFIER '=' expression TO expression forEnd .  (29)
+
+	.  reduce 29
+
+
+state 140
+	ifThenCont : ELSE command .  (26)
+
+	.  reduce 26
+
+
+state 141
+	functParamsDefCont : ',' type IDENTIFIER . functParamsDefCont  (20)
+	functParamsDefCont : .  (21)
+
+	','  shift 128
+	'{'  reduce 21
+
+	functParamsDefCont  goto 143
+
+
+state 142
+	arrayInitLiterals : literal arrayInitLiterals .  (78)
 
 	.  reduce 78
 
 
-145: shift/reduce conflict (shift 5, reduce 12) on IDENTIFIER
-145: shift/reduce conflict (shift 6, reduce 12) on READ
-145: shift/reduce conflict (shift 7, reduce 12) on PRINT
-145: shift/reduce conflict (shift 8, reduce 12) on RETURN
-145: shift/reduce conflict (shift 9, reduce 12) on FOR
-145: shift/reduce conflict (shift 10, reduce 12) on IF
-145: shift/reduce conflict (shift 11, reduce 12) on '{'
-state 145
-	flowControl : FOR '(' IDENTIFIER '=' expression TO expression ')' . command  (27)
-	command : .  (12)
-
-	IDENTIFIER  shift 5
-	READ  shift 6
-	PRINT  shift 7
-	RETURN  shift 8
-	FOR  shift 9
-	IF  shift 10
-	'{'  shift 11
-	ELSE  reduce 12
-	';'  reduce 12
-
-	command  goto 149
-	commandBlock  goto 18
-	print  goto 19
-	return  goto 20
-	read  goto 21
-	attribuition  goto 22
-	flowControl  goto 23
-
-
-state 146
-	flowControl : IF '(' expression ')' THEN command ELSE command .  (25)
-
-	.  reduce 25
-
-
-state 147
-	functParamsDefCont : ',' type IDENTIFIER . functParamsDefCont  (20)
-	functParamsDefCont : .  (21)
-
-	','  shift 135
-	'{'  reduce 21
-
-	functParamsDefCont  goto 150
-
-
-state 148
-	arrayInitLiterals : literal arrayInitLiterals .  (80)
-
-	.  reduce 80
-
-
-state 149
-	flowControl : FOR '(' IDENTIFIER '=' expression TO expression ')' command .  (27)
-
-	.  reduce 27
-
-
-state 150
+state 143
 	functParamsDefCont : ',' type IDENTIFIER functParamsDefCont .  (20)
 
 	.  reduce 20
 
 
-State 0 contains 7 shift/reduce conflicts.
 State 7 contains 1 shift/reduce conflict.
-State 16 contains 7 shift/reduce conflicts.
-State 29 contains 29 reduce/reduce conflicts.
-State 32 contains 1 shift/reduce conflict.
 State 33 contains 1 shift/reduce conflict.
-State 35 contains 87 reduce/reduce conflicts.
-State 36 contains 1 shift/reduce conflict.
-State 38 contains 2 shift/reduce conflicts.
-State 39 contains 8 shift/reduce conflicts.
-State 40 contains 4 shift/reduce conflicts.
-State 41 contains 10 shift/reduce conflicts.
-State 96 contains 8 reduce/reduce conflicts.
-State 97 contains 2 shift/reduce conflicts.
-State 100 contains 4 shift/reduce conflicts.
-State 101 contains 4 shift/reduce conflicts.
-State 102 contains 4 shift/reduce conflicts.
-State 104 contains 10 shift/reduce conflicts.
-State 106 contains 10 shift/reduce conflicts.
-State 108 contains 7 shift/reduce conflicts.
-State 127 contains 7 shift/reduce conflicts.
-State 134 contains 1 shift/reduce conflict.
-State 141 contains 7 shift/reduce conflicts.
-State 145 contains 7 shift/reduce conflicts.
+State 34 contains 1 shift/reduce conflict.
+State 37 contains 1 shift/reduce conflict.
+State 41 contains 4 shift/reduce conflicts.
+State 93 contains 2 shift/reduce conflicts.
+State 96 contains 4 shift/reduce conflicts.
+State 97 contains 4 shift/reduce conflicts.
+State 98 contains 10 shift/reduce conflicts.
+State 127 contains 1 shift/reduce conflict.
 
 
-39 terminals, 36 nonterminals
-90 grammar rules, 151 states
+39 terminals, 39 nonterminals
+88 grammar rules, 144 states

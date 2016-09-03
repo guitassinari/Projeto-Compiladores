@@ -23,7 +23,8 @@
 %token ELSE
 
 %%
-program             : commandList
+program             : program
+                    | commandList
                     | variableDeclaration
                     | functDeclaration
                     ;
@@ -31,7 +32,7 @@ program             : commandList
 commandList         : command commandList
                     ;
 
-functDeclaration    : type IDENTIFIER '(' functParamsDef commandBlock
+functDeclaration    : type IDENTIFIER '(' functParamsDef ')' commandBlock
                     ;
 
 command             : print
@@ -40,7 +41,6 @@ command             : print
                     | attribuition
                     | flowControl
                     | commandBlock
-                    |
                     ;
 
 functCall           : IDENTIFIER '(' functParams ')'
@@ -53,8 +53,6 @@ functParams         : IDENTIFIER functParamsCont
 functParamsCont     : ',' IDENTIFIER functParamsCont
                     |
                     ;
-
-
 
 functParamsDef      : type IDENTIFIER functParamsDefCont
                     |
@@ -70,14 +68,26 @@ commandBlock        : '{' commandBlockList '}'
 commandBlockList    : command ';' commandBlockList
                     ;
 
-flowControl         : IF '(' expression ')' THEN command
-                    | IF '(' expression ')' THEN command ELSE command
-                    | FOR '(' expression ')' command
-                    | FOR '(' IDENTIFIER '=' expression TO expression ')' command
+flowControl         : IF '(' expression ')' THEN command ifThenCont
+                    | FOR '(' forCont
                     ;
 
-attribuition        : IDENTIFIER '=' expression
-                    | IDENTIFIER '[' expression ']' '=' expression
+ifThenCont          : ELSE command
+                    |
+                    ;
+
+forCont             : expression forEnd
+                    | IDENTIFIER '=' expression TO expression forEnd
+                    ;
+
+forEnd              : ')' command
+                    ;
+
+attribuition        : IDENTIFIER attribuitionCont
+                    ;
+
+attribuitionCont    : '=' expression
+                    | '[' expression ']' '=' expression
                     ;
 
 read                : READ IDENTIFIER
@@ -98,38 +108,31 @@ logicalExpression   : arithmeticExpression relationalOperators arithmeticExpress
                     | logicalExpression logicalOperators logicalExpression
                     | TRUE
                     | FALSE
-                    | functCall
                     ;
 
 arithmeticExpression: arithmeticExpression arithmeticOperators arithmeticExpression
+                    | integerExpression
                     | IDENTIFIER expressionVarCont
                     | REAL
-                    | INTEGER
-                    | functCall
                     ;
 
 integerExpression   : integerExpression arithmeticOperators integerExpression
                     | INTEGER
-                    | functCall
-                    ;
-charExpression      : charExpression operator charExpression
-                    | CHAR
-                    | functCall
                     ;
 
-expression          : parenthesisExpr operator parenthesisExpr
+charExpression      : charExpression operator charExpression
+                    | CHAR
+                    ;
+
+expression          : '(' expression ')'
                     | logicalExpression
                     | arithmeticExpression
-                    | integerExpression
                     | charExpression
+                    | functCall
                     ;
 
 expressionVarCont   : '[' arrayPosition ']'
                     |
-                    ;
-
-parenthesisExpr     : '(' expression ')'
-                    | expression
                     ;
 
 arrayPosition       : integerExpression
