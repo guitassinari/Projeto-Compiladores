@@ -27,7 +27,7 @@ declarationList     : variableDeclaration declarationList
                     | functDeclaration declarationList
                     ;
 
-variableDeclaration : TYPE IDENTIFIER arrayOrNormal ';' {printf(" VAR SUCCESS \n ");}
+variableDeclaration : TYPE IDENTIFIER arrayOrNormal ';'
                     ;
 
 arrayOrNormal       : ':' INT_LIT
@@ -47,14 +47,14 @@ arrayInitLiterals   : BOOL_LIT arrayInitLiterals
                     |
                     ;
 
-functDeclaration    : TYPE IDENTIFIER '(' functParamsDef ')' commandBlock ';' {printf("DECL");}
+functDeclaration    : TYPE IDENTIFIER '(' functParamsDef ')' commandBlock ';'
                     ;
 
 functParamsDef      : TYPE IDENTIFIER functParamsDefCont
-                    | {printf("EMPTY");}
+                    |
                     ;
 
-functCall           : IDENTIFIER '(' functParams ')' {printf("CALL");}
+functCall           : IDENTIFIER '(' functParams ')'
                     ;
 
 functParams         : IDENTIFIER functParamsCont
@@ -69,18 +69,18 @@ functParamsDefCont  : ',' TYPE IDENTIFIER functParamsDefCont
                     |
                     ;
 
-commandBlock        : '{' commandBlockList '}' {printf("CMD BLOCK");}
+commandBlock        : '{' commandBlockList '}'
                     ;
 
-commandBlockList    : command ';' commandBlockListCont {printf("BLCKLIST");}
+commandBlockList    : command ';' commandBlockListCont
                     ;
 
-commandBlockListCont: command ';' commandBlockListCont {printf("BLCKLISTCONT");}
+commandBlockListCont: command ';' commandBlockListCont
                     |
                     ;
 
-flowControl         : IF '(' expression ')' THEN command ifThenCont {printf("IF");}
-                    | FOR '(' forCont {printf("FOR");}
+flowControl         : IF '(' expression ')' THEN command ifThenCont
+                    | FOR '(' forCont
                     ;
 
 ifThenCont          : ELSE command
@@ -103,20 +103,20 @@ command             : print
                     |
                     ;
 
-attribuition        : IDENTIFIER attribuitionCont {printf("ATTR");}
+attribuition        : IDENTIFIER attribuitionCont
                     ;
 
 attribuitionCont    : '=' expression
                     | '[' expression ']' '=' expression
                     ;
 
-read                : READ IDENTIFIER {printf("READ");}
+read                : READ IDENTIFIER
                     ;
 
-return              : RETURN expression {printf("RETURN");}
+return              : RETURN expression
                     ;
 
-print               : PRINT printList {printf("PRINT");}
+print               : PRINT printList
                     ;
 
 printList           : STRING printList
@@ -131,7 +131,7 @@ logicalExpression   : arithmeticExpression relationalOperators arithmeticExpress
 
 arithmeticExpression: arithmeticExpression arithmeticOperators arithmeticExpression
                     | integerExpression
-                    | IDENTIFIER expressionVarCont {printf("HA");}
+                    | IDENTIFIER expressionVarCont
                     ;
 
 integerExpression   : integerExpression arithmeticOperators integerExpression
@@ -142,7 +142,9 @@ charExpression      : charExpression operator charExpression
                     | CHAR_LIT
                     ;
 
-expression          : logicalExpression
+expression          : '(' expression ')'
+                    | functCall
+                    | logicalExpression
                     | arithmeticExpression
                     | charExpression
                     ;
@@ -176,8 +178,3 @@ arithmeticOperators : '+'
                     ;
 
 %%
-
-void yyerror (char const *s) {
-  printf(" Fodeu %s", s);
-  exit(3);
-}

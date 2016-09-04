@@ -8,6 +8,7 @@
 struct entry_s {
 	char *key;
 	char *value;
+	int type;
 	struct entry_s *next;
 };
 
@@ -63,7 +64,7 @@ int ht_hash( hashtable_t *hashtable, char *key ) {
 }
 
 /* Create a key-value pair. */
-entry_t *ht_newpair( char *key, char *value ) {
+entry_t *ht_newpair( char *key, char *value, int type ) {
 	entry_t *newpair;
 
 	if( ( newpair = malloc( sizeof( entry_t ) ) ) == NULL ) {
@@ -78,13 +79,15 @@ entry_t *ht_newpair( char *key, char *value ) {
 		return NULL;
 	}
 
+	newpair->type = type;
+
 	newpair->next = NULL;
 
 	return newpair;
 }
 
 /* Insert a key-value pair into a hash table. */
-void ht_set( hashtable_t *hashtable, char *key, char *value ) {
+void ht_set( hashtable_t *hashtable, char *key, char *value, int type ) {
 	int bin = 0;
 	entry_t *newpair = NULL;
 	entry_t *next = NULL;
@@ -104,10 +107,11 @@ void ht_set( hashtable_t *hashtable, char *key, char *value ) {
 
 		free( next->value );
 		next->value = strdup( value );
+		next->type = type;
 
 	/* Nope, could't find it.  Time to grow a pair. */
 	} else {
-		newpair = ht_newpair( key, value );
+		newpair = ht_newpair( key, value, type);
 
 		/* We're at the start of the linked list in this bin. */
 		if( next == hashtable->table[ bin ] ) {
