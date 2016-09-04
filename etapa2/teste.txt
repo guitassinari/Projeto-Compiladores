@@ -1,1 +1,4 @@
-real hey ( ) { ; } ;
+real teste : 22 ;
+real teste[22] : 22 22 22 ;
+real teste[22];
+real funcao();

@@ -23,13 +23,17 @@
 
 %%
 
-[0-9]+ {return INTEGER;}
-[;:=+-[\].{}(),-_/] {return yytext[0];}
+[0-9]+ {return INT_LIT;}
+FALSE { printf("BOOL"); return BOOL_LIT;}
+TRUE { printf("BOOL"); return BOOL_LIT;}
+'[a-zA-z]' {return CHAR_LIT;}
 
-int {return INT;}
-real {return REAL;}
-bool {return BOOL;}
-char {return CHAR;}
+[;:=+-[\].{}(),-_//\\*|&!=<>] {printf("%c", yytext[0]);return yytext[0];}
+
+int {printf(TYPE); return TYPE;}
+real {printf("TYPE"); return TYPE;}
+bool {printf("TYPE"); return TYPE;}
+char {printf("TYPE"); return TYPE;}
 
 read {return READ;}
 print {return PRINT;}
@@ -41,10 +45,8 @@ then {return THEN;}
 else {return ELSE;}
 L?\"(\\.|[^\\"])*\"	{return STRING;}
 
-FALSE {return FALSE;}
-TRUE {return TRUE;}
-'[a-zA-z]' {return CHAR;}
-[a-zA-Z][a-zA-Z_0-9]+ {return IDENTIFIER;}
+
+[a-zA-Z][a-zA-Z_0-9]+ {printf("ID"); return IDENTIFIER;}
 
 \n {}
 

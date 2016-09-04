@@ -1,0 +1,15 @@
+#define TYPE 257
+#define CHAR_LIT 258
+#define INT_LIT 259
+#define BOOL_LIT 260
+#define IDENTIFIER 261
+#define READ 262
+#define PRINT 263
+#define RETURN 264
+#define STRING 265
+#define TO 266
+#define FOR 267
+#define IF 268
+#define THEN 269
+#define ELSE 270
+#define END 271

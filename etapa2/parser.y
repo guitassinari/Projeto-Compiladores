@@ -3,14 +3,10 @@
   #include <stdlib.h>
 %}
 
-%token INT
-%token REAL
-%token BOOL
-%token CHAR
-%token INTEGER
-%token FALSE
-%token TRUE
-%token CHAR
+%token TYPE
+%token CHAR_LIT
+%token INT_LIT
+%token BOOL_LIT
 %token IDENTIFIER
 %token READ
 %token PRINT
@@ -31,19 +27,34 @@ declarationList     : variableDeclaration declarationList
                     | functDeclaration declarationList
                     ;
 
-functDeclaration    : type IDENTIFIER '(' functParamsDef ')' commandBlock ';'
+variableDeclaration : TYPE IDENTIFIER arrayOrNormal ';' {printf(" VAR SUCCESS \n ");}
                     ;
 
-command             : print
-                    | return
-                    | read
-                    | attribuition
-                    | flowControl
-                    | commandBlock
+arrayOrNormal       : ':' INT_LIT
+                    | ':' BOOL_LIT
+                    | ':' CHAR_LIT
+                    | ':' STRING
+                    | '[' INT_LIT ']' arrayInit
+                    ;
+
+arrayInit           : ':' arrayInitLiterals
                     |
                     ;
 
-functCall           : IDENTIFIER '(' functParams ')'
+arrayInitLiterals   : BOOL_LIT arrayInitLiterals
+                    | INT_LIT arrayInitLiterals
+                    | CHAR_LIT arrayInitLiterals
+                    |
+                    ;
+
+functDeclaration    : TYPE IDENTIFIER '(' functParamsDef ')' commandBlock ';' {printf("DECL");}
+                    ;
+
+functParamsDef      : TYPE IDENTIFIER functParamsDefCont
+                    | {printf("EMPTY");}
+                    ;
+
+functCall           : IDENTIFIER '(' functParams ')' {printf("CALL");}
                     ;
 
 functParams         : IDENTIFIER functParamsCont
@@ -54,22 +65,22 @@ functParamsCont     : ',' IDENTIFIER functParamsCont
                     |
                     ;
 
-functParamsDef      : type IDENTIFIER functParamsDefCont
+functParamsDefCont  : ',' TYPE IDENTIFIER functParamsDefCont
                     |
                     ;
 
-functParamsDefCont  : ',' type IDENTIFIER functParamsDefCont
+commandBlock        : '{' commandBlockList '}' {printf("CMD BLOCK");}
+                    ;
+
+commandBlockList    : command ';' commandBlockListCont {printf("BLCKLIST");}
+                    ;
+
+commandBlockListCont: command ';' commandBlockListCont {printf("BLCKLISTCONT");}
                     |
                     ;
 
-commandBlock        : '{' commandBlockList '}'
-                    ;
-
-commandBlockList    : command ';' commandBlockList
-                    ;
-
-flowControl         : IF '(' expression ')' THEN command ifThenCont
-                    | FOR '(' forCont
+flowControl         : IF '(' expression ')' THEN command ifThenCont {printf("IF");}
+                    | FOR '(' forCont {printf("FOR");}
                     ;
 
 ifThenCont          : ELSE command
@@ -83,20 +94,29 @@ forCont             : expression forEnd
 forEnd              : ')' command
                     ;
 
-attribuition        : IDENTIFIER attribuitionCont
+command             : print
+                    | return
+                    | read
+                    | attribuition
+                    | flowControl
+                    | commandBlock
+                    |
+                    ;
+
+attribuition        : IDENTIFIER attribuitionCont {printf("ATTR");}
                     ;
 
 attribuitionCont    : '=' expression
                     | '[' expression ']' '=' expression
                     ;
 
-read                : READ IDENTIFIER
+read                : READ IDENTIFIER {printf("READ");}
                     ;
 
-return              : RETURN expression
+return              : RETURN expression {printf("RETURN");}
                     ;
 
-print               : PRINT printList
+print               : PRINT printList {printf("PRINT");}
                     ;
 
 printList           : STRING printList
@@ -106,29 +126,25 @@ printList           : STRING printList
 
 logicalExpression   : arithmeticExpression relationalOperators arithmeticExpression
                     | logicalExpression logicalOperators logicalExpression
-                    | TRUE
-                    | FALSE
+                    | BOOL_LIT
                     ;
 
 arithmeticExpression: arithmeticExpression arithmeticOperators arithmeticExpression
                     | integerExpression
-                    | IDENTIFIER expressionVarCont
-                    | REAL
+                    | IDENTIFIER expressionVarCont {printf("HA");}
                     ;
 
 integerExpression   : integerExpression arithmeticOperators integerExpression
-                    | INTEGER
+                    | INT_LIT
                     ;
 
 charExpression      : charExpression operator charExpression
-                    | CHAR
+                    | CHAR_LIT
                     ;
 
-expression          : '(' expression ')'
-                    | logicalExpression
+expression          : logicalExpression
                     | arithmeticExpression
                     | charExpression
-                    | functCall
                     ;
 
 expressionVarCont   : '[' arrayPosition ']'
@@ -143,47 +159,20 @@ operator            : logicalOperators
                     | arithmeticOperators
                     ;
 
-logicalOperators    : '||'
-                    | '&&'
+logicalOperators    : '|''|'
+                    | '&''&'
                     ;
 
-relationalOperators : '=='
-                    | '!='
-                    | '<='
-                    | '>='
+relationalOperators : '=''='
+                    | '!''='
+                    | '<''='
+                    | '>''='
                     ;
 
 arithmeticOperators : '+'
                     | '-'
                     | '*'
                     | '/'
-                    ;
-
-variableDeclaration : type IDENTIFIER arrayOrNormal ';'
-                    ;
-
-arrayOrNormal       : ':' literal
-                    | '[' INTEGER ']' arrayInit
-                    ;
-
-arrayInit           : ':' arrayInitLiterals
-                    |
-                    ;
-
-arrayInitLiterals   : literal arrayInitLiterals
-                    |
-                    ;
-
-literal             : INTEGER
-                    | FALSE
-                    | TRUE
-                    | CHAR
-                    ;
-
-type                : INT
-                    | REAL
-                    | BOOL
-                    | CHAR
                     ;
 
 %%
