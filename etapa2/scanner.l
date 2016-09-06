@@ -48,6 +48,13 @@ real {return TYPE;}
 bool {return TYPE;}
 char {return TYPE;}
 
+[=][=] {return EQUAL;}
+[!][=] {return DIFFERENT;}
+[<][=] {return LESS_THEN;}
+[>][=] {return GREATHER_THEN;}
+[|][|] {return OR;}
+[&][&] {return AND;}
+
 read {return READ;}
 print {return PRINT;}
 return {return RETURN;}
