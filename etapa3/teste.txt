@@ -1,0 +1,15 @@
+int funcao(){
+  print teste;
+  read teste;
+  return teste;
+  return 2+2;
+  return 1/2;
+  return 1 == 1 && 2 || 3;
+  if(1 || 2 == 2 >= 3) then print teste(2);
+  if(1 || 2 && 2 <= 3) then print teste else return 2+2;
+  for(2+2-1*3) teste = 2;
+  for ( teste = 2 - 1 || 3 && 12 to 2+2 ) return 2;
+};
+
+int var : 2;
+int array[22] : 22 22 "haha" 'a';

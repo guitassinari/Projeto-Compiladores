@@ -1,0 +1,2131 @@
+   0  $accept : program $end
+
+   1  program : declarationList
+
+   2  declarationList : variableDeclaration declarationList
+   3                  | functDeclaration declarationList
+
+   4  variableDeclaration : TYPE IDENTIFIER ':' BOOL_LIT ';'
+   5                      | TYPE IDENTIFIER ':' INT_LIT ';'
+   6                      | TYPE IDENTIFIER ':' CHAR_LIT ';'
+   7                      | TYPE IDENTIFIER ':' STRING ';'
+   8                      | TYPE IDENTIFIER '[' INT_LIT ']' ':' arrayInitLiterals ';'
+   9                      | TYPE IDENTIFIER '[' INT_LIT ']' ';'
+
+  10  arrayInitLiterals : BOOL_LIT arrayInitLiterals
+  11                    | INT_LIT arrayInitLiterals
+  12                    | CHAR_LIT arrayInitLiterals
+  13                    | STRING arrayInitLiterals
+  14                    | IDENTIFIER arrayInitLiterals
+  15                    |
+
+  16  functDeclaration : TYPE IDENTIFIER '(' functParamsDef ')' commandBlock ';'
+
+  17  functParamsDef : TYPE IDENTIFIER functParamsDefCont
+  18                 |
+
+  19  functParamsDefCont : ',' TYPE IDENTIFIER functParamsDefCont
+  20                     |
+
+  21  commandBlock : '{' commandBlockList '}'
+
+  22  commandBlockList : command ';' commandBlockListCont
+
+  23  commandBlockListCont : command ';' commandBlockListCont
+  24                       |
+
+  25  command : PRINT printList
+  26          | RETURN expression
+  27          | READ IDENTIFIER
+  28          | IDENTIFIER '=' expression
+  29          | IDENTIFIER '[' expression ']' '=' expression
+  30          | IF '(' expression ')' THEN command ELSE command
+  31          | IF '(' expression ')' THEN command
+  32          | FOR '(' expression ')' command
+  33          | FOR '(' IDENTIFIER '=' expression TO expression ')' command
+  34          | commandBlock
+  35          |
+
+  36  printList : STRING printList
+  37            | expression printList
+  38            |
+
+  39  functCall : IDENTIFIER '(' functParams ')'
+
+  40  functParams : IDENTIFIER functParamsCont
+  41              | INT_LIT functParamsCont
+  42              | CHAR_LIT functParamsCont
+  43              | STRING functParamsCont
+  44              | INT_LIT functParamsCont
+
+  45  functParamsCont : ',' IDENTIFIER functParamsCont
+  46                  | ',' INT_LIT functParamsCont
+  47                  | ',' CHAR_LIT functParamsCont
+  48                  | ',' STRING functParamsCont
+  49                  | ',' INT_LIT functParamsCont
+  50                  |
+
+  51  expression : '(' expression ')'
+  52             | functCall
+  53             | INT_LIT
+  54             | CHAR_LIT
+  55             | BOOL_LIT
+  56             | IDENTIFIER
+  57             | IDENTIFIER '[' expression ']'
+  58             | expression EQUAL expression
+  59             | expression DIFFERENT expression
+  60             | expression LESS_THEN expression
+  61             | expression GREATHER_THEN expression
+  62             | expression OR expression
+  63             | expression AND expression
+  64             | expression '+' expression
+  65             | expression '-' expression
+  66             | expression '/' expression
+  67             | expression '*' expression
+
+state 0
+	$accept : . program $end  (0)
+
+	TYPE  shift 1
+	.  error
+
+	program  goto 2
+	declarationList  goto 3
+	variableDeclaration  goto 4
+	functDeclaration  goto 5
+
+
+state 1
+	variableDeclaration : TYPE . IDENTIFIER ':' BOOL_LIT ';'  (4)
+	variableDeclaration : TYPE . IDENTIFIER ':' INT_LIT ';'  (5)
+	variableDeclaration : TYPE . IDENTIFIER ':' CHAR_LIT ';'  (6)
+	variableDeclaration : TYPE . IDENTIFIER ':' STRING ';'  (7)
+	variableDeclaration : TYPE . IDENTIFIER '[' INT_LIT ']' ':' arrayInitLiterals ';'  (8)
+	variableDeclaration : TYPE . IDENTIFIER '[' INT_LIT ']' ';'  (9)
+	functDeclaration : TYPE . IDENTIFIER '(' functParamsDef ')' commandBlock ';'  (16)
+
+	IDENTIFIER  shift 6
+	.  error
+
+
+state 2
+	$accept : program . $end  (0)
+
+	$end  accept
+
+
+state 3
+	program : declarationList .  (1)
+
+	.  reduce 1
+
+
+state 4
+	declarationList : variableDeclaration . declarationList  (2)
+
+	TYPE  shift 1
+	.  error
+
+	declarationList  goto 7
+	variableDeclaration  goto 4
+	functDeclaration  goto 5
+
+
+state 5
+	declarationList : functDeclaration . declarationList  (3)
+
+	TYPE  shift 1
+	.  error
+
+	declarationList  goto 8
+	variableDeclaration  goto 4
+	functDeclaration  goto 5
+
+
+state 6
+	variableDeclaration : TYPE IDENTIFIER . ':' BOOL_LIT ';'  (4)
+	variableDeclaration : TYPE IDENTIFIER . ':' INT_LIT ';'  (5)
+	variableDeclaration : TYPE IDENTIFIER . ':' CHAR_LIT ';'  (6)
+	variableDeclaration : TYPE IDENTIFIER . ':' STRING ';'  (7)
+	variableDeclaration : TYPE IDENTIFIER . '[' INT_LIT ']' ':' arrayInitLiterals ';'  (8)
+	variableDeclaration : TYPE IDENTIFIER . '[' INT_LIT ']' ';'  (9)
+	functDeclaration : TYPE IDENTIFIER . '(' functParamsDef ')' commandBlock ';'  (16)
+
+	':'  shift 9
+	'['  shift 10
+	'('  shift 11
+	.  error
+
+
+state 7
+	declarationList : variableDeclaration declarationList .  (2)
+
+	.  reduce 2
+
+
+state 8
+	declarationList : functDeclaration declarationList .  (3)
+
+	.  reduce 3
+
+
+state 9
+	variableDeclaration : TYPE IDENTIFIER ':' . BOOL_LIT ';'  (4)
+	variableDeclaration : TYPE IDENTIFIER ':' . INT_LIT ';'  (5)
+	variableDeclaration : TYPE IDENTIFIER ':' . CHAR_LIT ';'  (6)
+	variableDeclaration : TYPE IDENTIFIER ':' . STRING ';'  (7)
+
+	CHAR_LIT  shift 12
+	INT_LIT  shift 13
+	BOOL_LIT  shift 14
+	STRING  shift 15
+	.  error
+
+
+state 10
+	variableDeclaration : TYPE IDENTIFIER '[' . INT_LIT ']' ':' arrayInitLiterals ';'  (8)
+	variableDeclaration : TYPE IDENTIFIER '[' . INT_LIT ']' ';'  (9)
+
+	INT_LIT  shift 16
+	.  error
+
+
+state 11
+	functDeclaration : TYPE IDENTIFIER '(' . functParamsDef ')' commandBlock ';'  (16)
+	functParamsDef : .  (18)
+
+	TYPE  shift 17
+	')'  reduce 18
+
+	functParamsDef  goto 18
+
+
+state 12
+	variableDeclaration : TYPE IDENTIFIER ':' CHAR_LIT . ';'  (6)
+
+	';'  shift 19
+	.  error
+
+
+state 13
+	variableDeclaration : TYPE IDENTIFIER ':' INT_LIT . ';'  (5)
+
+	';'  shift 20
+	.  error
+
+
+state 14
+	variableDeclaration : TYPE IDENTIFIER ':' BOOL_LIT . ';'  (4)
+
+	';'  shift 21
+	.  error
+
+
+state 15
+	variableDeclaration : TYPE IDENTIFIER ':' STRING . ';'  (7)
+
+	';'  shift 22
+	.  error
+
+
+state 16
+	variableDeclaration : TYPE IDENTIFIER '[' INT_LIT . ']' ':' arrayInitLiterals ';'  (8)
+	variableDeclaration : TYPE IDENTIFIER '[' INT_LIT . ']' ';'  (9)
+
+	']'  shift 23
+	.  error
+
+
+state 17
+	functParamsDef : TYPE . IDENTIFIER functParamsDefCont  (17)
+
+	IDENTIFIER  shift 24
+	.  error
+
+
+state 18
+	functDeclaration : TYPE IDENTIFIER '(' functParamsDef . ')' commandBlock ';'  (16)
+
+	')'  shift 25
+	.  error
+
+
+state 19
+	variableDeclaration : TYPE IDENTIFIER ':' CHAR_LIT ';' .  (6)
+
+	.  reduce 6
+
+
+state 20
+	variableDeclaration : TYPE IDENTIFIER ':' INT_LIT ';' .  (5)
+
+	.  reduce 5
+
+
+state 21
+	variableDeclaration : TYPE IDENTIFIER ':' BOOL_LIT ';' .  (4)
+
+	.  reduce 4
+
+
+state 22
+	variableDeclaration : TYPE IDENTIFIER ':' STRING ';' .  (7)
+
+	.  reduce 7
+
+
+state 23
+	variableDeclaration : TYPE IDENTIFIER '[' INT_LIT ']' . ':' arrayInitLiterals ';'  (8)
+	variableDeclaration : TYPE IDENTIFIER '[' INT_LIT ']' . ';'  (9)
+
+	':'  shift 26
+	';'  shift 27
+	.  error
+
+
+state 24
+	functParamsDef : TYPE IDENTIFIER . functParamsDefCont  (17)
+	functParamsDefCont : .  (20)
+
+	','  shift 28
+	')'  reduce 20
+
+	functParamsDefCont  goto 29
+
+
+state 25
+	functDeclaration : TYPE IDENTIFIER '(' functParamsDef ')' . commandBlock ';'  (16)
+
+	'{'  shift 30
+	.  error
+
+	commandBlock  goto 31
+
+
+state 26
+	variableDeclaration : TYPE IDENTIFIER '[' INT_LIT ']' ':' . arrayInitLiterals ';'  (8)
+	arrayInitLiterals : .  (15)
+
+	CHAR_LIT  shift 32
+	INT_LIT  shift 33
+	BOOL_LIT  shift 34
+	IDENTIFIER  shift 35
+	STRING  shift 36
+	';'  reduce 15
+
+	arrayInitLiterals  goto 37
+
+
+state 27
+	variableDeclaration : TYPE IDENTIFIER '[' INT_LIT ']' ';' .  (9)
+
+	.  reduce 9
+
+
+state 28
+	functParamsDefCont : ',' . TYPE IDENTIFIER functParamsDefCont  (19)
+
+	TYPE  shift 38
+	.  error
+
+
+state 29
+	functParamsDef : TYPE IDENTIFIER functParamsDefCont .  (17)
+
+	.  reduce 17
+
+
+state 30
+	commandBlock : '{' . commandBlockList '}'  (21)
+	command : .  (35)
+
+	IDENTIFIER  shift 39
+	READ  shift 40
+	PRINT  shift 41
+	RETURN  shift 42
+	FOR  shift 43
+	IF  shift 44
+	'{'  shift 30
+	';'  reduce 35
+
+	commandBlock  goto 45
+	commandBlockList  goto 46
+	command  goto 47
+
+
+state 31
+	functDeclaration : TYPE IDENTIFIER '(' functParamsDef ')' commandBlock . ';'  (16)
+
+	';'  shift 48
+	.  error
+
+
+state 32
+	arrayInitLiterals : CHAR_LIT . arrayInitLiterals  (12)
+	arrayInitLiterals : .  (15)
+
+	CHAR_LIT  shift 32
+	INT_LIT  shift 33
+	BOOL_LIT  shift 34
+	IDENTIFIER  shift 35
+	STRING  shift 36
+	';'  reduce 15
+
+	arrayInitLiterals  goto 49
+
+
+state 33
+	arrayInitLiterals : INT_LIT . arrayInitLiterals  (11)
+	arrayInitLiterals : .  (15)
+
+	CHAR_LIT  shift 32
+	INT_LIT  shift 33
+	BOOL_LIT  shift 34
+	IDENTIFIER  shift 35
+	STRING  shift 36
+	';'  reduce 15
+
+	arrayInitLiterals  goto 50
+
+
+state 34
+	arrayInitLiterals : BOOL_LIT . arrayInitLiterals  (10)
+	arrayInitLiterals : .  (15)
+
+	CHAR_LIT  shift 32
+	INT_LIT  shift 33
+	BOOL_LIT  shift 34
+	IDENTIFIER  shift 35
+	STRING  shift 36
+	';'  reduce 15
+
+	arrayInitLiterals  goto 51
+
+
+state 35
+	arrayInitLiterals : IDENTIFIER . arrayInitLiterals  (14)
+	arrayInitLiterals : .  (15)
+
+	CHAR_LIT  shift 32
+	INT_LIT  shift 33
+	BOOL_LIT  shift 34
+	IDENTIFIER  shift 35
+	STRING  shift 36
+	';'  reduce 15
+
+	arrayInitLiterals  goto 52
+
+
+state 36
+	arrayInitLiterals : STRING . arrayInitLiterals  (13)
+	arrayInitLiterals : .  (15)
+
+	CHAR_LIT  shift 32
+	INT_LIT  shift 33
+	BOOL_LIT  shift 34
+	IDENTIFIER  shift 35
+	STRING  shift 36
+	';'  reduce 15
+
+	arrayInitLiterals  goto 53
+
+
+state 37
+	variableDeclaration : TYPE IDENTIFIER '[' INT_LIT ']' ':' arrayInitLiterals . ';'  (8)
+
+	';'  shift 54
+	.  error
+
+
+state 38
+	functParamsDefCont : ',' TYPE . IDENTIFIER functParamsDefCont  (19)
+
+	IDENTIFIER  shift 55
+	.  error
+
+
+state 39
+	command : IDENTIFIER . '=' expression  (28)
+	command : IDENTIFIER . '[' expression ']' '=' expression  (29)
+
+	'['  shift 56
+	'='  shift 57
+	.  error
+
+
+state 40
+	command : READ . IDENTIFIER  (27)
+
+	IDENTIFIER  shift 58
+	.  error
+
+
+state 41
+	command : PRINT . printList  (25)
+	printList : .  (38)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	STRING  shift 63
+	'('  shift 64
+	ELSE  reduce 38
+	';'  reduce 38
+
+	printList  goto 65
+	expression  goto 66
+	functCall  goto 67
+
+
+state 42
+	command : RETURN . expression  (26)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	'('  shift 64
+	.  error
+
+	expression  goto 68
+	functCall  goto 67
+
+
+state 43
+	command : FOR . '(' expression ')' command  (32)
+	command : FOR . '(' IDENTIFIER '=' expression TO expression ')' command  (33)
+
+	'('  shift 69
+	.  error
+
+
+state 44
+	command : IF . '(' expression ')' THEN command ELSE command  (30)
+	command : IF . '(' expression ')' THEN command  (31)
+
+	'('  shift 70
+	.  error
+
+
+state 45
+	command : commandBlock .  (34)
+
+	.  reduce 34
+
+
+state 46
+	commandBlock : '{' commandBlockList . '}'  (21)
+
+	'}'  shift 71
+	.  error
+
+
+state 47
+	commandBlockList : command . ';' commandBlockListCont  (22)
+
+	';'  shift 72
+	.  error
+
+
+state 48
+	functDeclaration : TYPE IDENTIFIER '(' functParamsDef ')' commandBlock ';' .  (16)
+
+	.  reduce 16
+
+
+state 49
+	arrayInitLiterals : CHAR_LIT arrayInitLiterals .  (12)
+
+	.  reduce 12
+
+
+state 50
+	arrayInitLiterals : INT_LIT arrayInitLiterals .  (11)
+
+	.  reduce 11
+
+
+state 51
+	arrayInitLiterals : BOOL_LIT arrayInitLiterals .  (10)
+
+	.  reduce 10
+
+
+state 52
+	arrayInitLiterals : IDENTIFIER arrayInitLiterals .  (14)
+
+	.  reduce 14
+
+
+state 53
+	arrayInitLiterals : STRING arrayInitLiterals .  (13)
+
+	.  reduce 13
+
+
+state 54
+	variableDeclaration : TYPE IDENTIFIER '[' INT_LIT ']' ':' arrayInitLiterals ';' .  (8)
+
+	.  reduce 8
+
+
+state 55
+	functParamsDefCont : ',' TYPE IDENTIFIER . functParamsDefCont  (19)
+	functParamsDefCont : .  (20)
+
+	','  shift 28
+	')'  reduce 20
+
+	functParamsDefCont  goto 73
+
+
+state 56
+	command : IDENTIFIER '[' . expression ']' '=' expression  (29)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	'('  shift 64
+	.  error
+
+	expression  goto 74
+	functCall  goto 67
+
+
+state 57
+	command : IDENTIFIER '=' . expression  (28)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	'('  shift 64
+	.  error
+
+	expression  goto 75
+	functCall  goto 67
+
+
+state 58
+	command : READ IDENTIFIER .  (27)
+
+	.  reduce 27
+
+
+state 59
+	expression : CHAR_LIT .  (54)
+
+	.  reduce 54
+
+
+state 60
+	expression : INT_LIT .  (53)
+
+	.  reduce 53
+
+
+state 61
+	expression : BOOL_LIT .  (55)
+
+	.  reduce 55
+
+
+62: shift/reduce conflict (shift 77, reduce 56) on '('
+state 62
+	functCall : IDENTIFIER . '(' functParams ')'  (39)
+	expression : IDENTIFIER .  (56)
+	expression : IDENTIFIER . '[' expression ']'  (57)
+
+	'['  shift 76
+	'('  shift 77
+	CHAR_LIT  reduce 56
+	INT_LIT  reduce 56
+	BOOL_LIT  reduce 56
+	IDENTIFIER  reduce 56
+	STRING  reduce 56
+	TO  reduce 56
+	ELSE  reduce 56
+	EQUAL  reduce 56
+	DIFFERENT  reduce 56
+	LESS_THEN  reduce 56
+	GREATHER_THEN  reduce 56
+	OR  reduce 56
+	AND  reduce 56
+	';'  reduce 56
+	']'  reduce 56
+	')'  reduce 56
+	'+'  reduce 56
+	'-'  reduce 56
+	'/'  reduce 56
+	'*'  reduce 56
+
+
+state 63
+	printList : STRING . printList  (36)
+	printList : .  (38)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	STRING  shift 63
+	'('  shift 64
+	ELSE  reduce 38
+	';'  reduce 38
+
+	printList  goto 78
+	expression  goto 66
+	functCall  goto 67
+
+
+state 64
+	expression : '(' . expression ')'  (51)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	'('  shift 64
+	.  error
+
+	expression  goto 79
+	functCall  goto 67
+
+
+state 65
+	command : PRINT printList .  (25)
+
+	.  reduce 25
+
+
+state 66
+	printList : expression . printList  (37)
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+	printList : .  (38)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	STRING  shift 63
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	'('  shift 64
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	ELSE  reduce 38
+	';'  reduce 38
+
+	printList  goto 90
+	expression  goto 66
+	functCall  goto 67
+
+
+state 67
+	expression : functCall .  (52)
+
+	.  reduce 52
+
+
+state 68
+	command : RETURN expression .  (26)
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	ELSE  reduce 26
+	';'  reduce 26
+
+
+state 69
+	command : FOR '(' . expression ')' command  (32)
+	command : FOR '(' . IDENTIFIER '=' expression TO expression ')' command  (33)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 91
+	'('  shift 64
+	.  error
+
+	expression  goto 92
+	functCall  goto 67
+
+
+state 70
+	command : IF '(' . expression ')' THEN command ELSE command  (30)
+	command : IF '(' . expression ')' THEN command  (31)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	'('  shift 64
+	.  error
+
+	expression  goto 93
+	functCall  goto 67
+
+
+state 71
+	commandBlock : '{' commandBlockList '}' .  (21)
+
+	.  reduce 21
+
+
+state 72
+	commandBlockList : command ';' . commandBlockListCont  (22)
+	commandBlockListCont : .  (24)
+	command : .  (35)
+
+	IDENTIFIER  shift 39
+	READ  shift 40
+	PRINT  shift 41
+	RETURN  shift 42
+	FOR  shift 43
+	IF  shift 44
+	'{'  shift 30
+	';'  reduce 35
+	'}'  reduce 24
+
+	commandBlock  goto 45
+	command  goto 94
+	commandBlockListCont  goto 95
+
+
+state 73
+	functParamsDefCont : ',' TYPE IDENTIFIER functParamsDefCont .  (19)
+
+	.  reduce 19
+
+
+state 74
+	command : IDENTIFIER '[' expression . ']' '=' expression  (29)
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	']'  shift 96
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	.  error
+
+
+state 75
+	command : IDENTIFIER '=' expression .  (28)
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	ELSE  reduce 28
+	';'  reduce 28
+
+
+state 76
+	expression : IDENTIFIER '[' . expression ']'  (57)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	'('  shift 64
+	.  error
+
+	expression  goto 97
+	functCall  goto 67
+
+
+state 77
+	functCall : IDENTIFIER '(' . functParams ')'  (39)
+
+	CHAR_LIT  shift 98
+	INT_LIT  shift 99
+	IDENTIFIER  shift 100
+	STRING  shift 101
+	.  error
+
+	functParams  goto 102
+
+
+state 78
+	printList : STRING printList .  (36)
+
+	.  reduce 36
+
+
+state 79
+	expression : '(' expression . ')'  (51)
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	')'  shift 103
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	.  error
+
+
+state 80
+	expression : expression EQUAL . expression  (58)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	'('  shift 64
+	.  error
+
+	expression  goto 104
+	functCall  goto 67
+
+
+state 81
+	expression : expression DIFFERENT . expression  (59)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	'('  shift 64
+	.  error
+
+	expression  goto 105
+	functCall  goto 67
+
+
+state 82
+	expression : expression LESS_THEN . expression  (60)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	'('  shift 64
+	.  error
+
+	expression  goto 106
+	functCall  goto 67
+
+
+state 83
+	expression : expression GREATHER_THEN . expression  (61)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	'('  shift 64
+	.  error
+
+	expression  goto 107
+	functCall  goto 67
+
+
+state 84
+	expression : expression OR . expression  (62)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	'('  shift 64
+	.  error
+
+	expression  goto 108
+	functCall  goto 67
+
+
+state 85
+	expression : expression AND . expression  (63)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	'('  shift 64
+	.  error
+
+	expression  goto 109
+	functCall  goto 67
+
+
+state 86
+	expression : expression '+' . expression  (64)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	'('  shift 64
+	.  error
+
+	expression  goto 110
+	functCall  goto 67
+
+
+state 87
+	expression : expression '-' . expression  (65)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	'('  shift 64
+	.  error
+
+	expression  goto 111
+	functCall  goto 67
+
+
+state 88
+	expression : expression '/' . expression  (66)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	'('  shift 64
+	.  error
+
+	expression  goto 112
+	functCall  goto 67
+
+
+state 89
+	expression : expression '*' . expression  (67)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	'('  shift 64
+	.  error
+
+	expression  goto 113
+	functCall  goto 67
+
+
+state 90
+	printList : expression printList .  (37)
+
+	.  reduce 37
+
+
+state 91
+	command : FOR '(' IDENTIFIER . '=' expression TO expression ')' command  (33)
+	functCall : IDENTIFIER . '(' functParams ')'  (39)
+	expression : IDENTIFIER .  (56)
+	expression : IDENTIFIER . '[' expression ']'  (57)
+
+	'['  shift 76
+	'('  shift 77
+	'='  shift 114
+	EQUAL  reduce 56
+	DIFFERENT  reduce 56
+	LESS_THEN  reduce 56
+	GREATHER_THEN  reduce 56
+	OR  reduce 56
+	AND  reduce 56
+	')'  reduce 56
+	'+'  reduce 56
+	'-'  reduce 56
+	'/'  reduce 56
+	'*'  reduce 56
+
+
+state 92
+	command : FOR '(' expression . ')' command  (32)
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	')'  shift 115
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	.  error
+
+
+state 93
+	command : IF '(' expression . ')' THEN command ELSE command  (30)
+	command : IF '(' expression . ')' THEN command  (31)
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	')'  shift 116
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	.  error
+
+
+state 94
+	commandBlockListCont : command . ';' commandBlockListCont  (23)
+
+	';'  shift 117
+	.  error
+
+
+state 95
+	commandBlockList : command ';' commandBlockListCont .  (22)
+
+	.  reduce 22
+
+
+state 96
+	command : IDENTIFIER '[' expression ']' . '=' expression  (29)
+
+	'='  shift 118
+	.  error
+
+
+state 97
+	expression : IDENTIFIER '[' expression . ']'  (57)
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	']'  shift 119
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	.  error
+
+
+state 98
+	functParams : CHAR_LIT . functParamsCont  (42)
+	functParamsCont : .  (50)
+
+	','  shift 120
+	')'  reduce 50
+
+	functParamsCont  goto 121
+
+
+state 99
+	functParams : INT_LIT . functParamsCont  (41)
+	functParams : INT_LIT . functParamsCont  (44)
+	functParamsCont : .  (50)
+
+	','  shift 120
+	')'  reduce 50
+
+	functParamsCont  goto 122
+
+
+state 100
+	functParams : IDENTIFIER . functParamsCont  (40)
+	functParamsCont : .  (50)
+
+	','  shift 120
+	')'  reduce 50
+
+	functParamsCont  goto 123
+
+
+state 101
+	functParams : STRING . functParamsCont  (43)
+	functParamsCont : .  (50)
+
+	','  shift 120
+	')'  reduce 50
+
+	functParamsCont  goto 124
+
+
+state 102
+	functCall : IDENTIFIER '(' functParams . ')'  (39)
+
+	')'  shift 125
+	.  error
+
+
+state 103
+	expression : '(' expression ')' .  (51)
+
+	.  reduce 51
+
+
+104: shift/reduce conflict (shift 80, reduce 58) on EQUAL
+104: shift/reduce conflict (shift 81, reduce 58) on DIFFERENT
+104: shift/reduce conflict (shift 82, reduce 58) on LESS_THEN
+104: shift/reduce conflict (shift 83, reduce 58) on GREATHER_THEN
+104: shift/reduce conflict (shift 84, reduce 58) on OR
+104: shift/reduce conflict (shift 85, reduce 58) on AND
+104: shift/reduce conflict (shift 86, reduce 58) on '+'
+104: shift/reduce conflict (shift 87, reduce 58) on '-'
+104: shift/reduce conflict (shift 88, reduce 58) on '/'
+104: shift/reduce conflict (shift 89, reduce 58) on '*'
+state 104
+	expression : expression . EQUAL expression  (58)
+	expression : expression EQUAL expression .  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	CHAR_LIT  reduce 58
+	INT_LIT  reduce 58
+	BOOL_LIT  reduce 58
+	IDENTIFIER  reduce 58
+	STRING  reduce 58
+	TO  reduce 58
+	ELSE  reduce 58
+	';'  reduce 58
+	']'  reduce 58
+	'('  reduce 58
+	')'  reduce 58
+
+
+105: shift/reduce conflict (shift 80, reduce 59) on EQUAL
+105: shift/reduce conflict (shift 81, reduce 59) on DIFFERENT
+105: shift/reduce conflict (shift 82, reduce 59) on LESS_THEN
+105: shift/reduce conflict (shift 83, reduce 59) on GREATHER_THEN
+105: shift/reduce conflict (shift 84, reduce 59) on OR
+105: shift/reduce conflict (shift 85, reduce 59) on AND
+105: shift/reduce conflict (shift 86, reduce 59) on '+'
+105: shift/reduce conflict (shift 87, reduce 59) on '-'
+105: shift/reduce conflict (shift 88, reduce 59) on '/'
+105: shift/reduce conflict (shift 89, reduce 59) on '*'
+state 105
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression DIFFERENT expression .  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	CHAR_LIT  reduce 59
+	INT_LIT  reduce 59
+	BOOL_LIT  reduce 59
+	IDENTIFIER  reduce 59
+	STRING  reduce 59
+	TO  reduce 59
+	ELSE  reduce 59
+	';'  reduce 59
+	']'  reduce 59
+	'('  reduce 59
+	')'  reduce 59
+
+
+106: shift/reduce conflict (shift 80, reduce 60) on EQUAL
+106: shift/reduce conflict (shift 81, reduce 60) on DIFFERENT
+106: shift/reduce conflict (shift 82, reduce 60) on LESS_THEN
+106: shift/reduce conflict (shift 83, reduce 60) on GREATHER_THEN
+106: shift/reduce conflict (shift 84, reduce 60) on OR
+106: shift/reduce conflict (shift 85, reduce 60) on AND
+106: shift/reduce conflict (shift 86, reduce 60) on '+'
+106: shift/reduce conflict (shift 87, reduce 60) on '-'
+106: shift/reduce conflict (shift 88, reduce 60) on '/'
+106: shift/reduce conflict (shift 89, reduce 60) on '*'
+state 106
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression LESS_THEN expression .  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	CHAR_LIT  reduce 60
+	INT_LIT  reduce 60
+	BOOL_LIT  reduce 60
+	IDENTIFIER  reduce 60
+	STRING  reduce 60
+	TO  reduce 60
+	ELSE  reduce 60
+	';'  reduce 60
+	']'  reduce 60
+	'('  reduce 60
+	')'  reduce 60
+
+
+107: shift/reduce conflict (shift 80, reduce 61) on EQUAL
+107: shift/reduce conflict (shift 81, reduce 61) on DIFFERENT
+107: shift/reduce conflict (shift 82, reduce 61) on LESS_THEN
+107: shift/reduce conflict (shift 83, reduce 61) on GREATHER_THEN
+107: shift/reduce conflict (shift 84, reduce 61) on OR
+107: shift/reduce conflict (shift 85, reduce 61) on AND
+107: shift/reduce conflict (shift 86, reduce 61) on '+'
+107: shift/reduce conflict (shift 87, reduce 61) on '-'
+107: shift/reduce conflict (shift 88, reduce 61) on '/'
+107: shift/reduce conflict (shift 89, reduce 61) on '*'
+state 107
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression GREATHER_THEN expression .  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	CHAR_LIT  reduce 61
+	INT_LIT  reduce 61
+	BOOL_LIT  reduce 61
+	IDENTIFIER  reduce 61
+	STRING  reduce 61
+	TO  reduce 61
+	ELSE  reduce 61
+	';'  reduce 61
+	']'  reduce 61
+	'('  reduce 61
+	')'  reduce 61
+
+
+108: shift/reduce conflict (shift 80, reduce 62) on EQUAL
+108: shift/reduce conflict (shift 81, reduce 62) on DIFFERENT
+108: shift/reduce conflict (shift 82, reduce 62) on LESS_THEN
+108: shift/reduce conflict (shift 83, reduce 62) on GREATHER_THEN
+108: shift/reduce conflict (shift 84, reduce 62) on OR
+108: shift/reduce conflict (shift 85, reduce 62) on AND
+108: shift/reduce conflict (shift 86, reduce 62) on '+'
+108: shift/reduce conflict (shift 87, reduce 62) on '-'
+108: shift/reduce conflict (shift 88, reduce 62) on '/'
+108: shift/reduce conflict (shift 89, reduce 62) on '*'
+state 108
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression OR expression .  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	CHAR_LIT  reduce 62
+	INT_LIT  reduce 62
+	BOOL_LIT  reduce 62
+	IDENTIFIER  reduce 62
+	STRING  reduce 62
+	TO  reduce 62
+	ELSE  reduce 62
+	';'  reduce 62
+	']'  reduce 62
+	'('  reduce 62
+	')'  reduce 62
+
+
+109: shift/reduce conflict (shift 80, reduce 63) on EQUAL
+109: shift/reduce conflict (shift 81, reduce 63) on DIFFERENT
+109: shift/reduce conflict (shift 82, reduce 63) on LESS_THEN
+109: shift/reduce conflict (shift 83, reduce 63) on GREATHER_THEN
+109: shift/reduce conflict (shift 84, reduce 63) on OR
+109: shift/reduce conflict (shift 85, reduce 63) on AND
+109: shift/reduce conflict (shift 86, reduce 63) on '+'
+109: shift/reduce conflict (shift 87, reduce 63) on '-'
+109: shift/reduce conflict (shift 88, reduce 63) on '/'
+109: shift/reduce conflict (shift 89, reduce 63) on '*'
+state 109
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression AND expression .  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	CHAR_LIT  reduce 63
+	INT_LIT  reduce 63
+	BOOL_LIT  reduce 63
+	IDENTIFIER  reduce 63
+	STRING  reduce 63
+	TO  reduce 63
+	ELSE  reduce 63
+	';'  reduce 63
+	']'  reduce 63
+	'('  reduce 63
+	')'  reduce 63
+
+
+110: shift/reduce conflict (shift 80, reduce 64) on EQUAL
+110: shift/reduce conflict (shift 81, reduce 64) on DIFFERENT
+110: shift/reduce conflict (shift 82, reduce 64) on LESS_THEN
+110: shift/reduce conflict (shift 83, reduce 64) on GREATHER_THEN
+110: shift/reduce conflict (shift 84, reduce 64) on OR
+110: shift/reduce conflict (shift 85, reduce 64) on AND
+110: shift/reduce conflict (shift 86, reduce 64) on '+'
+110: shift/reduce conflict (shift 87, reduce 64) on '-'
+110: shift/reduce conflict (shift 88, reduce 64) on '/'
+110: shift/reduce conflict (shift 89, reduce 64) on '*'
+state 110
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression '+' expression .  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	CHAR_LIT  reduce 64
+	INT_LIT  reduce 64
+	BOOL_LIT  reduce 64
+	IDENTIFIER  reduce 64
+	STRING  reduce 64
+	TO  reduce 64
+	ELSE  reduce 64
+	';'  reduce 64
+	']'  reduce 64
+	'('  reduce 64
+	')'  reduce 64
+
+
+111: shift/reduce conflict (shift 80, reduce 65) on EQUAL
+111: shift/reduce conflict (shift 81, reduce 65) on DIFFERENT
+111: shift/reduce conflict (shift 82, reduce 65) on LESS_THEN
+111: shift/reduce conflict (shift 83, reduce 65) on GREATHER_THEN
+111: shift/reduce conflict (shift 84, reduce 65) on OR
+111: shift/reduce conflict (shift 85, reduce 65) on AND
+111: shift/reduce conflict (shift 86, reduce 65) on '+'
+111: shift/reduce conflict (shift 87, reduce 65) on '-'
+111: shift/reduce conflict (shift 88, reduce 65) on '/'
+111: shift/reduce conflict (shift 89, reduce 65) on '*'
+state 111
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression '-' expression .  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	CHAR_LIT  reduce 65
+	INT_LIT  reduce 65
+	BOOL_LIT  reduce 65
+	IDENTIFIER  reduce 65
+	STRING  reduce 65
+	TO  reduce 65
+	ELSE  reduce 65
+	';'  reduce 65
+	']'  reduce 65
+	'('  reduce 65
+	')'  reduce 65
+
+
+112: shift/reduce conflict (shift 80, reduce 66) on EQUAL
+112: shift/reduce conflict (shift 81, reduce 66) on DIFFERENT
+112: shift/reduce conflict (shift 82, reduce 66) on LESS_THEN
+112: shift/reduce conflict (shift 83, reduce 66) on GREATHER_THEN
+112: shift/reduce conflict (shift 84, reduce 66) on OR
+112: shift/reduce conflict (shift 85, reduce 66) on AND
+112: shift/reduce conflict (shift 86, reduce 66) on '+'
+112: shift/reduce conflict (shift 87, reduce 66) on '-'
+112: shift/reduce conflict (shift 88, reduce 66) on '/'
+112: shift/reduce conflict (shift 89, reduce 66) on '*'
+state 112
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression '/' expression .  (66)
+	expression : expression . '*' expression  (67)
+
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	CHAR_LIT  reduce 66
+	INT_LIT  reduce 66
+	BOOL_LIT  reduce 66
+	IDENTIFIER  reduce 66
+	STRING  reduce 66
+	TO  reduce 66
+	ELSE  reduce 66
+	';'  reduce 66
+	']'  reduce 66
+	'('  reduce 66
+	')'  reduce 66
+
+
+113: shift/reduce conflict (shift 80, reduce 67) on EQUAL
+113: shift/reduce conflict (shift 81, reduce 67) on DIFFERENT
+113: shift/reduce conflict (shift 82, reduce 67) on LESS_THEN
+113: shift/reduce conflict (shift 83, reduce 67) on GREATHER_THEN
+113: shift/reduce conflict (shift 84, reduce 67) on OR
+113: shift/reduce conflict (shift 85, reduce 67) on AND
+113: shift/reduce conflict (shift 86, reduce 67) on '+'
+113: shift/reduce conflict (shift 87, reduce 67) on '-'
+113: shift/reduce conflict (shift 88, reduce 67) on '/'
+113: shift/reduce conflict (shift 89, reduce 67) on '*'
+state 113
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+	expression : expression '*' expression .  (67)
+
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	CHAR_LIT  reduce 67
+	INT_LIT  reduce 67
+	BOOL_LIT  reduce 67
+	IDENTIFIER  reduce 67
+	STRING  reduce 67
+	TO  reduce 67
+	ELSE  reduce 67
+	';'  reduce 67
+	']'  reduce 67
+	'('  reduce 67
+	')'  reduce 67
+
+
+state 114
+	command : FOR '(' IDENTIFIER '=' . expression TO expression ')' command  (33)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	'('  shift 64
+	.  error
+
+	expression  goto 126
+	functCall  goto 67
+
+
+state 115
+	command : FOR '(' expression ')' . command  (32)
+	command : .  (35)
+
+	IDENTIFIER  shift 39
+	READ  shift 40
+	PRINT  shift 41
+	RETURN  shift 42
+	FOR  shift 43
+	IF  shift 44
+	'{'  shift 30
+	ELSE  reduce 35
+	';'  reduce 35
+
+	commandBlock  goto 45
+	command  goto 127
+
+
+state 116
+	command : IF '(' expression ')' . THEN command ELSE command  (30)
+	command : IF '(' expression ')' . THEN command  (31)
+
+	THEN  shift 128
+	.  error
+
+
+state 117
+	commandBlockListCont : command ';' . commandBlockListCont  (23)
+	commandBlockListCont : .  (24)
+	command : .  (35)
+
+	IDENTIFIER  shift 39
+	READ  shift 40
+	PRINT  shift 41
+	RETURN  shift 42
+	FOR  shift 43
+	IF  shift 44
+	'{'  shift 30
+	';'  reduce 35
+	'}'  reduce 24
+
+	commandBlock  goto 45
+	command  goto 94
+	commandBlockListCont  goto 129
+
+
+state 118
+	command : IDENTIFIER '[' expression ']' '=' . expression  (29)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	'('  shift 64
+	.  error
+
+	expression  goto 130
+	functCall  goto 67
+
+
+state 119
+	expression : IDENTIFIER '[' expression ']' .  (57)
+
+	.  reduce 57
+
+
+state 120
+	functParamsCont : ',' . IDENTIFIER functParamsCont  (45)
+	functParamsCont : ',' . INT_LIT functParamsCont  (46)
+	functParamsCont : ',' . CHAR_LIT functParamsCont  (47)
+	functParamsCont : ',' . STRING functParamsCont  (48)
+	functParamsCont : ',' . INT_LIT functParamsCont  (49)
+
+	CHAR_LIT  shift 131
+	INT_LIT  shift 132
+	IDENTIFIER  shift 133
+	STRING  shift 134
+	.  error
+
+
+state 121
+	functParams : CHAR_LIT functParamsCont .  (42)
+
+	.  reduce 42
+
+
+122: reduce/reduce conflict (reduce 41, reduce 44) on ')'
+state 122
+	functParams : INT_LIT functParamsCont .  (41)
+	functParams : INT_LIT functParamsCont .  (44)
+
+	.  reduce 41
+
+
+state 123
+	functParams : IDENTIFIER functParamsCont .  (40)
+
+	.  reduce 40
+
+
+state 124
+	functParams : STRING functParamsCont .  (43)
+
+	.  reduce 43
+
+
+state 125
+	functCall : IDENTIFIER '(' functParams ')' .  (39)
+
+	.  reduce 39
+
+
+state 126
+	command : FOR '(' IDENTIFIER '=' expression . TO expression ')' command  (33)
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+
+	TO  shift 135
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	.  error
+
+
+state 127
+	command : FOR '(' expression ')' command .  (32)
+
+	.  reduce 32
+
+
+state 128
+	command : IF '(' expression ')' THEN . command ELSE command  (30)
+	command : IF '(' expression ')' THEN . command  (31)
+	command : .  (35)
+
+	IDENTIFIER  shift 39
+	READ  shift 40
+	PRINT  shift 41
+	RETURN  shift 42
+	FOR  shift 43
+	IF  shift 44
+	'{'  shift 30
+	ELSE  reduce 35
+	';'  reduce 35
+
+	commandBlock  goto 45
+	command  goto 136
+
+
+state 129
+	commandBlockListCont : command ';' commandBlockListCont .  (23)
+
+	.  reduce 23
+
+
+state 130
+	command : IDENTIFIER '[' expression ']' '=' expression .  (29)
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	ELSE  reduce 29
+	';'  reduce 29
+
+
+state 131
+	functParamsCont : ',' CHAR_LIT . functParamsCont  (47)
+	functParamsCont : .  (50)
+
+	','  shift 120
+	')'  reduce 50
+
+	functParamsCont  goto 137
+
+
+state 132
+	functParamsCont : ',' INT_LIT . functParamsCont  (46)
+	functParamsCont : ',' INT_LIT . functParamsCont  (49)
+	functParamsCont : .  (50)
+
+	','  shift 120
+	')'  reduce 50
+
+	functParamsCont  goto 138
+
+
+state 133
+	functParamsCont : ',' IDENTIFIER . functParamsCont  (45)
+	functParamsCont : .  (50)
+
+	','  shift 120
+	')'  reduce 50
+
+	functParamsCont  goto 139
+
+
+state 134
+	functParamsCont : ',' STRING . functParamsCont  (48)
+	functParamsCont : .  (50)
+
+	','  shift 120
+	')'  reduce 50
+
+	functParamsCont  goto 140
+
+
+state 135
+	command : FOR '(' IDENTIFIER '=' expression TO . expression ')' command  (33)
+
+	CHAR_LIT  shift 59
+	INT_LIT  shift 60
+	BOOL_LIT  shift 61
+	IDENTIFIER  shift 62
+	'('  shift 64
+	.  error
+
+	expression  goto 141
+	functCall  goto 67
+
+
+136: shift/reduce conflict (shift 142, reduce 31) on ELSE
+state 136
+	command : IF '(' expression ')' THEN command . ELSE command  (30)
+	command : IF '(' expression ')' THEN command .  (31)
+
+	ELSE  shift 142
+	';'  reduce 31
+
+
+state 137
+	functParamsCont : ',' CHAR_LIT functParamsCont .  (47)
+
+	.  reduce 47
+
+
+138: reduce/reduce conflict (reduce 46, reduce 49) on ')'
+state 138
+	functParamsCont : ',' INT_LIT functParamsCont .  (46)
+	functParamsCont : ',' INT_LIT functParamsCont .  (49)
+
+	.  reduce 46
+
+
+state 139
+	functParamsCont : ',' IDENTIFIER functParamsCont .  (45)
+
+	.  reduce 45
+
+
+state 140
+	functParamsCont : ',' STRING functParamsCont .  (48)
+
+	.  reduce 48
+
+
+state 141
+	command : FOR '(' IDENTIFIER '=' expression TO expression . ')' command  (33)
+	expression : expression . EQUAL expression  (58)
+	expression : expression . DIFFERENT expression  (59)
+	expression : expression . LESS_THEN expression  (60)
+	expression : expression . GREATHER_THEN expression  (61)
+	expression : expression . OR expression  (62)
+	expression : expression . AND expression  (63)
+	expression : expression . '+' expression  (64)
+	expression : expression . '-' expression  (65)
+	expression : expression . '/' expression  (66)
+	expression : expression . '*' expression  (67)
+
+	EQUAL  shift 80
+	DIFFERENT  shift 81
+	LESS_THEN  shift 82
+	GREATHER_THEN  shift 83
+	OR  shift 84
+	AND  shift 85
+	')'  shift 143
+	'+'  shift 86
+	'-'  shift 87
+	'/'  shift 88
+	'*'  shift 89
+	.  error
+
+
+state 142
+	command : IF '(' expression ')' THEN command ELSE . command  (30)
+	command : .  (35)
+
+	IDENTIFIER  shift 39
+	READ  shift 40
+	PRINT  shift 41
+	RETURN  shift 42
+	FOR  shift 43
+	IF  shift 44
+	'{'  shift 30
+	ELSE  reduce 35
+	';'  reduce 35
+
+	commandBlock  goto 45
+	command  goto 144
+
+
+state 143
+	command : FOR '(' IDENTIFIER '=' expression TO expression ')' . command  (33)
+	command : .  (35)
+
+	IDENTIFIER  shift 39
+	READ  shift 40
+	PRINT  shift 41
+	RETURN  shift 42
+	FOR  shift 43
+	IF  shift 44
+	'{'  shift 30
+	ELSE  reduce 35
+	';'  reduce 35
+
+	commandBlock  goto 45
+	command  goto 145
+
+
+state 144
+	command : IF '(' expression ')' THEN command ELSE command .  (30)
+
+	.  reduce 30
+
+
+state 145
+	command : FOR '(' IDENTIFIER '=' expression TO expression ')' command .  (33)
+
+	.  reduce 33
+
+
+Rules never reduced:
+	functParams : INT_LIT functParamsCont  (44)
+	functParamsCont : ',' INT_LIT functParamsCont  (49)
+
+
+State 62 contains 1 shift/reduce conflict.
+State 104 contains 10 shift/reduce conflicts.
+State 105 contains 10 shift/reduce conflicts.
+State 106 contains 10 shift/reduce conflicts.
+State 107 contains 10 shift/reduce conflicts.
+State 108 contains 10 shift/reduce conflicts.
+State 109 contains 10 shift/reduce conflicts.
+State 110 contains 10 shift/reduce conflicts.
+State 111 contains 10 shift/reduce conflicts.
+State 112 contains 10 shift/reduce conflicts.
+State 113 contains 10 shift/reduce conflicts.
+State 122 contains 1 reduce/reduce conflict.
+State 136 contains 1 shift/reduce conflict.
+State 138 contains 1 reduce/reduce conflict.
+
+
+37 terminals, 17 nonterminals
+68 grammar rules, 146 states
