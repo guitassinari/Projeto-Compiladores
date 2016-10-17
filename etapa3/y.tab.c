@@ -18,10 +18,10 @@
 #define YYPURE 0
 
 #line 2 "parser.y"
+  #include "hash.h"
+  #include "astree.h"
   #include <stdio.h>
   #include <stdlib.h>
-  #include "hash.c"
-  #include "astree.h"
 #line 8 "parser.y"
 #ifdef YYSTYPE
 #undef  YYSTYPE_IS_DECLARED
@@ -31,7 +31,7 @@
 #define YYSTYPE_IS_DECLARED 1
 typedef union {
 	ASTREE *astree;
-	HASH_ELEMENT *symbol;
+	entry_t *symbol;
 } YYSTYPE;
 #endif /* !YYSTYPE_IS_DECLARED */
 #line 38 "y.tab.c"
@@ -744,7 +744,7 @@ case 33:
 break;
 case 34:
 #line 100 "parser.y"
-	{ yyval.astree = astCreate(AST_CMD_CMD_BLOCK, 0, yystack.l_mark[0].astree, 0, 0); }
+	{ yyval.astree = astCreate(AST_CMD_CMD_BLOCK, 0, 0, yystack.l_mark[0].astree, 0, 0); }
 break;
 case 35:
 #line 101 "parser.y"

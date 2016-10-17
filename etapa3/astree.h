@@ -2,7 +2,7 @@
 //Compiladores - Etapa 3
 //ASTree
 
-#include "hash.c"
+#include "hash.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -47,20 +47,19 @@
 #define AST_SUB_UP 33
 #define AST_DIV_OP 34
 #define AST_MULT_OP 35
-
-
-
-
-
+#define AST_INT 35
+#define AST_CHAR 35
+#define AST_BOOL 35
+#define AST_REAL 35
 
 typedef struct astreenode
 {
 	int type;
-	HASH_ELEMENT *symbol;
+	entry_t *symbol;
 	struct astreenode *children[MAX_CHILDREN];
 } ASTREE;
 
-ASTREE *astCreate(int type, HASH_ELEMENT *symbol, ASTREE *s0, ASTREE *s1, ASTREE *s2, ASTREE *s3);
+ASTREE *astCreate(int type, entry_t *symbol, ASTREE *s0, ASTREE *s1, ASTREE *s2, ASTREE *s3);
 void astPrintTree(ASTREE *root);
 void astPrintTree_aux(ASTREE *root, int level);
 void astPrintNode(ASTREE *node);

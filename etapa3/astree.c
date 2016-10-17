@@ -1,12 +1,7 @@
-//Guilherme Schievelbein e Leonardo Ramos
-//Compiladores - Etapa 3
-//ASTree
-
 #include "astree.h"
-
 FILE *yyout;
 
-ASTREE *astCreate(int type, HASH_ELEMENT *symbol, ASTREE *s0, ASTREE *s1, ASTREE *s2, ASTREE *s3) {
+ASTREE *astCreate(int type, entry_t *symbol, ASTREE *s0, ASTREE *s1, ASTREE *s2, ASTREE *s3) {
 	ASTREE *newNode;
 	newNode = (ASTREE*) calloc(1, sizeof(ASTREE));
 	newNode->type = type;
@@ -25,14 +20,14 @@ void astPrintTree(ASTREE *root) {
 void astPrintTree_aux(ASTREE *root, int level) {
 	if (root == 0)
 		return;
-	
+
 	int i;
 	for (i = 0; i < level; ++i)	{
 		printf("  ");
 	}
 
 	astPrintNode(root);
-	
+
 	for(i = 0; i < MAX_CHILDREN; i++){
 		astPrintTree_aux(root->children[i], level+1);
 	}
@@ -236,9 +231,9 @@ void astPrintTreeSrc (ASTREE *node) {
 void astPrintNode(ASTREE *node) {
 	if (node == 0)
 		return;
-	
+
 	printf("ASTREE(");
-	
+
 	switch(node->type) {
 		case AST_SYMBOL: printf("Hash symbol");
 			break;
@@ -301,7 +296,7 @@ void astPrintNode(ASTREE *node) {
 		case AST_T_CHA: printf("Char type");
 			break;
 		case AST_LIST_P: printf("Parameter list");
-			break;	
+			break;
 		case AST_DEF_F: printf("Function definition");
 			break;
 		case AST_DECL_LOC: printf("Local declaration");
@@ -325,9 +320,9 @@ void astPrintNode(ASTREE *node) {
 		default: printf("UNKNOWN");
 			break;
 	}
-	
+
 	if (node->symbol != 0)
 		printf(", %s", node->symbol->text);
-		
+
 	printf(");\n");
 }

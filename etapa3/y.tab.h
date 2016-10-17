@@ -30,7 +30,7 @@
 #define YYSTYPE_IS_DECLARED 1
 typedef union {
 	ASTREE *astree;
-	HASH_ELEMENT *symbol;
+	entry_t *symbol;
 } YYSTYPE;
 #endif /* !YYSTYPE_IS_DECLARED */
 extern YYSTYPE yylval;

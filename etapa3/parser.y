@@ -1,13 +1,13 @@
 %{
+  #include "hash.h"
+  #include "astree.h"
   #include <stdio.h>
   #include <stdlib.h>
-  #include "hash.c"
-  #include "astree.h"
 %}
 
 %union {
 	ASTREE *astree;
-	HASH_ELEMENT *symbol;
+	entry_t *symbol;
 }
 
 %token KW_INT
@@ -97,7 +97,7 @@ program             : declarationList
                               | IF '(' expression ')' THEN command { $$ = astCreate(AST_IF, 0, $3, $6, 0, 0); }
                               | FOR '(' expression ')' command { $$ = astCreate(AST_FOR, 0, $3, $5, 0, 0); }
                               | FOR '(' IDENTIFIER '=' expression TO expression ')' command { $$ = astCreate(AST_FOR_TO, 0, $3, $5, $7, $9); }
-                              | commandBlock { $$ = astCreate(AST_CMD_CMD_BLOCK, 0, $1, 0, 0); }
+                              | commandBlock { $$ = astCreate(AST_CMD_CMD_BLOCK, 0, 0, $1, 0, 0); }
                               | { $$ = astCreate(AST_CMD_EMPTY, 0, 0, 0, 0, 0); }
                               ;
             printList           : STRING printList { $$ = astCreate(AST_PRINT_LIST, 0, $1, $2, 0, 0); }

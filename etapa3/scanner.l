@@ -8,8 +8,6 @@
   #define SYMBOL_IDENTIFIER 3
   #define SYMBOL_STRING 4
 
-  extern int yylval;
-
   hashtable_t *table;
   void initMe(void){
     table = ht_create( TABLE_SIZE );
