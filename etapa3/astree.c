@@ -165,7 +165,7 @@ void astPrintTreeSrc (ASTREE *node) {
 			break;
 		case AST_PRINT_LIST:
 			if(node->symbol != 0){
-				fprintf(yyout, " %s ", node->symbol->text);
+				fprintf(yyout, " %s ", node->symbol->value);
 			}
 			if(node->children[0] != 0){
 				astPrintTreeSrc(node->children[0]);
@@ -175,18 +175,18 @@ void astPrintTreeSrc (ASTREE *node) {
 			}
 			break;
 		case AST_FUNCT_CALL:
-			fprintf(yyout, "%s (", node->symbol->text);
+			fprintf(yyout, "%s (", node->symbol->value);
 			astPrintTreeSrc(node->children[0]);
 			fprintf(yyout, ")");
 			break;
 		case AST_FUNCT_CALL_PARAMS:
-		 	fprintf(yyout, "%s", node->symbol->text);
+		 	fprintf(yyout, "%s", node->symbol->value);
 			astPrintTreeSrc(node->children[0]);
 			break;
 		case AST_FUNCT_CALL_PARAMS_CONT:
 			if(node->children[0] != 0){
 				fprintf(yyout, ",");
-				fprintf(yyout, "%s (", node->symbol->text);
+				fprintf(yyout, "%s (", node->symbol->value);
 				astPrintTreeSrc(node->children[0]);
 				fprintf(yyout, ")");
 			}
@@ -200,10 +200,10 @@ void astPrintTreeSrc (ASTREE *node) {
 			astPrintTreeSrc(node->children[0]);
 			break;
 		case AST_LITERAL_EXPRESSION:
-			fprintf(yyout, " %s ", node->symbol->text);
+			fprintf(yyout, " %s ", node->symbol->value);
 			break;
 		case AST_VECTOR_EXPRESSION:
-			fprintf(yyout, " %s[", node->symbol->text);
+			fprintf(yyout, " %s[", node->symbol->value);
 			astPrintTreeSrc(node->children[0]);
 			fprintf(yyout, "]");
 			break;
@@ -281,94 +281,98 @@ void astPrintNode(ASTREE *node) {
 	printf("ASTREE(");
 
 	switch(node->type) {
-		case AST_SYMBOL: printf("Hash symbol");
+		case AST_DECL_LIST: printf("DECLARATION LIST");
 			break;
-		case AST_SYMBOL_VEC: printf("Vector symbol");
+		case AST_VAR_DECL: printf("VAR DECLARATION");
 			break;
-		case AST_SYMBOL_LIT: printf("Literal symbol");
+		case AST_VEC_DECL: printf("VECTOR DECLARATION");
 			break;
-		case AST_OP_SUM: printf("+ operation");
+		case AST_ARRAY_INIT: printf("ARRAY INIT");
 			break;
-		case AST_OP_SUB: printf("- operation");
+		case AST_FUNCT_DECL: printf("FUNCTION DECLARATION");
 			break;
-		case AST_OP_MUL: printf("* operation");
+		case AST_FUNCT_PARAMS_DEF: printf("FUNCT PARAMS DEFINITION");
 			break;
-		case AST_OP_DIV: printf("/ operation");
+		case AST_PARAMS_DEF_CONT: printf("FUNCT PARAMS DEFINITION CONT");
 			break;
-		case AST_OP_LES: printf("< operation");
+		case AST_CMD_BLOCK: printf("COMMAND BLOCK");
 			break;
-		case AST_OP_GRE: printf("> operation");
+		case AST_CMD_BLOCK_LIST: printf("COMMAND BLOCK LIST");
 			break;
-		case AST_OP_LE: printf("<= operation");
+		case AST_CMD_BLOCK_LIST_CONT:	printf("COMMAND BLOCK LIST CONT");
 			break;
-		case AST_OP_GE: printf(">= operation");
+		case AST_PRINT: printf("PRINT");
 			break;
-		case AST_OP_EQ: printf("== operation");
+		case AST_RETURN: printf("RETURN");
 			break;
-		case AST_OP_NE: printf("!= operation");
+		case AST_READ: printf("READ");
 			break;
-		case AST_OP_AND: printf("AND operation");
+		case AST_ATTRIBUTION: printf("ATTRIBUTION");
 			break;
-		case AST_OP_OR: printf("OR operation");
+		case AST_VECTOR_ATTRIBUTION: printf("VECTOR ATTRIBUTION");
 			break;
-		case AST_LIST_E: printf("Expression list");
+		case AST_IF_ELSE: printf("IF ELSE");
 			break;
-		case AST_IF: printf("If");
+		case AST_IF: printf("IF");
 			break;
-		case AST_WHILE: printf("While");
+		case AST_FOR: printf("FOR");
 			break;
-		case AST_RET: printf("Return");
+		case AST_FOR_TO: printf("FOR TO");
 			break;
-		case AST_INP: printf("Input");
+		case AST_CMD_CMD_BLOCK: printf("COMMAND COMMAND BLOCK");
 			break;
-		case AST_OUT: printf("Output");
+		case AST_CMD_EMPTY: printf("EMPTY");
 			break;
-		case AST_ATR_VAR: printf("Variable atribution");
+		case AST_PRINT_LIST: printf("PRINT LIST");
 			break;
-		case AST_ATR_VEC: printf("Vector atribution");
+		case AST_FUNCT_CALL: printf("FUNCTION CALL");
 			break;
-		case AST_CHAM_F: printf("Function call");
+		case AST_FUNCT_CALL_PARAMS: printf("FUNCTION CALL PARAMS");
 			break;
-		case AST_SEQ: printf("Command sequence");
+		case AST_FUNCT_CALL_PARAMS_CONT: printf("FUNCTION CALL PARAMS CONT");
 			break;
-		case AST_PARAM: printf("Parameter");
+		case AST_PARENTHESIS_EXPRESSION: printf("PARENTHESIS EXPRESSION");
 			break;
-		case AST_T_INT: printf("Int type");
+		case AST_FUNCT_CALL_EXPRESSION: printf("FUNCT CALL EXPRESSION");
 			break;
-		case AST_T_FLO: printf("Float type");
+		case AST_LITERAL_EXPRESSION: printf("LITERAL EXPRESSION");
 			break;
-		case AST_T_BOO: printf("Bool type");
+		case AST_VECTOR_EXPRESSION: printf("VECTOR EXPRESSION");
 			break;
-		case AST_T_CHA: printf("Char type");
+		case AST_EQUAL_OP: printf("EQUA EXPRESSION");
 			break;
-		case AST_LIST_P: printf("Parameter list");
+		case AST_DIFF_OP: printf("DIFF EXPRESSION");
 			break;
-		case AST_DEF_F: printf("Function definition");
+		case AST_LT_OP: printf("LESS THEN EXPRESSION");
 			break;
-		case AST_DECL_LOC: printf("Local declaration");
+		case AST_GT_OP: printf("GREATHER THEN EXPRESSION");
 			break;
-		case AST_DECL_VEC: printf("Vector declaration");
+		case AST_OR_OP: printf("OR EXPRESSION");
 			break;
-		case AST_VEC_SIZE: printf("Vector size");
+		case AST_AND_OP: printf("AND EXPRESSION");
 			break;
-		case AST_DECL_VAR: printf("Variable declaration");
+		case AST_SUM_OP: printf("SUM EXPRESSION");
 			break;
-		case AST_DECL_GL: printf("Global declaration");
+		case AST_SUB_OP: printf("SUB EXPRESSION");
 			break;
-		case AST_PROG: printf("Program");
+		case AST_DIV_OP: printf("DIV EXPRESSION");
 			break;
-		case AST_BLO_COM: printf("Command block");
+		case AST_MULT_OP: printf("MULT EXPRESSION");
 			break;
-		case AST_COM: printf("Command");
+		case AST_INT: printf("INT");
 			break;
-		case AST_EMPTY: printf("Empty");
+		case AST_CHAR: printf("CHAR");
+			break;
+		case AST_BOOL: printf("BOOL");
+			break;
+		case AST_REAL: printf("REAL");
 			break;
 		default: printf("UNKNOWN");
 			break;
 	}
 
 	if (node->symbol != 0)
-		printf(", %s", node->symbol->text);
+		printf(", %s", node->symbol->value);
 
 	printf(");\n");
 }
