@@ -62,11 +62,11 @@ program             : declarationList
                       | type IDENTIFIER '[' INT_LIT ']' ':' arrayInitLiterals ';' { $$ = astCreate(AST_VEC_DECL, $2, $1, $4, $7, 0); }
                       | type IDENTIFIER '[' INT_LIT ']' ';' { $$ = astCreate(AST_VEC_DECL, $2, $1, $4, 0, 0); }
                       ;
-      arrayInitLiterals   : BOOL_LIT arrayInitLiterals { $$ = astCreate(AST_ARRAY_INIT, 0, $1, $2, 0, 0); }
-                          | INT_LIT arrayInitLiterals { $$ = astCreate(AST_ARRAY_INIT, 0, $1, $2, 0, 0); }
-                          | CHAR_LIT arrayInitLiterals { $$ = astCreate(AST_ARRAY_INIT, 0, $1, $2, 0, 0); }
-                          | STRING arrayInitLiterals { $$ = astCreate(AST_ARRAY_INIT, 0, $1, $2, 0, 0); }
-                          | IDENTIFIER arrayInitLiterals { $$ = astCreate(AST_ARRAY_INIT, 0, $1, $2, 0, 0); }
+      arrayInitLiterals   : BOOL_LIT arrayInitLiterals { $$ = astCreate(AST_ARRAY_INIT, $1, $2, 0, 0, 0); }
+                          | INT_LIT arrayInitLiterals { $$ = astCreate(AST_ARRAY_INIT, $1, $2, 0, 0, 0); }
+                          | CHAR_LIT arrayInitLiterals { $$ = astCreate(AST_ARRAY_INIT, $1, $2, 0, 0, 0); }
+                          | STRING arrayInitLiterals { $$ = astCreate(AST_ARRAY_INIT, $1, $2, 0, 0, 0); }
+                          | IDENTIFIER arrayInitLiterals { $$ = astCreate(AST_ARRAY_INIT, $1, $2, 0, 0, 0); }
                           | { $$ = astCreate(AST_ARRAY_INIT, 0, 0, 0, 0, 0); }
                           ;
 
@@ -74,7 +74,7 @@ program             : declarationList
 
   functDeclaration    : type IDENTIFIER '(' functParamsDef ')' commandBlock ';' { $$ = astCreate(AST_FUNCT_DECL, $2, $1, $4, $6, 0); }
                       ;
-    functParamsDef      : type IDENTIFIER functParamsDefCont { $$ = astCreate(AST_FUNCT_PARAMS_DEF, $2, $1, 0, 0, 0); }
+    functParamsDef      : type IDENTIFIER functParamsDefCont { $$ = astCreate(AST_FUNCT_PARAMS_DEF, $2, $1, $3, 0, 0); }
                         | { $$ = astCreate(AST_FUNCT_PARAMS_DEF, 0, 0, 0, 0, 0); }
                         ;
       functParamsDefCont  : ',' type IDENTIFIER functParamsDefCont { $$ = astCreate(AST_PARAMS_DEF_CONT, $3, $2, $4, 0, 0); }
@@ -97,7 +97,7 @@ program             : declarationList
                               | IF '(' expression ')' THEN command { $$ = astCreate(AST_IF, 0, $3, $6, 0, 0); }
                               | FOR '(' expression ')' command { $$ = astCreate(AST_FOR, 0, $3, $5, 0, 0); }
                               | FOR '(' IDENTIFIER '=' expression TO expression ')' command { $$ = astCreate(AST_FOR_TO, $3, $5, $7, $9, 0); }
-                              | commandBlock { $$ = astCreate(AST_CMD_CMD_BLOCK, 0, 0, $1, 0, 0); }
+                              | commandBlock { $$ = astCreate(AST_CMD_CMD_BLOCK, 0, $1, 0, 0, 0); }
                               | { $$ = astCreate(AST_CMD_EMPTY, 0, 0, 0, 0, 0); }
                               ;
             printList           : STRING printList { $$ = astCreate(AST_PRINT_LIST, $1, $2, 0, 0, 0); }
@@ -135,7 +135,7 @@ expression          : '(' expression ')' { $$ = astCreate(AST_PARENTHESIS_EXPRES
                     | expression OR expression { $$ = astCreate(AST_OR_OP, 0, $1, $3, 0, 0); }
                     | expression AND expression { $$ = astCreate(AST_AND_OP, 0, $1, $3, 0, 0); }
                     | expression '+' expression { $$ = astCreate(AST_SUM_OP, 0, $1, $3, 0, 0); }
-                    | expression '-' expression { $$ = astCreate(AST_SUB_UP, 0, $1, $3, 0, 0); }
+                    | expression '-' expression { $$ = astCreate(AST_SUB_OP, 0, $1, $3, 0, 0); }
                     | expression '/' expression { $$ = astCreate(AST_DIV_OP, 0, $1, $3, 0, 0); }
                     | expression '*' expression { $$ = astCreate(AST_MULT_OP, 0, $1, $3, 0, 0); }
                     ;
