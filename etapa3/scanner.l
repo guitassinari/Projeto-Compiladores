@@ -1,4 +1,5 @@
 %{
+  #include "astree.h"
   #include "y.tab.h"
   #include "hash.c"
   #define TABLE_SIZE 997
@@ -43,10 +44,10 @@ TRUE { printf("BOOL"); return BOOL_LIT;}
 
 [;:=+-[\].{}(),-_//\\*|&!=<>] {return yytext[0];}
 
-int {return TYPE;}
-real {return TYPE;}
-bool {return TYPE;}
-char {return TYPE;}
+int {return KW_INT;}
+real {return KW_REAL;}
+bool {return KW_BOOL;}
+char {return KW_CHAR;}
 
 [=][=] {return EQUAL;}
 [!][=] {return DIFFERENT;}

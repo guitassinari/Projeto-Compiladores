@@ -2,7 +2,7 @@
 //Compiladores - Etapa 3
 //ASTree
 
-#include "hash.h"
+#include "hash.c"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -37,7 +37,18 @@
 #define AST_FUNCT_CALL_EXPRESSION 23
 #define AST_LITERAL_EXPRESSION 24
 #define AST_VECTOR_EXPRESSION 25
-#define AST_OPERATION_EXPRESSION 26
+#define AST_EQUAL_OP 26
+#define AST_DIFF_OP 27
+#define AST_LT_OP 28
+#define AST_GT_OP 29
+#define AST_OR_OP 30
+#define AST_AND_OP 31
+#define AST_SUM_OP 32
+#define AST_SUB_UP 33
+#define AST_DIV_OP 34
+#define AST_MULT_OP 35
+
+
 
 
 
