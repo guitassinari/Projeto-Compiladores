@@ -72,7 +72,7 @@ entry_t *ht_newpair( char *key, char *value, int type ) {
 }
 
 /* Insert a key-value pair into a hash table. */
-void ht_set( hashtable_t *hashtable, char *key, char *value, int type ) {
+entry_t * ht_set( hashtable_t *hashtable, char *key, char *value, int type ) {
 	int bin = 0;
 	entry_t *newpair = NULL;
 	entry_t *next = NULL;
@@ -113,6 +113,8 @@ void ht_set( hashtable_t *hashtable, char *key, char *value, int type ) {
 			last->next = newpair;
 		}
 	}
+
+	return newpair;
 }
 
 /* Retrieve a key-value pair from a hash table. */

@@ -20,7 +20,7 @@ typedef struct hashtable_s hashtable_t;
 hashtable_t *ht_create( int size );
 int ht_hash( hashtable_t *hashtable, char *key );
 entry_t *ht_newpair( char *key, char *value, int type );
-void ht_set( hashtable_t *hashtable, char *key, char *value, int type );
+entry_t * ht_set( hashtable_t *hashtable, char *key, char *value, int type );
 char *ht_get( hashtable_t *hashtable, char *key );
 void display(hashtable_t *hashtable);
 #endif

@@ -7,6 +7,7 @@
   #define SYMBOL_INT_LIT 2
   #define SYMBOL_IDENTIFIER 3
   #define SYMBOL_STRING 4
+  #define SYMBOL_BOOL_LIT 5
 
   hashtable_t *table;
   void initMe(void){
@@ -35,10 +36,10 @@
 <COMMENT>\n {line_number++;}
 <COMMENT>\*"/" {BEGIN(INITIAL);}
 
-[0-9]+ {ht_set(table, yytext, yytext, SYMBOL_INT_LIT); return INT_LIT;}
-FALSE { printf("BOOL"); return BOOL_LIT;}
-TRUE { printf("BOOL"); return BOOL_LIT;}
-'[a-zA-z]' {ht_set(table, yytext, yytext, SYMBOL_CHAR_LIT); return CHAR_LIT;}
+[0-9]+ {yylval.symbol = ht_set(table, yytext, yytext, SYMBOL_INT_LIT); return INT_LIT;}
+FALSE {yylval.symbol = ht_set(table, yytext, yytext, SYMBOL_BOOL_LIT); return BOOL_LIT;}
+TRUE {yylval.symbol = ht_set(table, yytext, yytext, SYMBOL_BOOL_LIT); return BOOL_LIT;}
+'[a-zA-z]' {yylval.symbol = ht_set(table, yytext, yytext, SYMBOL_CHAR_LIT); return CHAR_LIT;}
 
 [;:=+-[\].{}(),-_//\\*|&!=<>] {return yytext[0];}
 
@@ -62,10 +63,10 @@ to {return TO;}
 if {return IF;}
 then {return THEN;}
 else {return ELSE;}
-L?\"(\\.|[^\\"])*\"	{ht_set(table, yytext, yytext, SYMBOL_STRING); return STRING;}
+L?\"(\\.|[^\\"])*\"	{yylval.symbol = ht_set(table, yytext, yytext, SYMBOL_STRING); return STRING;}
 
 
-[a-zA-Z][a-zA-Z_0-9]+ {ht_set(table, yytext, yytext, SYMBOL_IDENTIFIER); return IDENTIFIER;}
+[a-zA-Z][a-zA-Z_0-9]+ {yylval.symbol = ht_set(table, yytext, yytext, SYMBOL_IDENTIFIER); return IDENTIFIER;}
 
 \n {line_number++;}
 

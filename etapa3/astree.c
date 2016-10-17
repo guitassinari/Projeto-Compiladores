@@ -40,7 +40,7 @@ void astPrintTreeSrc (ASTREE *node) {
 	int i;
 
 	switch(node->type) {
-		case AST_SYMBOL: fprintf(yyout, "%s", node->symbol->text);
+		case AST_DECL_LIST: fprintf(yyout, "%s", node->symbol->text);
 			break;
 		case AST_SYMBOL_VEC: fprintf(yyout, "%s[", node->symbol->text);
 			astPrintTreeSrc(node->children[0]);
