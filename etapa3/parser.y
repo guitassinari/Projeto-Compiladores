@@ -42,16 +42,18 @@
 
 %type <astree> 	declarationList variableDeclaration arrayInitLiterals functDeclaration functParamsDef
 functParamsDefCont commandBlock commandBlockList commandBlockListCont command printList functCall
-functParams functParamsCont expression type
+functParams functParamsCont expression type program
 
 %%
-program             : declarationList
+program             : declarationList {printf("Programa"); $$ = $1; astPrintTree($$); astPrintTreeSrc($$); }
                     ;
 
 
 
-  declarationList     : variableDeclaration declarationList { $$ = astCreate(AST_DECL_LIST, 0, $1, $2, 0, 0); }
+  declarationList     : variableDeclaration declarationList {  $$ = astCreate(AST_DECL_LIST, 0, $1, $2, 0, 0); }
                       | functDeclaration declarationList { $$ = astCreate(AST_DECL_LIST, 0, $1, $2, 0, 0); }
+                      | functDeclaration { $$ = astCreate(AST_DECL_LIST, 0, $1, 0, 0, 0); }
+                      | variableDeclaration { $$ = astCreate(AST_DECL_LIST, 0, $1, 0, 0, 0); }
                       ;
 
 
@@ -72,7 +74,7 @@ program             : declarationList
 
 
 
-  functDeclaration    : type IDENTIFIER '(' functParamsDef ')' commandBlock ';' { $$ = astCreate(AST_FUNCT_DECL, $2, $1, $4, $6, 0); }
+  functDeclaration    : type IDENTIFIER '(' functParamsDef ')' commandBlock ';' {$$ = astCreate(AST_FUNCT_DECL, $2, $1, $4, $6, 0); }
                       ;
     functParamsDef      : type IDENTIFIER functParamsDefCont { $$ = astCreate(AST_FUNCT_PARAMS_DEF, $2, $1, $3, 0, 0); }
                         | { $$ = astCreate(AST_FUNCT_PARAMS_DEF, 0, 0, 0, 0, 0); }

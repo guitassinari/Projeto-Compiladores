@@ -63,8 +63,9 @@ void astPrintTreeSrc (ASTREE *node) {
 			break;
 		case AST_ARRAY_INIT:
 			if(node->symbol->value != 0){
-				fprintf(yyout, " %s ", node->symbol->value);
+				fprintf(yyout, " %d ", node->symbol->value);
 				astPrintTreeSrc(node->children[0]);
+				astPrintTreeSrc(node->children[1]);
 			}
 			break;
 		case AST_FUNCT_DECL:
@@ -278,6 +279,7 @@ void astPrintNode(ASTREE *node) {
 	if (node == 0)
 		return;
 
+		printf("%d-", node->type);
 	printf("ASTREE(");
 
 	switch(node->type) {

@@ -2009,8 +2009,8 @@ int yywrap(){
 
 void yyerror (char const *s) {
   if(is_running){
-  printf("%s", s);
-  exit(3);
+    printf("%s", s);
+    exit(3);
   }
   exit(0);
 }
