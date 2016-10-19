@@ -74,6 +74,7 @@ entry_t *ht_newpair( char *key, char *value, int type ) {
 /* Insert a key-value pair into a hash table. */
 entry_t * ht_set( hashtable_t *hashtable, char *key, char *value, int type ) {
 	int bin = 0;
+	entry_t *pair = NULL;
 	entry_t *newpair = NULL;
 	entry_t *next = NULL;
 	entry_t *last = NULL;
@@ -93,10 +94,12 @@ entry_t * ht_set( hashtable_t *hashtable, char *key, char *value, int type ) {
 		free( next->value );
 		next->value = strdup( value );
 		next->type = type;
+		pair = next;
 
 	/* Nope, could't find it.  Time to grow a pair. */
 	} else {
 		newpair = ht_newpair( key, value, type);
+		pair = newpair;
 
 		/* We're at the start of the linked list in this bin. */
 		if( next == hashtable->table[ bin ] ) {
@@ -114,7 +117,7 @@ entry_t * ht_set( hashtable_t *hashtable, char *key, char *value, int type ) {
 		}
 	}
 
-	return newpair;
+	return pair;
 }
 
 /* Retrieve a key-value pair from a hash table. */

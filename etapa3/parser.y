@@ -45,7 +45,7 @@ functParamsDefCont commandBlock commandBlockList commandBlockListCont command pr
 functParams functParamsCont expression type program
 
 %%
-program             : declarationList {printf("Programa"); $$ = $1; astPrintTree($$); astPrintTreeSrc($$); }
+program             : declarationList {$$ = $1; astPrintTree($$); astPrintTreeSrc($$); }
                     ;
 
 
@@ -57,13 +57,14 @@ program             : declarationList {printf("Programa"); $$ = $1; astPrintTree
                       ;
 
 
-  variableDeclaration : type IDENTIFIER ':' BOOL_LIT ';' { $$ = astCreate(AST_VAR_DECL, $2, $1, $4, 0, 0); }
-                      | type IDENTIFIER ':' INT_LIT ';' { $$ = astCreate(AST_VAR_DECL, $2, $1, $4, 0, 0); }
-                      | type IDENTIFIER ':' CHAR_LIT ';' { $$ = astCreate(AST_VAR_DECL, $2, $1, $4, 0, 0); }
-                      | type IDENTIFIER ':' STRING ';' { $$ = astCreate(AST_VAR_DECL, $2, $1, $4, 0, 0); }
-                      | type IDENTIFIER '[' INT_LIT ']' ':' arrayInitLiterals ';' { $$ = astCreate(AST_VEC_DECL, $2, $1, $4, $7, 0); }
-                      | type IDENTIFIER '[' INT_LIT ']' ';' { $$ = astCreate(AST_VEC_DECL, $2, $1, $4, 0, 0); }
+  variableDeclaration : type IDENTIFIER ':' BOOL_LIT ';' { $$ = astCreate(AST_VAR_DECL, $2, $1, astCreate(AST_VAR_INIT, $4, 0, 0, 0, 0), 0, 0); }
+                      | type IDENTIFIER ':' INT_LIT ';' { $$ = astCreate(AST_VAR_DECL, $2, $1, astCreate(AST_VAR_INIT, $4, 0, 0, 0, 0), 0, 0); }
+                      | type IDENTIFIER ':' CHAR_LIT ';' { $$ = astCreate(AST_VAR_DECL, $2, $1, astCreate(AST_VAR_INIT, $4, 0, 0, 0, 0), 0, 0); }
+                      | type IDENTIFIER ':' STRING ';' { $$ = astCreate(AST_VAR_DECL, $2, $1, astCreate(AST_VAR_INIT, $4, 0, 0, 0, 0), 0, 0); }
+                      | type IDENTIFIER '[' INT_LIT ']' ':' arrayInitLiterals ';' { $$ = astCreate(AST_VEC_DECL, $2, $1, astCreate(AST_VEC_SIZE, $4, 0, 0, 0, 0), $7, 0); }
+                      | type IDENTIFIER '[' INT_LIT ']' ';' { $$ = astCreate(AST_VEC_DECL, $2, $1, astCreate(AST_VEC_SIZE, $4, 0, 0, 0, 0), 0, 0); }
                       ;
+
       arrayInitLiterals   : BOOL_LIT arrayInitLiterals { $$ = astCreate(AST_ARRAY_INIT, $1, $2, 0, 0, 0); }
                           | INT_LIT arrayInitLiterals { $$ = astCreate(AST_ARRAY_INIT, $1, $2, 0, 0, 0); }
                           | CHAR_LIT arrayInitLiterals { $$ = astCreate(AST_ARRAY_INIT, $1, $2, 0, 0, 0); }

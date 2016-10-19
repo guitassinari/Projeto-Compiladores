@@ -1,4 +1,4 @@
-                                                                                                             
+                                                                                                                                                                                                                       
 int funcao ( ) { print teste ;
 read teste ;
 return teste ;
