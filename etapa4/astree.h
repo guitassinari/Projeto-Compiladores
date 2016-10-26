@@ -1,3 +1,6 @@
+#ifndef AST_H
+#define AST_H
+
 #include "hash.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -52,6 +55,7 @@
 
 typedef struct astreenode
 {
+	int lineNumber;
 	int type;
 	entry_t *symbol;
 	struct astreenode *children[MAX_CHILDREN];
@@ -62,3 +66,5 @@ void astPrintTree(ASTREE *root);
 void astPrintTree_aux(ASTREE *root, int level);
 void astPrintNode(ASTREE *node);
 void astPrintTreeSrc(ASTREE *node);
+
+#endif
