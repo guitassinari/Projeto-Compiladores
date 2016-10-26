@@ -831,7 +831,7 @@ case 53:
 break;
 case 54:
 #line 133 "parser.y"
-	{ yyval.astree = astCreate(AST_LITERAL_EXPRESSION, yystack.l_mark[0].symbol, 0, 0, 0, 0); }
+	{ yyval.astree = astCreate(AST_VAR_EXPRESSION, yystack.l_mark[0].symbol, 0, 0, 0, 0); }
 break;
 case 55:
 #line 134 "parser.y"

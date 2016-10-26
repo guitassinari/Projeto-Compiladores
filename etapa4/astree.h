@@ -52,6 +52,7 @@
 #define AST_REAL 43
 #define AST_VEC_SIZE 44
 #define AST_VAR_INIT 45
+#define AST_VAR_EXPRESSION 46
 
 typedef struct astreenode
 {

@@ -231,6 +231,7 @@ void astPrintTreeSrc (ASTREE *node) {
 			astPrintTreeSrc(node->children[0]);
 			break;
 		case AST_LITERAL_EXPRESSION:
+		case AST_VAR_EXPRESSION:
 			if(node->symbol != 0){
   			fprintf(outFile, "%s ", node->symbol->value);
 			}
@@ -380,6 +381,8 @@ void astPrintNode(ASTREE *node) {
 		case AST_PARENTHESIS_EXPRESSION: printf("PARENTHESIS EXPRESSION");
 			break;
 		case AST_FUNCT_CALL_EXPRESSION: printf("FUNCT CALL EXPRESSION");
+			break;
+		case AST_VAR_EXPRESSION : printf("VARIABLE EXPRESSION");
 			break;
 		case AST_LITERAL_EXPRESSION: printf("LITERAL EXPRESSION");
 			break;
